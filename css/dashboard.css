@@ -2,7 +2,7 @@ html, body{
     margin: 0;
     padding: 0;
 }
-a, a:hover, a:active{
+a, a:hover, a:active, a:visited, a:focus{
     text-decoration: none;
     outline: none;
     text-transform: uppercase;
@@ -23,6 +23,8 @@ header{
 }
 header > h1{
     margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 header > p{
     float: right;
@@ -38,11 +40,16 @@ section  h2{
     margin-bottom: 24px;
     color: #8347b3;
 }
-
+#add-task-btn{
+    padding: 8px 24px;
+    background-color: #8347b3;
+    color: #fff;
+    float: right;
+}
 .task{
     background-color: #fff;
     padding: 16px 24px;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #eee;
     border-top-color: transparent;
 }
 .task > h3{
@@ -60,9 +67,12 @@ section  h2{
 .task .time-list{
     font-family: 'Roboto', sans-serif;
 }
-.task .duration{
+.task .duration, .task .delete-btn{
     float: right;
     color: #969696;
+}
+.task .delete-btn{
+    margin-left: 24px;
 }
 .task .time{
     margin-top: 10px;
@@ -91,11 +101,12 @@ section  h2{
     margin-bottom: 24px;
 }
 #project-form #new-project-title-input{
-    width: 70%;
+    width: 75%;
     border: none;
     background-color: #fff;
     box-shadow: none;
     padding: 5px 10px;
+    outline: none;
 }
 #project-form #add-project-btn{
     width: 20%;

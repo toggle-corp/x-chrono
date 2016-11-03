@@ -94,6 +94,7 @@
     <script type="text/javascript" src="jquery.min.js"></script>
 
     <!--Custom scripts-->
+    <script type="text/javascript" src="bootstrap.min.js"></script>
     <script type="text/javascript" src="database.js"></script>
     <script type="text/javascript" src="dashboard.js"></script>
     <script type="text/javascript" src="sign-in.js"></script>
@@ -117,8 +118,9 @@
         <h1>Chrono</h1>
     </header>
     <main hidden>
-        <section id="recent-tasks">
+        <section id="tasks">
             <div class="container-fluid">
+                <a href='#' data-toggle="modal" data-target="#add-task-modal" id="add-task-btn">Add Task</a>
                 <h2>Tasks</h2>
                 <div class="row">
                     <div class="col-md-4">
@@ -165,7 +167,31 @@
     </div>
     <div class="time-template" hidden>
         <date></date>
+        <a href="#" class="delete-btn">⌫</a>
         <span class="duration"></span>
+    </div>
+    <div id="add-task-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Task</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Task title">
+                    </div>
+                    <div class="form-group">
+                        <select id="project-select" class="form-control">
+                            <option>Project 1</option>
+                            <option>Project 2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
