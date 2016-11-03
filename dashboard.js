@@ -13,7 +13,7 @@ refreshTasks = function() {
 
     var taskTemplate = $(".task-template");
     var timeTemplate = $(".time-template");
-    var taskContainer = $("#task-list")
+    var taskContainer = $("#task-list .row")
 
     taskContainer.empty();
 
@@ -21,7 +21,7 @@ refreshTasks = function() {
         var task = taskTemplate.clone();
         var currentTask = tasks[i];
         task.removeClass("task-template");
-        task.addClass("task");
+        //task.addClass("task");
 
         task.find("h3").text(currentTask.title);
         task.find("p").text(projects[currentTask.project]);
