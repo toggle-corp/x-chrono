@@ -7,7 +7,7 @@ function refreshDashboard() {
 
 refreshTasks = function() {
     $('#preload').slideUp('fast', function(){
-        $('header').fadeIn();
+        $('header').slideDown();
         $('main').fadeIn();
     });
     console.log(tasks);
