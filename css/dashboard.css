@@ -1,0 +1,88 @@
+html, body{
+    margin: 0;
+    padding: 0;
+}
+a, a:hover, a:active{
+    text-decoration: none;
+    outline: none;
+    text-transform: uppercase;
+    color: #717171;
+    font-family: 'Roboto', sans-serif;
+}
+
+body{
+    font-family: 'Source Sans Pro', sans-serif;
+    background-color: #fafafa;
+    color: #616161;
+}
+
+header{
+    background-color: #8347b3;
+    color: #fff;
+    padding: 24px;
+}
+header > h1{
+    margin: 0;
+}
+header > p{
+    float: right;
+}
+
+section{
+    padding: 24px;
+}
+section  h2{
+    font-weight: 300;
+    text-transform: uppercase;
+    font-size: 1.2em;
+    margin-bottom: 24px;
+    color: #8347b3;
+}
+
+.task{
+    background-color: #fff;
+    padding: 16px 24px;
+    border: 1px solid #f0f0f0;
+    border-top-color: transparent;
+}
+.task > h3{
+    margin: 0;
+    font-weight: 300;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+.task > p{
+    color: #969696;
+}
+.task time, .task date{
+    color: #969696;
+}
+.task .time-list{
+    font-family: 'Roboto', sans-serif;
+}
+.task .duration{
+    float: right;
+    color: #969696;
+}
+.task .time{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.task .action{
+    text-align: right;
+    margin-top: 24px;
+}
+.task .action a{
+    margin-left: 32px;
+}
+.task .action .btn-start{
+    color: #8347b3;
+}
+
+#project-list{
+    background-color: #fff;
+}
+#project-list a{
+    display: block;
+    padding: 10px 16px;
+}

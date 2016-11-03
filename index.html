@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
     <!--Google Charts API-->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <!--Firebase-->
@@ -25,11 +29,66 @@
     <script type="text/javascript" src="auth.js"></script>
     <!--<script type="text/javascript" src="index.js"></script>-->
 
-    <!--Custom css-->
-    <!--<link rel="stylesheet" href="index.css">-->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 
 <body>
-    <h1> chrono </h1>
+    <header>
+        <p>Welcome <strong id="username">Ankit</strong>!</p>
+        <h1>Chrono</h1>
+    </header>
+    <main>
+        <section id="recent-tasks">
+            <div class="container-fluid">
+                <h2>Recent Tasks</h2>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div id="recent-task-list">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <section id="projects">
+            <div class="container-fluid">
+                <h2>Projects</h2>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div id="project-list">
+                            <a href="#" class="project">Chrono</a>
+                            <a href="#" class="project">Deep</a>
+                            <a href="#" class="project">Skrawl</a>
+                            <a href="#" class="project">Survey Analysis</a>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div id="project-detail">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </section>
+    </main>
+
+    <div class="task-template">
+        <h3></h3>
+        <p></p>
+        <hr>
+        <div class="time-list">
+        </div>
+        <hr>
+        <div class="action">
+            <a href="#" class="btn-start">Start</a>
+            <a href="#" class="btn-edit">Edit</a>
+        </div>
+    </div>
+    <div class="time-template">
+        <date></date>, <time class="start-time"></time> - <time class="end-time">16:30</time>
+        <span class="duration"></span>
+    </div>
 </body>
 </html>
