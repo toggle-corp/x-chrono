@@ -10,7 +10,7 @@ refreshTasks = function() {
         $('header').slideDown();
         $('main').fadeIn();
     });
-    console.log(tasks);
+
     var taskTemplate = $(".task-template");
     var timeTemplate = $(".time-template");
     var taskContainer = $("#task-list")
@@ -24,7 +24,7 @@ refreshTasks = function() {
         task.addClass("task");
 
         task.find("h3").text(currentTask.title);
-        task.find("p").text(currentTask.project);
+        task.find("p").text(projects[currentTask.project]);
 
         var timeContainer = task.find('.time-list');
         var active = null;
@@ -42,31 +42,52 @@ refreshTasks = function() {
             } else {
                 time.find(".duration").text( ((endTime-startTime)/(1000*3600)).toFixed(2) + ' hrs' );
             }
+
+            time.find('.delete-btn').click(function(pid, tid, tmid) {
+                return function() {
+                    if (confirm("Are you sure?"))
+                        deleteTime(pid, tid, tmid);
+                }
+            } (currentTask.project, currentTask.id, currentTask.times[j].id));
+
             time.appendTo(timeContainer);
             time.show();
         }
 
         if (active) {
             task.find('.btn-start').text("Stop");
-            task.find('.btn-start').click(function() {
-                updateTask(currentTask.project, currentTask.id, active.id, active.start_time,
-                    new Date().getTime());
-            });
-        } else {
-            task.find('.btn-start').text("Start");
-            task.find('.btn-start').click(function() {
-                startTask(currentTask.project, currentTask.id, new Date().getTime());
-            });
+            task.find('.btn-start').click(function(pid, tid, tmid, st, et) {
+                return function() {
+                    updateTask(pid, tid, tmid, st, et);
+                }
+            }(currentTask.project, currentTask.id, active.id,
+              active.start_time.getTime(), new Date().getTime()));
         }
+        else {
+            task.find('.btn-start').text("Start");
+            task.find('.btn-start').click(function(pid, tid, tmid) {
+                return function() {
+                    startTask(pid, tid, tmid);
+                };
+            }(currentTask.project, currentTask.id, new Date().getTime()));
+        }
+
+        task.find('.btn-delete').click(function(pid, tid) {
+            return function() {
+                if (confirm("Are you sure you want to delete this task?"))
+                    deleteTask(pid, tid);
+            }
+        }(currentTask.project, currentTask.id));
 
         task.appendTo(taskContainer);
         task.show();
     }
 
-    console.log(projects);
     if (projects) {
         var projectListContainer = $('#project-list');
         projectListContainer.empty();
+
+        var projectSelect = $("#project-select");
 
         var projectTemplate = $('<a href="#" class="project"></a>');
         for(var pid in projects){
@@ -74,6 +95,9 @@ refreshTasks = function() {
             var currentProject = projects[pid];
             project.text(currentProject);
             project.appendTo(projectListContainer);
+
+            $('<option value="' + pid + '">' + currentProject + '</option>')
+                .appendTo(projectSelect);
         }
     }
 
@@ -82,5 +106,12 @@ refreshTasks = function() {
         var title = $("#new-project-title-input").val();
         $("#new-project-title-input").val("");
         addProject(title);
-    })
+    });
+
+    $("#add-task-modal-btn").click(function() {
+        var title = $("#task-title-input").val();
+        var pid = $("#project-select").val();
+        $("#task-title-input").val("");
+        addTask(pid, title);
+    });
 }

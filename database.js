@@ -124,3 +124,19 @@ function updateTask(projectId, taskId, timeId, startTime, endTime) {
 
     return timeId;
 }
+
+
+function deleteTask(projectId, taskId) {
+    database.ref("users/" + currentUser.uid + "/projects/" + projectId
+        + "/tasks/" + taskId).remove();
+}
+
+function deleteTime(projectId, taskId, timeId) {
+    database.ref("users/" + currentUser.uid + "/projects/" + projectId
+        + "/tasks/" + taskId + "/times/" + timeId).remove();
+}
+
+function deleteProject(projectId) {
+    database.ref("users/" + currentUser.uid + "/projects/" + projectId)
+        .remove();
+}
