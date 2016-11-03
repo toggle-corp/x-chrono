@@ -6,6 +6,10 @@ function refreshDashboard() {
 }
 
 refreshTasks = function() {
+    $('#preload').slideUp('fast', function(){
+        $('header').fadeIn();
+        $('main').fadeIn();
+    });
     console.log(tasks);
     var taskTemplate = $(".task-template");
     var timeTemplate = $(".time-template");

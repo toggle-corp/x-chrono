@@ -6,6 +6,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+    <style>
+    #preload h1, #preload p{
+      font-family: 'Source Sans Pro', sans-serif;
+      font-weight: 300;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #fff;
+    }
+    #preload{
+      background-color: #8347b3;
+      height: 100vh;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+    }
+    #photon-clock{
+      position: relative;
+      width: 150px;
+      height: 200px;
+    }
+    .wall{
+      width: 50px;
+      height: 10px;
+      position: absolute;
+      background-color: #a257f0;
+    }
+    #upper-wall{
+      left: 50px;
+      top: 50px;
+    }
+    #lower-wall{
+      left: 50px;
+      top: 100px;
+    }
+    #photon{
+      background-color: #fff;
+      width: 5px;
+      height: 5px;
+      position: absolute;
+      left: 72px;
+      top: 77px;
+      animation: tick linear 2s infinite;
+    }
+    @keyframes tick{
+      0% {
+        transform: translateY(0px) rotate(45deg);
+        box-shadow: 0 0 5px 1px #fff;
+      }
+      25% {
+        transform: translateY(-16px) rotate(45deg);
+        box-shadow: 0 0 1px 0 #fff;
+      }
+      50%{
+        transform: translateY(0px) rotate(45deg);
+        box-shadow: 0 0 5px 1px #fff;
+      }
+      75% {
+        transform: translateY(+16px) rotate(45deg);
+        box-shadow: 0 0 1px 0 #fff;
+      }
+      100% {
+        transform: translateY(0px) rotate(45deg);
+        box-shadow: 0 0 5px 1px #fff;
+      }
+    }
+    </style>
     <!--Google Charts API-->
     <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
     <!--Firebase-->
@@ -35,11 +103,20 @@
 </head>
 
 <body>
-    <header>
+    <div id="preload">
+        <h1>Chrono</h1>
+        <div id="photon-clock">
+            <span id="upper-wall" class="wall"></span>
+            <span id="lower-wall" class="wall"></span>
+            <span id="photon"></span>
+        </div>
+        <p>Loading...</p>
+    </div>
+    <header hidden>
         <p>Welcome <strong id="username"></strong>!</p>
         <h1>Chrono</h1>
     </header>
-    <main>
+    <main hidden>
         <section id="recent-tasks">
             <div class="container-fluid">
                 <h2>Tasks</h2>
@@ -81,8 +158,9 @@
         </div>
         <hr>
         <div class="action">
+            <a href="#" class="btn-delete">Delete</a>
+            <!-- <a href="#" class="btn-edit">Edit</a> -->
             <a href="#" class="btn-start">Start</a>
-            <a href="#" class="btn-edit">Edit</a>
         </div>
     </div>
     <div class="time-template" hidden>
