@@ -86,3 +86,18 @@ section  h2{
     display: block;
     padding: 10px 16px;
 }
+
+#project-form #new-project-title-input{
+    width: 70%;
+    border: none;
+    background-color: #fff;
+    box-shadow: none;
+    padding: 5px 10px;
+}
+#project-form #add-project-btn{
+    width: 20%;
+    border: none;
+    background-color: #8347b3;
+    color: #fff;
+    padding: 5px 10px;
+}

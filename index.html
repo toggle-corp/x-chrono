@@ -7,27 +7,28 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!--Google Charts API-->
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
     <!--Firebase-->
     <script src="https://www.gstatic.com/firebasejs/3.5.3/firebase.js"></script>
     <script>
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyCzkTE6rbTFlFwFtspwdaxhf9TIwfPfhP4",
-            authDomain: "task-6b911.firebaseapp.com",
-            databaseURL: "https://task-6b911.firebaseio.com",
-            storageBucket: "task-6b911.appspot.com",
-            messagingSenderId: "1078508738968"
-        };
-        firebase.initializeApp(config);
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyDV5SEaetn38UksDXF3a0mQPFY4UH1nPU4",
+        authDomain: "chrono-50f8f.firebaseapp.com",
+        databaseURL: "https://chrono-50f8f.firebaseio.com",
+        storageBucket: "chrono-50f8f.appspot.com",
+        messagingSenderId: "445187391"
+      };
+      firebase.initializeApp(config);
     </script>
 
     <!--Jquery-->
     <script type="text/javascript" src="jquery.min.js"></script>
 
     <!--Custom scripts-->
-    <script type="text/javascript" src="auth.js"></script>
-    <!--<script type="text/javascript" src="index.js"></script>-->
+    <script type="text/javascript" src="database.js"></script>
+    <script type="text/javascript" src="dashboard.js"></script>
+    <script type="text/javascript" src="sign-in.js"></script>
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/dashboard.css">
@@ -35,16 +36,16 @@
 
 <body>
     <header>
-        <p>Welcome <strong id="username">Ankit</strong>!</p>
+        <p>Welcome <strong id="username"></strong>!</p>
         <h1>Chrono</h1>
     </header>
     <main>
         <section id="recent-tasks">
             <div class="container-fluid">
-                <h2>Recent Tasks</h2>
+                <h2>Tasks</h2>
                 <div class="row">
                     <div class="col-md-4">
-                        <div id="recent-task-list">
+                        <div id="task-list">
                         </div>
                     </div>
                 </div>
@@ -56,11 +57,11 @@
                 <h2>Projects</h2>
                 <div class="row">
                     <div class="col-md-4">
+                        <div id="project-form">
+                            <input id="new-project-title-input" type="text">
+                            <button id="add-project-btn">Add</button>
+                        </div>
                         <div id="project-list">
-                            <a href="#" class="project">Chrono</a>
-                            <a href="#" class="project">Deep</a>
-                            <a href="#" class="project">Skrawl</a>
-                            <a href="#" class="project">Survey Analysis</a>
                         </div>
                     </div>
                     <div class="col-md-8">
@@ -69,12 +70,10 @@
                     </div>
                 </div>
             </div>
-
-
         </section>
     </main>
 
-    <div class="task-template">
+    <div class="task-template" hidden>
         <h3></h3>
         <p></p>
         <hr>
@@ -86,8 +85,8 @@
             <a href="#" class="btn-edit">Edit</a>
         </div>
     </div>
-    <div class="time-template">
-        <date></date>, <time class="start-time"></time> - <time class="end-time">16:30</time>
+    <div class="time-template" hidden>
+        <date></date>
         <span class="duration"></span>
     </div>
 </body>
