@@ -28,7 +28,10 @@ function addDBListener() {
                 var project = ps[p];
                 var ts = project.tasks;
 
-                projects[p] = project.title;
+                projects[p] = {
+                    title: project.title,
+                    created_at: project.created_at
+                };
 
                 // Fetch tasks for this project
                 if (ts) {
@@ -39,7 +42,8 @@ function addDBListener() {
                             id: t,
                             project: p,
                             title: task.title,
-                            times: []
+                            times: [],
+                            created_at: task.created_at
                         };
 
                         var times = task.times;
@@ -63,11 +67,18 @@ function addDBListener() {
                             }
                         }
 
+                        newTask.times.sort(function(t1, t2) {
+                            return t1.start_time < t2.start_time;
+                        });
                         tasks.push(newTask);
                     }
                 }
             }
         }
+
+        tasks.sort(function(t1, t2) {
+            return t1.created_at < t2.created_at;
+        });
 
         if (refreshTasks)
             refreshTasks();
@@ -82,7 +93,8 @@ function addProject(projectTitle) {
     var projectsRef = database.ref("users/" + currentUser.uid + "/projects");
     var project = projectsRef.push();
     project.set({
-        title: projectTitle
+        title: projectTitle,
+        created_at: new Date().getTime()
     });
 
     return project.key;
@@ -94,10 +106,11 @@ function addTask(projectId, taskTitle) {
         + projectId + "/tasks");
     var task = tasksRef.push();
     task.set({
-        title: taskTitle
+        title: taskTitle,
+        created_at: new Date().getTime()
     });
 
-    return task.key();
+    return task.key;
 }
 
 
