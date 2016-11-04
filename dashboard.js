@@ -26,7 +26,7 @@ refreshTasks = function() {
         //task.addClass("task");
 
         task.find("h3").text(currentTask.title);
-        task.find("p").text(projects[currentTask.project]);
+        task.find("p").text(projects[currentTask.project].title);
 
         var timeContainer = task.find('.time-list');
         var active = null;
@@ -48,7 +48,7 @@ refreshTasks = function() {
                 time.find(".duration").text( ((endTime-startTime)/(1000*3600)).toFixed(2) + ' hrs' );
             }
 
-            time.find('.delete-btn').click(function(pid, tid, tmid) {
+            time.find('.delete-btn').unbind().click(function(pid, tid, tmid) {
                 return function() {
                     if (confirm("Are you sure?"))
                         deleteTime(pid, tid, tmid);
@@ -61,7 +61,7 @@ refreshTasks = function() {
 
         if (active) {
             task.find('.btn-start').text("Stop");
-            task.find('.btn-start').click(function(pid, tid, tmid, st, et) {
+            task.find('.btn-start').unbind().click(function(pid, tid, tmid, st, et) {
                 return function() {
                     updateTask(pid, tid, tmid, st, et);
                 }
@@ -70,14 +70,14 @@ refreshTasks = function() {
         }
         else {
             task.find('.btn-start').text("Start");
-            task.find('.btn-start').click(function(pid, tid, tmid) {
+            task.find('.btn-start').unbind().click(function(pid, tid, tmid) {
                 return function() {
                     startTask(pid, tid, tmid);
                 };
             }(currentTask.project, currentTask.id, new Date().getTime()));
         }
 
-        task.find('.btn-delete').click(function(pid, tid) {
+        task.find('.btn-delete').unbind().click(function(pid, tid) {
             return function() {
                 if (confirm("Are you sure you want to delete this task?"))
                     deleteTask(pid, tid);
@@ -99,24 +99,30 @@ refreshTasks = function() {
         for(var pid in projects){
             var project = projectTemplate.clone();
             var currentProject = projects[pid];
-            project.text(currentProject);
+            project.text(currentProject.title);
             project.appendTo(projectListContainer);
 
-            $('<option value="' + pid + '">' + currentProject + '</option>')
+            $('<option value="' + pid + '">' + currentProject.title + '</option>')
                 .appendTo(projectSelect);
         }
     }
 
 
-    $("#add-project-btn").click(function() {
+    $("#add-project-btn").unbind().click(function() {
         var title = $("#new-project-title-input").val();
+        if (title == "")
+            return;
         $("#new-project-title-input").val("");
         addProject(title);
     });
 
-    $("#add-task-modal-btn").click(function() {
+    $("#add-task-modal-btn").unbind().click(function() {
         var title = $("#task-title-input").val();
+        if (title == "")
+            return;
         var pid = $("#project-select").val();
+        if (!pid || pid == "")
+            return;
         $("#task-title-input").val("");
         addTask(pid, title);
     });
