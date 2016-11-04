@@ -5,11 +5,13 @@ function refreshDashboard() {
     $("#username").html(currentUser.displayName);
 }
 
+var currentTab = '#tab-tasks';
+
 refreshTasks = function() {
     $('#preload').slideUp('fast', function(){
         $('header').slideDown();
         $('main').fadeIn('slow', function(){
-            showTab($('#tab-tasks'));
+            showTab($(currentTab));
         });
     });
 
@@ -135,6 +137,7 @@ refreshTasks = function() {
         });
         $('.tab-content').hide();
         $(tab.data('target')).fadeIn();
+        currentTab = '#' + tab.prop('id');
     }
 
     $('.tab').on('click', function(){
