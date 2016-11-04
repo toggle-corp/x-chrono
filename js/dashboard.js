@@ -63,12 +63,12 @@ refreshTasks = function() {
 
         if (active) {
             task.find('.btn-start').text("Stop");
-            task.find('.btn-start').unbind().click(function(pid, tid, tmid, st, et) {
+            task.find('.btn-start').unbind().click(function(pid, tid, tmid, st) {
                 return function() {
-                    updateTask(pid, tid, tmid, st, et);
+                    updateTask(pid, tid, tmid, st, new Date().getTime());
                 }
             }(currentTask.project, currentTask.id, active.id,
-              active.start_time.getTime(), new Date().getTime()));
+              active.start_time.getTime()));
         }
         else {
             task.find('.btn-start').text("Start");
@@ -96,6 +96,7 @@ refreshTasks = function() {
         projectListContainer.empty();
 
         var projectSelect = $("#project-select");
+        projectSelect.empty();
 
         var projectTemplate = $('<a href="#" class="project"></a>');
         for(var pid in projects){
