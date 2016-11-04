@@ -7,12 +7,14 @@ var chartLoaded = false;
 function drawEmptyChart() {
     $('#line-chart-div').html("No data available for this project");
     $('#timeline-div').html("");
+    $("#report-div").html("");
 }
 
 function drawChart() {
     chartLoaded = true;
 
     if (activeProject) {
+        var totalHours = {};
 
         // First draw the line chart
         var data = new google.visualization.DataTable();
@@ -21,6 +23,8 @@ function drawChart() {
         for (var i in activeProject) {
             var info = activeProject[i];
             data.addColumn('number', users[info.uid].username);
+
+            totalHours[users[info.uid].username] = 0;
         }
 
         var dates = [];
@@ -42,8 +46,11 @@ function drawChart() {
             var date = dates[d];
             var temp = [date];
             for (var i in activeProject) {
-                if (activeProject[i].hours[date])
+                if (activeProject[i].hours[date]) {
                     temp.push(activeProject[i].hours[date]);
+                    totalHours[users[activeProject[i].uid].username] +=
+                        activeProject[i].hours[date];
+                }
                 else
                     temp.push(0);
             }
@@ -96,6 +103,13 @@ function drawChart() {
 
         var timeline = new google.visualization.Timeline(document.getElementById('timeline-div'));
         timeline.draw(dataTable);
+
+        var report = "";
+        for (var username in totalHours) {
+            report += "<b>" + username + " :</b> " +
+                getInterval(totalHours[username]*3600000) + "<br>";
+        }
+        $("#report-div").html(report);
     }
 }
 
