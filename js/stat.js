@@ -51,14 +51,16 @@ function refreshStat() {
 
         var projectItem = $('<a href="#">' + projectTitle + '</a>');
         projectItem.appendTo(projectsContainer);
-        projectItem.unbind().click(function(title) {
+        projectItem.unbind().click(function(item, title) {
             return function() {
+                $('#project-list .active').removeClass('active');
+                item.addClass('active');
                 activeProject = projects[title];
                 if (chartLoaded) {
                     drawChart();
                 }
             }
-        }(projectTitle));
+        }(projectItem, projectTitle));
     }
 }
 
