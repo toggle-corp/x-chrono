@@ -8,7 +8,9 @@ function refreshDashboard() {
 refreshTasks = function() {
     $('#preload').slideUp('fast', function(){
         $('header').slideDown();
-        $('main').fadeIn();
+        $('main').fadeIn('slow', function(){
+            showTab($('#tab-tasks'));
+        });
     });
 
     var taskTemplate = $(".task-template");
@@ -28,6 +30,9 @@ refreshTasks = function() {
 
         var timeContainer = task.find('.time-list');
         var active = null;
+        if(currentTask.times.length == 0){
+            $('<p class="empty-text">No time data found</p>').appendTo(timeContainer);
+        }
         for(var j=0; j < currentTask.times.length; j++){
             var startTime = currentTask.times[j].start_time;
             var endTime = currentTask.times[j].end_time;
@@ -81,6 +86,7 @@ refreshTasks = function() {
 
         task.appendTo(taskContainer);
         task.show();
+
     }
 
     if (projects) {
@@ -113,5 +119,19 @@ refreshTasks = function() {
         var pid = $("#project-select").val();
         $("#task-title-input").val("");
         addTask(pid, title);
+    });
+
+    function showTab(tab){
+        var tabBar = tab.parent().find('.tab-active-bar');
+        tabBar.animate({
+            left: parseInt(tab.position().left)+'px',
+            width: parseInt(tab.innerWidth())+'px'
+        });
+        $('.tab-content').hide();
+        $(tab.data('target')).fadeIn();
+    }
+
+    $('.tab').on('click', function(){
+        showTab($(this));
     });
 }

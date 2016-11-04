@@ -118,7 +118,12 @@
         <h1>Chrono</h1>
     </header>
     <main hidden>
-        <section id="tasks">
+        <div class="tabs">
+            <a class="tab" id="tab-tasks" data-target="#tasks">Tasks</a>
+            <a class="tab" id="tab-projects" data-target="#projects">projects</a>
+            <span class="tab-active-bar"></span>
+        </div>
+        <section id="tasks" hidden class="tab-content">
             <div class="container-fluid">
                 <a href='#' data-toggle="modal" data-target="#add-task-modal" id="add-task-btn">Add Task</a>
                 <h2>Tasks</h2>
@@ -130,7 +135,7 @@
                 </div>
             </div>
         </section>
-        <section id="projects">
+        <section id="projects" hidden class="tab-content">
             <div class="container-fluid">
                 <h2>Projects</h2>
                 <div class="row">
