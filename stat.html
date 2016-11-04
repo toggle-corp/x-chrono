@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto|Source+Sans+Pro" rel="stylesheet">
 
     <!--Google Charts API-->
-    <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <!--Firebase-->
     <script src="https://www.gstatic.com/firebasejs/3.5.3/firebase.js"></script>
@@ -38,9 +38,28 @@
     <script type="text/javascript" src="js/stat.js"></script>
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/stat.css">
+
 </head>
 
 <body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <h3>Projects</h3>
+                <div id="project-list">
+                    <!-- <a href="#">Project 1</a>
+                    <a href="#">Project 2</a>
+                    <a href="#">Project 3</a> -->
+                </div>
+            </div>
+            <div class="col-md-9">
+                <main>
+                    <div id='chart-div' ></div>
+                </main>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
