@@ -45,7 +45,7 @@ refreshTasks = function() {
                 time.find(".duration").text('active');
                 active = currentTask.times[j];
             } else {
-                time.find(".duration").text( ((endTime-startTime)/(1000*3600)).toFixed(2) + ' hrs' );
+                time.find(".duration").text(getInterval(endTime-startTime));
             }
 
             time.find('.delete-btn').unbind().click(function(pid, tid, tmid) {
