@@ -1,40 +1,101 @@
-google.charts.load('current', {'packages':['line']});
+google.charts.load('current', {'packages':['line', 'timeline']});
 google.charts.setOnLoadCallback(drawChart);
 
 var activeProject = null;
 var chartLoaded = false;
 
+function drawEmptyChart() {
+    $('#line-chart-div').html("No data available for this project");
+    $('#timeline-div').html("");
+}
+
 function drawChart() {
     chartLoaded = true;
 
     if (activeProject) {
+
+        // First draw the line chart
         var data = new google.visualization.DataTable();
-        data.addColumn('number', 'Day');
+        data.addColumn('string', 'Day');
 
         for (var i in activeProject) {
             var info = activeProject[i];
-            console.log(users[info.uid]);
             data.addColumn('number', users[info.uid].username);
         }
 
-        for (var j=0; j<15; ++j) {
-            var temp = [j+1];
-            for (var i in activeProject)
-                temp.push(Math.random()*50);
+        var dates = [];
+        for (var i in activeProject) {
+            var info = activeProject[i];
+            var keys = Object.keys(info.hours);
+            for (var h in keys) {
+                if (dates.indexOf(keys[h]) < 0)
+                    dates.push(keys[h]);
+            }
+        }
+
+        if (dates.length <= 0) {
+            drawEmptyChart();
+            return;
+        }
+
+        for (var d in dates) {
+            var date = dates[d];
+            var temp = [date];
+            for (var i in activeProject) {
+                if (activeProject[i].hours[date])
+                    temp.push(activeProject[i].hours[date]);
+                else
+                    temp.push(0);
+            }
+
             data.addRow(temp);
         }
 
-        var options = {
-            chart: {
-              title: 'Box Office Earnings in First Two Weeks of Opening',
-              subtitle: 'in millions of dollars (USD)'
-            },
+        var lineChartOptions = {
             width: 900,
-            height: 500
+            height: 300
         };
+        
+        $("main").show();
 
-        var chart = new google.charts.Line(document.getElementById('chart-div'));
-        chart.draw(data, options);
+        var lineChart = new google.charts.Line(document.getElementById('line-chart-div'));
+        lineChart.draw(data, lineChartOptions);
+
+        // Next draw the timeline
+        var dataTable = new google.visualization.DataTable();
+        dataTable.addColumn({type: 'string', id: 'Name'});
+        dataTable.addColumn({type: 'string', id: 'Task'});
+        dataTable.addColumn({type: 'date', id: 'Start'});
+        dataTable.addColumn({type: 'date', id: 'End'});
+
+        for (var i in activeProject) {
+            var info = activeProject[i];
+            var user = users[info.uid];
+            var project = user.projects[info.id];
+
+            if (project.tasks)
+            for (var t in project.tasks) {
+                var task = project.tasks[t];
+
+                if (task.times)
+                for (var tm in task.times) {
+                    var time = task.times[tm];
+
+                    if (time.start_time < time.end_time) {
+                        var temp = [
+                            users[info.uid].username,
+                            task.title,
+                            new Date(time.start_time),
+                            new Date(time.end_time)
+                        ];
+                        dataTable.addRow(temp);
+                    }
+                }
+            }
+        }
+
+        var timeline = new google.visualization.Timeline(document.getElementById('timeline-div'));
+        timeline.draw(dataTable);
     }
 }
 
@@ -51,14 +112,20 @@ function refreshStat() {
 
         var projectItem = $('<a href="#">' + projectTitle + '</a>');
         projectItem.appendTo(projectsContainer);
-        projectItem.unbind().click(function(title) {
+        projectItem.unbind().click(function(item, title) {
             return function() {
+                $('#project-list .active').removeClass('active');
+                item.addClass('active');
                 activeProject = projects[title];
                 if (chartLoaded) {
                     drawChart();
                 }
             }
-        }(projectTitle));
+        }(projectItem, projectTitle));
+    }
+
+    if (chartLoaded) {
+        drawChart();
     }
 }
 
@@ -81,9 +148,13 @@ var dbListener = function(snapshot) {
                         projects[project.title.toLowerCase()] = [];
                     }
 
+                    var hours = {};
+                    getHours(hours, project);
+
                     projects[project.title.toLowerCase()].push({
                         id: p,
-                        uid: u
+                        uid: u,
+                        hours: hours
                     });
                 }
             }
@@ -93,3 +164,26 @@ var dbListener = function(snapshot) {
     refreshStat();
 }
 database.ref("users").on("value", dbListener);
+
+function getHours(hours, project) {
+    if (project.tasks)
+    for (t in project.tasks) {
+        var task = project.tasks[t];
+
+        if (task.times)
+        for (var tm in task.times) {
+            var time = task.times[tm];
+
+            if (time.start_time < time.end_time) {
+                var date = new Date(time.start_time).toLocaleDateString();
+
+                if (!hours)
+                    hours = [];
+                if (!hours[date])
+                    hours[date] = 0;
+
+                hours[date] += (time.end_time - time.start_time) / 3600000.0;
+            }
+        }
+    }
+}

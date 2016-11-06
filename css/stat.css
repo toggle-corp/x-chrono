@@ -15,20 +15,25 @@ a, a:hover, a:active, a:visited, a:focus{
 
 
 main{
-    height: 548px;
     padding: 24px;
     background-color: #fff;
-    margin: 24px auto auto auto;
+    margin: 16px auto auto auto;
     box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.3);
+}
+
+#line-chart-container {
+    
 }
 
 h3{
     font-size: 1.2em;
     font-weight: 400;
     text-transform: uppercase;
+    margin-bottom: 16px;
+    color: #8347b3;
 }
 #project-list{
-
+    box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.3);
 }
 
 #project-list a{
@@ -40,4 +45,8 @@ h3{
 }
 #project-list a:hover{
     background-color: #f5f5f5;
+}
+#project-list .active{
+    background-color: #fafafa;
+    border-right: 2px solid #8347b3;
 }
