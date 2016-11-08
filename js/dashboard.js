@@ -92,11 +92,11 @@ refreshTasks = function() {
         }
         else {
             task.find('.btn-start').text("Start");
-            task.find('.btn-start').unbind().click(function(pid, tid, tmid) {
+            task.find('.btn-start').unbind().click(function(pid, tid) {
                 return function() {
-                    startTask(pid, tid, tmid);
+                    startTask(pid, tid, new Date().getTime());
                 };
-            }(currentTask.project, currentTask.id, new Date().getTime()));
+            }(currentTask.project, currentTask.id));
         }
 
         task.find('.btn-delete').unbind().click(function(pid, tid) {

@@ -88,11 +88,11 @@ section  h2{
 .task .time-list{
     font-family: 'Roboto', sans-serif;
 }
-.task .duration, .task .delete-btn{
+.task .duration, .task .edit-btn, .task .delete-btn{
     float: right;
     color: #969696;
 }
-.task .delete-btn{
+ .task .edit-btn, .task .delete-btn{
     margin-left: 24px;
 }
 .task .time{
