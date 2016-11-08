@@ -7,6 +7,8 @@ function refreshDashboard() {
 
 var currentTab = '#tab-tasks';
 
+var activeTime = null;
+
 refreshTasks = function() {
     $('#preload').slideUp('fast', function(){
         $('header').slideDown();
@@ -56,6 +58,24 @@ refreshTasks = function() {
                         deleteTime(pid, tid, tmid);
                 }
             } (currentTask.project, currentTask.id, currentTask.times[j].id));
+
+            time.find('.edit-btn').unbind().click(function(pid, tid, tmid, st, et) {
+                return function() {
+                    $("#edit-time-modal").modal('show');
+                    var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+
+                    var s = new Date(st.getTime()-tzoffset);
+                    var e = new Date(et.getTime()-tzoffset);
+                    s.setMilliseconds(0);
+                    e.setMilliseconds(0);
+
+                    $("#start-time-input").val(s.toISOString().slice(0, -1));
+                    $("#end-time-input").val(e.toISOString().slice(0, -1));
+
+                    activeTime = [pid, tid, tmid];
+                }
+            } (currentTask.project, currentTask.id, currentTask.times[j].id,
+               startTime, endTime));
 
             time.appendTo(timeContainer);
             time.show();
@@ -143,5 +163,21 @@ refreshTasks = function() {
 
     $('.tab').on('click', function(){
         showTab($(this));
+    });
+
+
+    $("#save-time-modal-btn").unbind().click(function() {
+        if (!activeTime)
+            return;
+
+        var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+        var st = new Date($("#start-time-input").val());
+        var et = new Date($("#end-time-input").val());
+
+        st = new Date(st.getTime() + tzoffset);
+        et = new Date(et.getTime() + tzoffset);
+        
+        updateTask(activeTime[0], activeTime[1], activeTime[2],
+            st.getTime(), et.getTime());
     });
 }
