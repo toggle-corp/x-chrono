@@ -37,6 +37,8 @@ function drawChart() {
             }
         }
 
+        dates.sort().reverse();
+
         if (dates.length <= 0) {
             drawEmptyChart();
             return;
