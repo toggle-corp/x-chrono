@@ -68,7 +68,7 @@ function addDBListener() {
                         }
 
                         newTask.times.sort(function(t1, t2) {
-                            return t1.start_time < t2.start_time;
+                            return t2.start_time - t1.start_time;
                         });
                         tasks.push(newTask);
                     }
@@ -77,7 +77,7 @@ function addDBListener() {
         }
 
         tasks.sort(function(t1, t2) {
-            return t1.created_at < t2.created_at;
+            return t2.created_at - t1.created_at;
         });
 
         if (refreshTasks)

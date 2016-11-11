@@ -38,7 +38,7 @@ function drawChart() {
         }
 
         dates.sort(function(d1, d2){
-            return new Date(d1) > new Date(d2);
+            return new Date(d1) - new Date(d2);
         });
 
         if (dates.length <= 0) {
