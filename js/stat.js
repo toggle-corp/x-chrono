@@ -37,7 +37,9 @@ function drawChart() {
             }
         }
 
-        dates.sort().reverse();
+        dates.sort(function(d1, d2){
+            return new Date(d1) > new Date(d2);
+        });
 
         if (dates.length <= 0) {
             drawEmptyChart();
@@ -92,7 +94,7 @@ function drawChart() {
 
                     if (time.start_time < time.end_time) {
                         var temp = [
-                            users[info.uid].username,
+                            user.username,
                             task.title,
                             new Date(time.start_time),
                             new Date(time.end_time)
