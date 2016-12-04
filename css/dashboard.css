@@ -184,6 +184,7 @@ section  h2{
     border: none;
     border-radius: 0;
     box-shadow: none;
+    text-transform: none;
 }
 option{
     padding: 10px;
@@ -217,3 +218,6 @@ option{
     background-color: #f0f0f0;
     border: none;
 }
+
+
+.ui-autocomplete { z-index:2147483647; }

@@ -128,6 +128,37 @@ refreshTasks = function() {
             $('<option value="' + pid + '">' + currentProject.title + '</option>')
                 .appendTo(projectSelect);
         }
+
+        // Fill the autocomplete
+        var project = projects[projectSelect.val()];
+        if (project) {
+            var tids = project.team.split(':');
+            if (teams[tids[0]]) {
+                var taskList = [];
+                var teamProject = teams[tids[0]].projects[tids[1]];
+                for (var t in teamProject.tasks)
+                    taskList.push(teamProject.tasks[t].title);
+                $("#task-title-input").autocomplete({source: taskList});
+            }
+        }
+    }
+
+    if (teams) {
+        var teamSelector = $("#new-project-team");
+        for (var teamId in teams) {
+            var team = teams[teamId];
+            var teamView = $('<option value="' + teamId + '">' + team.name + '</option>');
+            teamView.appendTo(teamSelector);
+        }
+
+        // Fill the autocomplete
+        var team = teams[teamSelector.val()];
+        if (team) {
+            var projectList = [];
+            for (var p in team.projects)
+                projectList.push(team.projects[p].title);
+            $("#new-project-title-input").autocomplete({source: projectList});
+        }
     }
 
 
@@ -135,8 +166,12 @@ refreshTasks = function() {
         var title = $("#new-project-title-input").val();
         if (title == "")
             return;
+        var teamId = $("#new-project-team").val();
+        if (teamId == null || teamId == "")
+            return;
+
         $("#new-project-title-input").val("");
-        addProject(title);
+        addProject(teamId, title);
     });
 
     $("#add-task-modal-btn").unbind().click(function() {
@@ -179,5 +214,25 @@ refreshTasks = function() {
 
         updateTask(activeTime[0], activeTime[1], activeTime[2],
             st.getTime(), et.getTime());
+    });
+
+    $("#new-project-team").unbind().change(function() {
+        var team = teams[$(this).val()];
+        var projectList = [];
+        for (var p in team.projects)
+            projectList.push(team.projects[p].title);
+        $("#new-project-title-input").autocomplete({source: projectList});
+    });
+    
+    $("#project-select").unbind().change(function() {
+        var project = projects[$(this).val()];
+        if (project) {
+            var taskList = [];
+            var tids = project.team.split(':');
+            var teamProject = teams[tids[0]].projects[tids[1]];
+            for (var t in teamProject.tasks)
+                taskList.push(teamProject.tasks[t].title);
+            $("#task-title-input").autocomplete({source: taskList});
+        }
     });
 }
