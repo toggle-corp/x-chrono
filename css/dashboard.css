@@ -11,7 +11,7 @@ a, a:hover, a:active, a:visited, a:focus{
     color: #717171;
 }
 
-button, a, input[type="text"]{
+button, a{
     text-transform: uppercase;
 }
 
@@ -72,6 +72,11 @@ section  h2{
     color: #fff;
     float: right;
     margin-right: 16px;
+    box-shadow: 0 3px 10px -3px #000;
+    transition: 0.2s all ease-in-out;
+}
+#add-task-btn:active{
+    box-shadow: 0 3px 5px -3px #000;
 }
 #add-task-btn i{
     margin-right: 10px;
@@ -148,22 +153,44 @@ section  h2{
 #project-form{
     margin-bottom: 24px;
 }
+#project-form label{
+    text-transform: uppercase;
+    font-size: 0.9em;
+    width: 23%;
+    color: #969696;
+}
+#project-form #new-project-team{
+    width: 76%;
+    background-color: #fff;
+    border: none;
+    padding: 6px 10px;
+    outline: none;
+    margin-bottom: 24px;
+    box-shadow: 0 3px 7px -3px rgba(0, 0, 0, 0.3);
+}
 #project-form #new-project-title-input{
     width: 75%;
     border: none;
     background-color: #fff;
     box-shadow: none;
-    padding: 5px 10px;
+    padding: 6px 10px;
     outline: none;
+    box-shadow: 0 3px 7px -3px rgba(0, 0, 0, 0.3);
 }
 #project-form #add-project-btn{
     width: 20%;
     border: none;
     background-color: #8347b3;
     color: #fff;
-    padding: 5px 10px;
+    padding: 6px 10px;
     float: right;
     text-transform: uppercase;
+    box-shadow: 0 3px 10px -3px #000;
+    outline: none;
+    transition: 0.2s all ease-in-out;
+}
+#project-form #add-project-btn:active{
+    box-shadow: 0 3px 5px -3px #000;
 }
 
 .empty-text{
