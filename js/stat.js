@@ -1,6 +1,7 @@
 google.charts.load('current', {'packages':['line', 'timeline']});
 google.charts.setOnLoadCallback(drawChart);
 
+var activeProjectTitle = null;
 var activeProject = null;
 var chartLoaded = false;
 
@@ -132,9 +133,13 @@ function refreshStat() {
         projectItem.appendTo(projectsContainer);
         projectItem.unbind().click(function(item, title) {
             return function() {
+                $('#export-container').show();
+
                 $('#project-list .active').removeClass('active');
                 item.addClass('active');
                 activeProject = projects[title];
+                activeProjectTitle = title;
+
                 if (chartLoaded) {
                     drawChart();
                 }
@@ -203,5 +208,104 @@ function getHours(hours, project) {
                 hours[date] += (time.end_time - time.start_time) / 3600000.0;
             }
         }
+    }
+}
+
+
+function exportHours() {
+    if (activeProject) {
+        var allTasks = {};
+        var allUsers = {};
+        var totalHours = 0;
+
+        // Collect data, for each user in the active project
+        for (var i in activeProject) {
+            var info = activeProject[i];
+            var user = users[info.uid];
+            var project = user.projects[info.id];
+
+            // For each task of the user in the project
+            if (project.tasks)
+            for (var t in project.tasks) {
+                var task = project.tasks[t];
+
+                // Get total hours for each task and each user
+
+                if (!(task.title.toLowerCase() in allTasks))
+                    allTasks[task.title.toLowerCase()] = { totalHours: 0, userHours: {} };
+
+                if (!(user.username in allTasks[task.title.toLowerCase()].userHours)) {
+                    allTasks[task.title.toLowerCase()].userHours[user.username] = 0;
+                }
+
+                if (task.times)
+                for (var tm in task.times) {
+                    var time = task.times[tm];
+
+                    if (time.start_time < time.end_time) {
+                        var hours = (time.end_time - time.start_time) / 3600000.0;
+
+                        allTasks[task.title.toLowerCase()].userHours[user.username] += hours;
+                        allTasks[task.title.toLowerCase()].totalHours += hours;
+
+                        if (!(user.username in allUsers))
+                            allUsers[user.username] = 0;
+
+                        allUsers[user.username] += hours;
+                        totalHours += hours;
+                    }
+                }
+            }
+        }
+
+        var tableContainer = $('<div></div>');
+        var table = $('<table></table>');
+        tableContainer.append(table);
+
+        var heading = $('<tr></tr>');
+        table.append(heading);
+
+        heading.append('<th>Tasks</th>');
+        for (var user in allUsers) {
+            heading.append('<th>' + user + '</th>');
+        }
+        heading.append('<th>Total</th>');
+
+        for (var task in allTasks) {
+            var row = $('<tr></tr>');
+            table.append(row);
+
+            row.append('<td>' + task[0].toUpperCase() + task.slice(1) + '</td>');
+            for (var user in allUsers) {
+                if (user in allTasks[task].userHours)
+                    row.append('<td>' + Math.round(allTasks[task].userHours[user]) + '</td>')
+                else
+                    row.append('<td>0</td>')
+            }
+            row.append('<td>' + Math.round(allTasks[task].totalHours) + '</td>')
+        }
+
+        table.append($('<tr></tr>'));
+        var totalRow = $('<tr></tr>');
+        table.append(totalRow);
+
+        totalRow.append($('<td>Total</td>'));
+        for (var user in allUsers) {
+            totalRow.append('<td>' + Math.round(allUsers[user]) + '</td>');
+        }
+        totalRow.append('<td>' + Math.round(totalHours) + '</td>');
+
+        // var newWindow = window.open('', '_blank');
+        // newWindow.document.write(tableContainer.html());
+        // newWindow.document.title = activeProjectTitle.toUpperCase() + ' HOUR BREAKDOWN';
+        // window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tableContainer.html()));
+        var d = new Date()
+		var df = d.getMonth()+'-'+d.getDate()+'-'+d.getYear()+' '+(d.getHours()+1)+'_'+d.getMinutes();
+        table.table2excel({
+            exclude: ".excludeThisClass",
+            name: activeProjectTitle.toUpperCase(),
+            filename: activeProjectTitle.toUpperCase() + ' HOUR BREAKDOWN ' + df,
+            fileext: ".xls",
+        }); 
     }
 }

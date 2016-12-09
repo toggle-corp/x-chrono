@@ -32,6 +32,7 @@
     <!--Jquery and bootstrap-->
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jquery.table2excel.min.js"></script>
 
     <!--Custom scripts-->
     <script type="text/javascript" src="js/utils.js"></script>
@@ -51,6 +52,9 @@
                     <!-- <a href="#">Project 1</a>
                     <a href="#">Project 2</a>
                     <a href="#">Project 3</a> -->
+                </div>
+                <div id="export-container" style="margin: 15px;" hidden>
+                    <button class="btn btn-primary" onclick="exportHours();">Export Hour Breakdown</button>
                 </div>
             </div>
             <div class="col-md-9">
