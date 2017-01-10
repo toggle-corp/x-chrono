@@ -1,0 +1,20 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    background-color: #f5f5f5;
+    color: #616161;
+
+    a{
+        font-family: 'Roboto', sans-serif;
+        text-transform: uppercase;
+        text-decoration: none;
+        outline: none;
+
+        &:hover, &:active, &:visited, &:focus{
+            text-decoration: none;
+            outline: none;
+            color: #717171;
+        }
+    }
+}

@@ -223,7 +223,7 @@ refreshTasks = function() {
             projectList.push(team.projects[p].title);
         $("#new-project-title-input").autocomplete({source: projectList});
     });
-    
+
     $("#project-select").unbind().change(function() {
         var project = projects[$(this).val()];
         if (project) {

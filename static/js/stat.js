@@ -9,6 +9,7 @@ function drawEmptyChart() {
     $('#line-chart-div').html("No data available for this project");
     $('#timeline-div').html("");
     $("#report-div").html("");
+    $("#report-after-mark-div").html("");
 }
 
 function drawChart() {
@@ -16,6 +17,7 @@ function drawChart() {
 
     if (activeProject) {
         var totalHours = {};
+        var totalAfterHours = {};
 
         // First draw the line chart
         var data = new google.visualization.DataTable();
@@ -26,6 +28,7 @@ function drawChart() {
             data.addColumn('number', users[info.uid].username);
 
             totalHours[users[info.uid].username] = 0;
+            totalAfterHours[users[info.uid].username] = 0;
         }
 
         var dates = [];
@@ -63,11 +66,12 @@ function drawChart() {
             data.addRow(temp);
         }
 
+
         var lineChartOptions = {
             width: 900,
             height: 300
         };
-        
+
         $("main").show();
 
         var lineChart = new google.charts.Line(document.getElementById('line-chart-div'));
@@ -115,6 +119,37 @@ function drawChart() {
                 getInterval(totalHours[username]*3600000) + "<br>";
         }
         $("#report-div").html(report);
+
+        if ($('#get-mark-date').val() != '' && $('#get-mark-date').val() != null) {
+            var afterDates = [];
+            var mark = new Date($('#get-mark-date').val());
+            for(var i = 0; i<dates.length; i++){
+                var date = dates[i];
+                if (new Date(date).getTime() > mark.getTime()){
+                    afterDates.push(date);
+                }
+            }
+            for (var d in afterDates) {
+                var date = afterDates[d];
+                var temp = [date];
+                for (var i in activeProject) {
+                    if (activeProject[i].hours[date]) {
+                        temp.push(activeProject[i].hours[date]);
+                        totalAfterHours[users[activeProject[i].uid].username] +=
+                            activeProject[i].hours[date];
+                    }
+                    else
+                        temp.push(0);
+                }
+                data.addRow(temp);
+            }
+            var report = "";
+            for (var username in totalHours) {
+                report += "<b>" + username + " :</b> " +
+                    getInterval(totalAfterHours[username]*3600000) + "<br>";
+            }
+            $("#report-after-mark-div").html(report);
+        }
     }
 }
 
@@ -187,30 +222,36 @@ var dbListener = function(snapshot) {
     refreshStat();
 }
 database.ref("users").on("value", dbListener);
+$(document).ready(function() {
+    $('#get-mark-date').change(function() {
+        refreshStat();
+    });
+});
 
 function getHours(hours, project) {
-    if (project.tasks)
-    for (t in project.tasks) {
-        var task = project.tasks[t];
+    if (project.tasks){
+        for (t in project.tasks) {
+            var task = project.tasks[t];
 
-        if (task.times)
-        for (var tm in task.times) {
-            var time = task.times[tm];
+            if (task.times){
+                for (var tm in task.times) {
+                    var time = task.times[tm];
 
-            if (time.start_time < time.end_time) {
-                var date = new Date(time.start_time).toLocaleDateString();
+                    if (time.start_time < time.end_time) {
+                        var date = new Date(time.start_time).toLocaleDateString();
 
-                if (!hours)
-                    hours = [];
-                if (!hours[date])
-                    hours[date] = 0;
+                        if (!hours)
+                        hours = [];
+                        if (!hours[date])
+                        hours[date] = 0;
 
-                hours[date] += (time.end_time - time.start_time) / 3600000.0;
+                        hours[date] += (time.end_time - time.start_time) / 3600000.0;
+                    }
+                }
             }
         }
     }
 }
-
 
 function exportHours() {
     if (activeProject) {
@@ -306,6 +347,6 @@ function exportHours() {
             name: activeProjectTitle.toUpperCase(),
             filename: activeProjectTitle.toUpperCase() + ' HOUR BREAKDOWN ' + df,
             fileext: ".xls",
-        }); 
+        });
     }
 }
