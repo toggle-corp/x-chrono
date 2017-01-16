@@ -123,9 +123,14 @@ function drawChart() {
         if ($('#get-mark-date').val() != '' && $('#get-mark-date').val() != null) {
             var afterDates = [];
             var mark = new Date($('#get-mark-date').val());
+            console.log(mark);
+            var newdate = new Date(mark);
+            newdate.setDate(newdate.getDate() - 1);
+            console.log(newdate);
+            mark = newdate;
             for(var i = 0; i<dates.length; i++){
                 var date = dates[i];
-                if (new Date(date).getTime() > mark.getTime()){
+                if (new Date(date).getTime() >= mark.getTime()){
                     afterDates.push(date);
                 }
             }
