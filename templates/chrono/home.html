@@ -1,0 +1,49 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Chrono</title>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyDV5SEaetn38UksDXF3a0mQPFY4UH1nPU4",
+        authDomain: "chrono-50f8f.firebaseapp.com",
+        databaseURL: "https://chrono-50f8f.firebaseio.com",
+        storageBucket: "chrono-50f8f.appspot.com",
+        messagingSenderId: "445187391"
+    };
+    firebase.initializeApp(config);
+
+    var userApi = "{% url 'user_api' %}";
+    </script>
+
+    <script src="{% static 'js/angular.min.js' %}"></script>
+    <script src="{% static 'js/sign-in.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+    <!-- <link rel="stylesheet" href="{% static 'css/main.css' %}"> -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500|Roboto:300,400,500" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+{% verbatim %}
+<body ng-app="chrono" ng-controller="mainController">
+    <header>
+        <h1>Chrono</h1>
+        <a><span>{{ auth.user.displayName }}</span><i class="fa fa-chevron-down"></i></a>
+    </header>
+    <main>
+
+    </main>
+</body>
+{% endverbatim %}
+</html>
