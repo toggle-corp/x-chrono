@@ -26,3 +26,4 @@ def get_json_request(request):
 # Standard responses
 JSON_METHOD_NOT_ALLOWED = JsonError('Method not allowed', status=405)
 INVALID_JSON_REQUEST = JsonError('Not a valid json data')
+INVALID_OBJECT_ID = JsonError('Object with given ID not found')

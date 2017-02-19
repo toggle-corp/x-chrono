@@ -1,0 +1,94 @@
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  background-color: #f0f0f0;
+  color: #515151;
+  line-height: 1.8; }
+  body a, body a:hover, body a:visited, body a:active, body a:focus {
+    outline: none;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 500;
+    cursor: pointer; }
+
+body {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  height: 100vh;
+  overflow: hidden; }
+  body h1, body h2, body h3, body h4 {
+    margin: 0;
+    text-transform: uppercase; }
+  body > header {
+    flex-basis: 100%;
+    height: 80px;
+    background-color: #8e44ad;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    z-index: 1;
+    box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.7); }
+    body > header h1 {
+      font-weight: 300; }
+    body > header a .fa {
+      margin-left: 10px; }
+  body aside {
+    flex-basis: 30%;
+    background-color: #fff;
+    height: calc(100vh - 80px);
+    box-shadow: 5px 0 15px -5px rgba(0, 0, 0, 0.3); }
+    body aside #search-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 48px;
+      padding: 10px 16px;
+      box-sizing: border-box;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.1); }
+      body aside #search-box .fa {
+        width: 32px;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.3); }
+      body aside #search-box input {
+        width: calc(100% - 32px);
+        border: none;
+        height: 32px;
+        outline: none; }
+    body aside #users .user {
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between; }
+      body aside #users .user .avatar {
+        width: 48px;
+        height: 48px;
+        object-fit: contain; }
+      body aside #users .user .user-info {
+        flex-basis: calc(100% - 48px - calc(1ex * 6));
+        padding: 0 16px; }
+        body aside #users .user .user-info .name {
+          font-weight: 500;
+          text-transform: uppercase; }
+        body aside #users .user .user-info .extra {
+          color: rgba(0, 0, 0, 0.5); }
+      body aside #users .user .amount {
+        flex-basis: calc(1ex * 6);
+        font-family: 'Roboto Mono', monospace;
+        text-align: right;
+        font-size: 24px; }
+  body main {
+    flex-basis: 70%;
+    height: calc(100vh - 80px);
+    overflow-y: auto; }
+    body main .user-detail {
+      height: 100vh;
+      overflow: hidden; }
+      body main .user-detail header {
+        height: 112px;
+        background-color: tomato; }
+
+/*# sourceMappingURL=main.css.map */

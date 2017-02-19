@@ -1,0 +1,110 @@
+@import 'base';
+
+body{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    height: 100vh;
+    overflow: hidden;
+
+    h1, h2, h3, h4{
+        margin: 0;
+        text-transform: uppercase;
+    }
+    > header{
+        flex-basis: 100%;
+        height: $header-height;
+        background-color: $primary-color;
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 24px;
+        z-index: 1;
+        box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.7);
+
+        h1{
+            font-weight: 300;
+        }
+        a{
+            .fa{
+                margin-left: 10px;
+            }
+        }
+    }
+    aside{
+        flex-basis: 30%;
+        background-color: #fff;
+        height: calc(100vh - #{$header-height});
+        box-shadow: 5px 0 15px -5px rgba(0, 0, 0, 0.3);
+
+        #search-box{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 48px;
+            padding: 10px 16px;
+            box-sizing: border-box;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+
+            .fa{
+                width: 32px;
+                text-align: center;
+                color: rgba(0, 0, 0, 0.3);
+            }
+            input{
+                width: calc(100% - 32px);
+                border: none;
+                height: 32px;
+                outline: none;
+            }
+        }
+
+        #users{
+            .user{
+                padding: 10px 16px;
+                display: flex;
+                justify-content: space-between;
+
+                .avatar{
+                    width: 48px;
+                    height: 48px;
+                    object-fit: contain;
+                }
+                .user-info{
+                    flex-basis: calc(100% - 48px - calc(1ex * 6));
+                    padding: 0 16px;
+
+                    .name{
+                        font-weight: $font-weight-bold;
+                        text-transform: uppercase;
+                    }
+                    .extra{
+                        color: $label-color;
+                    }
+                }
+                .amount{
+                    flex-basis: calc(1ex * 6);
+                    font-family: 'Roboto Mono', monospace;
+                    text-align: right;
+                    font-size: $font-size-sl;
+                }
+            }
+        }
+    }
+    main{
+        flex-basis: 70%;
+        height: calc(100vh - #{$header-height});
+        overflow-y: auto;
+
+        .user-detail{
+            height: 100vh;
+            overflow: hidden;
+
+            header{
+                height: 112px;
+                background-color: tomato;
+            }
+        }
+    }
+}

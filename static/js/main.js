@@ -1,3 +1,4 @@
+
 var chrono = angular.module('chrono', []);
 
 chrono.controller('mainController',  ['$scope', '$http', function($scope, $http) {
@@ -11,8 +12,11 @@ chrono.controller('mainController',  ['$scope', '$http', function($scope, $http)
         // We are now signed in
         // Do everything here
 
-
-    }).catch(function(errorMessage) {
-        console.log(errorMessage);
+        database.init($scope, $http);
+        return database.loadAll().then(function() {
+            $scope.$apply();
+        });
+    }).catch(function(error) {
+        console.log(error);
     });
 }]);

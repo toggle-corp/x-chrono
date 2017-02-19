@@ -1,13 +1,15 @@
 
 let auth = {
     init: function($scope, $http) {
-        $scope.auth = {};
+        $scope.auth = this;
+        that = this;
         return new Promise(function(resolve, reject) {
 
             // First get current user and if not found, invoke sign in with redirect
             firebase.auth().onAuthStateChanged(function(user) {
                 if (user) {
-                    $scope.auth.user = user;
+                    that.user = user;
+                    that.userId = user.uid;
 
                     // Before doing anything, save/update the user in the database
                     // Save user details to db
@@ -24,7 +26,7 @@ let auth = {
                             resolve();
                 		},
                         function error(response) {
-                            reject("Cannot save user info to database\n" + JSON.stringify({data: error}))
+                            reject("Cannot save user info to database\n" + JSON.stringify({response: response}))
                 		}
                     );
                 }
@@ -36,7 +38,10 @@ let auth = {
 
             // Next handle the redirect result in case of error
             firebase.auth().getRedirectResult().then(function(result) {
-                this.user = result.user;
+                that.user = result.user;
+                if (result.user) {
+                    that.userId = result.user.uid;
+                }
             }).catch(function(error) {
                 let errorCode = error.code;
                 let errorMessage = error.message;
@@ -47,6 +52,5 @@ let auth = {
             });
 
         });
-        let provider = new firebase.auth.GoogleAuthProvider();
     }
 };

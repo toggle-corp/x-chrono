@@ -24,14 +24,18 @@
     };
     firebase.initializeApp(config);
 
-    var userApi = "{% url 'user_api' %}";
+    var userApi = '{% url "user_api" %}';
+    var projectApi = '{% url "project_api" %}';
+    var taskApi = '{% url "task_api" %}';
+    var entryApi = '{% url "entry_api" %}';
     </script>
 
     <script src="{% static 'js/angular.min.js' %}"></script>
     <script src="{% static 'js/sign-in.js' %}"></script>
+    <script src="{% static 'js/database.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
 
-    <!-- <link rel="stylesheet" href="{% static 'css/main.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500|Roboto:300,400,500" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
@@ -42,7 +46,17 @@
         <a><span>{{ auth.user.displayName }}</span><i class="fa fa-chevron-down"></i></a>
     </header>
     <main>
-
+        <div ng-repeat="project in db.projects">
+            <h2>{{ project.name }}</h2>
+            <div ng-repeat="task in project.tasks">
+                <h3>{{ task.name }}</h3>
+                <div ng-repeat="entry in task.entries">
+                    <span>{{ entry.startTime | date : 'medium' }}</span>
+                    <span ng-if="entry.endTime"> - {{ entry.endTime | date : 'medium' }}</span>
+                    <span ng-if="!entry.endTime">active</span>
+                </div>
+            </div>
+        </div>
     </main>
 </body>
 {% endverbatim %}

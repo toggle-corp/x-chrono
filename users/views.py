@@ -6,7 +6,6 @@ from chrono.json_utils import *
 from users.models import *
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class UserApiView(View):
 
     def post(self, request):
@@ -38,7 +37,7 @@ class UserApiView(View):
 
         data = []
         for user in users:
-            data.push({
+            data.append({
                 'userId': user.user_id,
                 'displayName': user.displayName,
                 'email': user.email,
@@ -48,7 +47,6 @@ class UserApiView(View):
         return JsonResult(data=data)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class TeamApiView(View):
 
     def post(self, request):
@@ -82,7 +80,7 @@ class TeamApiView(View):
 
         data = []
         for team in teams:
-            data.push({
+            data.append({
                 'teamId': team.pk,
                 'name': team.name,
                 'members': [

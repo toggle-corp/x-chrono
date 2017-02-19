@@ -8,7 +8,6 @@ from users.models import *
 from tasks.models import *
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class ProjectApiView(View):
 
     def post(self, request):
@@ -30,6 +29,17 @@ class ProjectApiView(View):
             'projectId': project.pk if created else None
         })
 
+    def delete(self, request):
+        data_in = get_json_request(request)
+        if data_in is None:
+            return INVALID_JSON_REQUEST
+
+        if 'projectId' not in data_in:
+            return INVALID_OBJECT_ID
+
+        Project.objects.filter(pk=data_in['projectId']).delete()
+        return JsonResult({'deleted': True})
+
     def get(self, request):
         projects = Project.objects.all()
 
@@ -47,7 +57,7 @@ class ProjectApiView(View):
 
         data = []
         for project in projects:
-            data.push({
+            data.append({
                 'projectId': project.pk,
                 'name': project.name,
                 'team': project.team.pk,
@@ -56,7 +66,6 @@ class ProjectApiView(View):
         return JsonResult(data=data)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class TaskApiView(View):
 
     def post(self, request):
@@ -77,6 +86,17 @@ class TaskApiView(View):
             'created': created,
             'taskid': task.pk if created else None
         })
+
+    def delete(self, request):
+        data_in = get_json_request(request)
+        if data_in is None:
+            return INVALID_JSON_REQUEST
+
+        if 'taskId' not in data_in:
+            return INVALID_OBJECT_ID
+
+        Task.objects.filter(pk=data_in['taskId']).delete()
+        return JsonResult({'deleted': True})
 
     def get(self, request):
         tasks = Task.objects.all()
@@ -109,13 +129,12 @@ class TaskApiView(View):
                         'endTime': dateformat.format(entry.end_time, 'U') if entry.end_time else None
                     } for entry in TaskEntry.objects.filter(task__pk=task.pk, user__user_id=user_id)
                 ]
-            data.push(obj)
-            taskPks.push(task.pk)
+            data.append(obj)
+            taskPks.append(task.pk)
 
         return JsonResult(data=data)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class TaskEntryApiView(View):
 
     def post(self, request):
@@ -152,11 +171,11 @@ class TaskEntryApiView(View):
 
         user_id = request.GET.get('userId')
         if user_id:
-            entries = entries.filter(team__user__user_id=user_id)
+            entries = entries.filter(user__user_id=user_id)
 
         data = []
         for entry in entries:
-            data.push({
+            data.append({
                 'entryId': entry.pk,
                 'task': entry.task.pk,
                 'user': entry.user.user_id,
