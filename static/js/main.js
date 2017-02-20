@@ -14,6 +14,7 @@ chrono.controller('mainController',  ['$scope', '$http', function($scope, $http)
 
         database.init($scope, $http);
         return database.loadAll().then(function() {
+            $scope.selectedTeam = database.teams[0].teamId;
             $scope.$apply();
         });
     }).catch(function(error) {

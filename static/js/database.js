@@ -10,10 +10,31 @@ let database = {
 
     loadAll: function() {
         let that = this;
-        return this.loadProjects().then(function() {
+        return this.loadTeams().then(function() {
+            return that.loadProjects();
+        }).then(function() {
             return that.loadTasks();
         }).then(function() {
             that.reloadTasksIntoProjects();
+        });
+    },
+
+    loadTeams: function() {
+        let that = this;
+        return new Promise(function(resolve, reject) {
+            that.http.get(teamApi, { params: {userId: auth.userId} }).then(
+                function success(response) {
+                    if (response.data.status) {
+                        that.teams = response.data.data;
+                        resolve();
+                    } else {
+                        reject('Failed to load teams\n' + JSON.stringify({response: response}))
+                    }
+                },
+                function error(response) {
+                    reject('Failed to load teams\n' + JSON.stringify({response: response}))
+                }
+            )
         });
     },
 
@@ -68,6 +89,9 @@ let database = {
     },
 
     addProject: function(teamId, name) {
+        if (!name || name.length == 0)
+            return;
+
         let project = {
             projectId: null, name: name,
             team: teamId
@@ -105,6 +129,9 @@ let database = {
     },
 
     addTask: function(projectId, name) {
+        if (!name || name.length == 0)
+            return;
+            
         let task = {
             taskId: null, name: name,
             project: projectId

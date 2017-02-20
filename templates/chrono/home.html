@@ -25,6 +25,7 @@
     firebase.initializeApp(config);
 
     var userApi = '{% url "user_api" %}';
+    var teamApi = '{% url "team_api" %}';
     var projectApi = '{% url "project_api" %}';
     var taskApi = '{% url "task_api" %}';
     var entryApi = '{% url "entry_api" %}';
@@ -46,16 +47,32 @@
         <a><span>{{ auth.user.displayName }}</span><i class="fa fa-chevron-down"></i></a>
     </header>
     <main>
-        <div ng-repeat="project in db.projects">
+        <select ng-model="selectedTeam" ng-options="team.teamId as team.name for team in db.teams">
+        </select>
+
+        <input ng-model="newProjectName"><button ng-click="db.addProject(selectedTeam, newProjectName)">Add project</button>
+
+        <div ng-if="project.team == selectedTeam" ng-repeat="project in db.projects">
             <h2>{{ project.name }}</h2>
+            <button ng-click="db.deleteProject(project.projectId)">Delete</button>
+
             <div ng-repeat="task in project.tasks">
                 <h3>{{ task.name }}</h3>
+
+                <button ng-click="db.deleteTask(task.taskId)">Delete</button>
+                <button ng-click="db.startTask(task.taskId)">Start</button>
+
                 <div ng-repeat="entry in task.entries">
                     <span>{{ entry.startTime | date : 'medium' }}</span>
                     <span ng-if="entry.endTime"> - {{ entry.endTime | date : 'medium' }}</span>
-                    <span ng-if="!entry.endTime">active</span>
+                    <span ng-if="!entry.endTime">
+                        active
+                        <button ng-click="db.stopTask(task.taskId, entry.entryId)">Stop</button>
+                    </span>
                 </div>
+
             </div>
+            <input ng-model="newTaskName"><button ng-click="db.addTask(project.projectId, newTaskName)">Add task</button>
         </div>
     </main>
 </body>

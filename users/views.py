@@ -75,8 +75,12 @@ class TeamApiView(View):
         teams = Team.objects.all()
 
         team_id = request.GET.get('teamId')
-        if teamId:
+        if team_id:
             teams = teams.filter(pk=team_id)
+
+        user_id = request.GET.get('userId')
+        if user_id:
+            teams = teams.filter(members__user_id=user_id)
 
         data = []
         for team in teams:
@@ -84,7 +88,7 @@ class TeamApiView(View):
                 'teamId': team.pk,
                 'name': team.name,
                 'members': [
-                    user.pk for user in team.members
+                    user.pk for user in team.members.all()
                 ]
             })
 
