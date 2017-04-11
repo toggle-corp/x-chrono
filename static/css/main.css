@@ -19,76 +19,170 @@ body {
   justify-content: space-between;
   height: 100vh;
   overflow: hidden; }
+  body * {
+    box-sizing: border-box; }
   body h1, body h2, body h3, body h4 {
     margin: 0;
     text-transform: uppercase; }
   body > header {
     flex-basis: 100%;
     height: 80px;
-    background-color: #8e44ad;
-    color: #fff;
+    background-color: #fff;
     display: flex;
+    color: #8e44ad;
     justify-content: space-between;
     align-items: center;
     padding: 0 24px;
     z-index: 1;
-    box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.7); }
-    body > header h1 {
-      font-weight: 300; }
-    body > header a .fa {
-      margin-left: 10px; }
+    border-bottom: 1px solid #8e44ad; }
+    body > header #app-info {
+      display: flex;
+      align-items: center; }
+      body > header #app-info img {
+        height: 2.6em;
+        width: 2.6em;
+        object-fit: contain;
+        object-position: center; }
+      body > header #app-info h1 {
+        font-size: 2.6em;
+        font-weight: 300; }
+    body > header #user-info {
+      color: inherit; }
   body aside {
     flex-basis: 30%;
-    background-color: #fff;
-    height: calc(100vh - 80px);
-    box-shadow: 5px 0 15px -5px rgba(0, 0, 0, 0.3); }
-    body aside #search-box {
+    background-color: #f0f0f0;
+    border-right: 1px solid #8e44ad;
+    height: calc(100vh - 80px); }
+    body aside > header {
+      height: 72px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      height: 48px;
-      padding: 10px 16px;
-      box-sizing: border-box;
-      border-bottom: 2px solid rgba(0, 0, 0, 0.1); }
-      body aside #search-box .fa {
-        width: 32px;
-        text-align: center;
-        color: rgba(0, 0, 0, 0.3); }
-      body aside #search-box input {
-        width: calc(100% - 32px);
-        border: none;
-        height: 32px;
-        outline: none; }
-    body aside #users .user {
-      padding: 10px 16px;
+      padding: 0 16px;
+      background-color: #fff;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+      body aside > header h2 {
+        font-weight: 400; }
+    body aside #projects {
+      height: calc(100% - 144px - 72px);
+      overflow-y: scroll; }
+      body aside #projects a {
+        display: block;
+        width: 100%;
+        padding: 8px 16px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        color: #8e44ad; }
+        body aside #projects a:hover {
+          background-color: rgba(0, 0, 0, 0.05); }
+    body aside #add-project-inputs {
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      height: 144px;
       display: flex;
-      justify-content: space-between; }
-      body aside #users .user .avatar {
-        width: 48px;
-        height: 48px;
-        object-fit: contain; }
-      body aside #users .user .user-info {
-        flex-basis: calc(100% - 48px - calc(1ex * 6));
-        padding: 0 16px; }
-        body aside #users .user .user-info .name {
-          font-weight: 500;
-          text-transform: uppercase; }
-        body aside #users .user .user-info .extra {
-          color: rgba(0, 0, 0, 0.5); }
-      body aside #users .user .amount {
-        flex-basis: calc(1ex * 6);
-        font-family: 'Roboto Mono', monospace;
-        text-align: right;
-        font-size: 24px; }
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 10px; }
+      body aside #add-project-inputs input, body aside #add-project-inputs select, body aside #add-project-inputs button {
+        font-family: inherit;
+        outline: none;
+        text-transform: uppercase; }
+      body aside #add-project-inputs h3 {
+        flex-basis: 67%;
+        font-weight: 400; }
+      body aside #add-project-inputs button {
+        border: none;
+        background-color: transparent;
+        color: #8e44ad; }
+        body aside #add-project-inputs button .fa {
+          margin-right: 8px; }
+      body aside #add-project-inputs label {
+        flex-basis: 33%;
+        text-transform: uppercase;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 0.9em; }
+      body aside #add-project-inputs input, body aside #add-project-inputs select {
+        padding: 4px 8px;
+        flex-basis: 67%;
+        outline: none; }
   body main {
     flex-basis: 70%;
     height: calc(100vh - 80px);
     overflow-y: auto; }
-    body main .user-detail {
-      height: 100vh;
-      overflow: hidden; }
-      body main .user-detail header {
-        height: 112px;
-        background-color: tomato; }
+    body main > div {
+      min-height: 100vh; }
+      body main > div > header {
+        height: 72px;
+        background-color: #fff;
+        color: #8e44ad;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 16px;
+        position: sticky;
+        top: 0;
+        box-shadow: 0 5px 15px -10px rgba(0, 0, 0, 0.5); }
+        body main > div > header h2 {
+          font-weight: 400; }
+        body main > div > header button {
+          background-color: #fff;
+          color: #8e44ad;
+          border: 1px solid #8e44ad;
+          border-radius: 50%;
+          width: 32px;
+          height: 32px; }
+      body main > div #tasks {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        flex-wrap: wrap; }
+        body main > div #tasks .task {
+          width: 300px;
+          margin: 10px;
+          border: 1px solid rgba(0, 0, 0, 0.1); }
+          body main > div #tasks .task h3 {
+            background-color: #8e44ad;
+            height: 48px;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            color: #fff;
+            font-weight: 400; }
+            body main > div #tasks .task h3 input {
+              background-color: transparent;
+              border: none;
+              outline: none; }
+          body main > div #tasks .task.active h3 {
+            background-color: #27ae60; }
+          body main > div #tasks .task.new-task h3 {
+            background-color: #fff; }
+          body main > div #tasks .task .time-elements {
+            height: 300px;
+            overflow-y: scroll; }
+            body main > div #tasks .task .time-elements > div {
+              padding: 0 10px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              height: 32px; }
+              body main > div #tasks .task .time-elements > div:nth-child(odd) {
+                background-color: #fff; }
+          body main > div #tasks .task .task-action-buttons {
+            height: 48px;
+            padding: 0 10px;
+            display: flex;
+            justify-content: space-between;
+            background-color: #fff; }
+            body main > div #tasks .task .task-action-buttons button {
+              font-size: 1.1em;
+              letter-spacing: 0.05em;
+              background-color: transparent;
+              color: #8e44ad;
+              border: none;
+              font-family: inherit;
+              text-transform: uppercase;
+              font-weight: 400;
+              outline: none;
+              cursor: pointer; }
 
 /*# sourceMappingURL=main.css.map */

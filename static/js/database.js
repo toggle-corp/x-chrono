@@ -83,8 +83,17 @@ let database = {
         for (let i=0; i<this.tasks.length; i++) {
             let task = this.tasks[i];
             let project = this.projects.find(p => p.projectId == task.project);
-            if (project)
+            if (project) {
                 project.tasks.push(task);
+            }
+
+            task.active = false;
+            for (let i=0; i<task.entries.length; i++) {
+                if (!task.entries[i].endTime) {
+                    task.active = true;
+                    break;
+                }
+            }
         }
     },
 
@@ -131,7 +140,7 @@ let database = {
     addTask: function(projectId, name) {
         if (!name || name.length == 0)
             return;
-            
+
         let task = {
             taskId: null, name: name,
             project: projectId
@@ -171,7 +180,7 @@ let database = {
     startTask: function(taskId) {
         let taskEntry = {
             entryId: null, task: taskId,
-            user: auth.userId, startTime: Math.floor(Date.now()/1000),
+            user: auth.userId, startTime: Math.floor(Date.now()),
         };
         let that = this;
         that.http.post(entryApi, taskEntry).then(
@@ -193,7 +202,15 @@ let database = {
         if (!task)
             return;
 
-        let entry = task.entries.find(e => e.entryId == entryId);
+        let entry = null;
+        if (!entryId) {
+            entry = task.entries.find(e => !e.endTime);
+            entryId = entry.entryId;
+        }
+        else {
+            entry = task.entries.find(e => e.entryId == entryId);
+        }
+
         if (!entry)
             return;
 
@@ -201,7 +218,7 @@ let database = {
             entryId: entryId, task: taskId,
             user: auth.userId,
             startTime: parseInt(entry.startTime),
-            endTime: Math.floor(Date.now()/1000),
+            endTime: Math.floor(Date.now()),
         };
 
         let that = this;
@@ -217,5 +234,22 @@ let database = {
                 console.log("Cannot start task\n" + JSON.stringify({response: response}))
             }
         );
-    }
+    },
+
+    deleteTaskEntry: function(entryId) {
+        let entry = { entryId: entryId };
+        let that = this;
+        that.http.delete(entryApi, { data: JSON.stringify(entry) }).then(
+            function success(response) {
+                that.loadAll().then(function() {
+                    that.scope.$apply();
+                }).catch(function(error) {
+                    console.log(error);
+                });
+            },
+            function error(response) {
+                console.log("Cannot delete entryy\n" + JSON.stringify({response: response}))
+            }
+        );
+    },
 };

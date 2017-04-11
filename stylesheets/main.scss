@@ -7,6 +7,9 @@ body{
     height: 100vh;
     overflow: hidden;
 
+    *{
+        box-sizing: border-box;
+    }
     h1, h2, h3, h4{
         margin: 0;
         text-transform: uppercase;
@@ -14,97 +17,222 @@ body{
     > header{
         flex-basis: 100%;
         height: $header-height;
-        background-color: $primary-color;
-        color: #fff;
+        background-color: #fff;
         display: flex;
+        color: $primary-color;
         justify-content: space-between;
         align-items: center;
         padding: 0 24px;
         z-index: 1;
-        box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.7);
+        border-bottom: 1px solid $primary-color;
+        // box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.7);
 
-        h1{
-            font-weight: 300;
-        }
-        a{
-            .fa{
-                margin-left: 10px;
+
+        #app-info{
+            display: flex;
+            align-items: center;
+
+            img{
+                height: 2.6em;
+                width: 2.6em;
+                object-fit: contain;
+                object-position: center;
+            }
+            h1{
+                font-size: 2.6em;
+                font-weight: 300;
             }
         }
+        #user-info{
+            color: inherit;
+        }
+
     }
     aside{
         flex-basis: 30%;
-        background-color: #fff;
+        background-color: #f0f0f0;
+        border-right: 1px solid $primary-color;
         height: calc(100vh - #{$header-height});
-        box-shadow: 5px 0 15px -5px rgba(0, 0, 0, 0.3);
 
-        #search-box{
+        >header{
+            height: 72px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            height: 48px;
-            padding: 10px 16px;
-            box-sizing: border-box;
-            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            padding: 0 16px;
+            background-color: #fff;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
-            .fa{
-                width: 32px;
-                text-align: center;
-                color: rgba(0, 0, 0, 0.3);
+            h2{
+                font-weight: 400;
             }
-            input{
-                width: calc(100% - 32px);
+        }
+        #projects{
+            height: calc(100% - 144px - 72px);
+            overflow-y: scroll;
+
+            a{
+                display: block;
+                width: 100%;
+                padding: 8px 16px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                color: $primary-color;
+
+                &:hover{
+                    background-color: rgba(0, 0, 0, 0.05);
+                }
+            }
+        }
+        #add-project-inputs{
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            height: 144px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 10px;
+
+            input, select, button{
+                font-family: inherit;
+                outline: none;
+                text-transform: uppercase;
+            }
+            h3{
+                flex-basis: 67%;
+                font-weight: 400;
+            }
+            button{
                 border: none;
-                height: 32px;
+                background-color: transparent;
+                color: $primary-color;
+
+                .fa{
+                    margin-right: 8px;
+                }
+            }
+            label{
+                flex-basis: 33%;
+                text-transform: uppercase;
+                color: $label-color;
+                font-size: 0.9em;
+            }
+            input, select{
+                padding: 4px 8px;
+                flex-basis: 67%;
                 outline: none;
             }
         }
-
-        #users{
-            .user{
-                padding: 10px 16px;
-                display: flex;
-                justify-content: space-between;
-
-                .avatar{
-                    width: 48px;
-                    height: 48px;
-                    object-fit: contain;
-                }
-                .user-info{
-                    flex-basis: calc(100% - 48px - calc(1ex * 6));
-                    padding: 0 16px;
-
-                    .name{
-                        font-weight: $font-weight-bold;
-                        text-transform: uppercase;
-                    }
-                    .extra{
-                        color: $label-color;
-                    }
-                }
-                .amount{
-                    flex-basis: calc(1ex * 6);
-                    font-family: 'Roboto Mono', monospace;
-                    text-align: right;
-                    font-size: $font-size-sl;
-                }
-            }
-        }
     }
+
     main{
         flex-basis: 70%;
         height: calc(100vh - #{$header-height});
         overflow-y: auto;
 
-        .user-detail{
-            height: 100vh;
-            overflow: hidden;
+        >div{
+            min-height: 100vh;
 
-            header{
-                height: 112px;
-                background-color: tomato;
+
+            >header{
+                height: 72px;
+                background-color: #fff;
+                color: $primary-color;
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 16px;
+                position: sticky;
+                top: 0;
+                box-shadow: 0 5px 15px -10px rgba(0, 0, 0, 0.5);
+
+                h2{
+                    font-weight: 400;
+                }
+                button{
+                    background-color: #fff;
+                    color: $primary-color;
+                    border: 1px solid $primary-color;
+                    border-radius: 50%;
+                    width: 32px;
+                    height: 32px;
+                }
             }
+            #tasks{
+                display: flex;
+                align-items: flex-start;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+
+                .task{
+                    width: 300px;
+                    margin: 10px;
+                    border: 1px solid rgba(0, 0, 0, 0.1);
+
+                    h3{
+                        background-color: $primary-color;
+                        height: 48px;
+                        padding: 0 10px;
+                        display: flex;
+                        align-items: center;
+                        color: #fff;
+                        font-weight: 400;
+
+                        input{
+                            background-color: transparent;
+                            border: none;
+                            outline: none;
+                        }
+                    }
+                    &.active{
+                        h3{
+                            background-color: $active-color;
+                        }
+                    }
+                    &.new-task{
+                        h3{
+                            background-color: #fff;
+                        }
+                    }
+                    .time-elements{
+                        height: 300px;
+                        overflow-y: scroll;
+
+                        > div{
+                            padding: 0 10px;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            height: 32px;
+
+                            &:nth-child(odd){
+                                background-color: #fff;
+                            }
+                        }
+                    }
+                    .task-action-buttons{
+                        height: 48px;
+                        padding: 0 10px;
+                        display: flex;
+                        justify-content: space-between;
+                        background-color: #fff;
+
+                        button{
+                            font-size: 1.1em;
+                            letter-spacing: 0.05em;
+                            background-color: transparent;
+                            color: $primary-color;
+                            border: none;
+                            font-family: inherit;
+                            text-transform: uppercase;
+                            font-weight: 400;
+                            outline: none;
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+
         }
     }
 }

@@ -29,3 +29,6 @@ class TaskEntry(models.Model):
 
     def __str__(self):
         return self.task.name + ' by ' + self.user.display_name
+
+    class Meta:
+        ordering = ['-start_time']

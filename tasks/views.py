@@ -125,8 +125,8 @@ class TaskApiView(View):
                         'entryId': entry.pk,
                         'task': entry.task.pk,
                         'user': entry.user.user_id,
-                        'startTime': dateformat.format(entry.start_time, 'U'),
-                        'endTime': dateformat.format(entry.end_time, 'U') if entry.end_time else None
+                        'startTime': int(dateformat.format(entry.start_time, 'U')) * 1000,
+                        'endTime': (int(dateformat.format(entry.end_time, 'U')) * 1000) if entry.end_time else None
                     } for entry in TaskEntry.objects.filter(task__pk=task.pk, user__user_id=user_id)
                 ]
             data.append(obj)
@@ -148,8 +148,8 @@ class TaskEntryApiView(View):
                 'pk': data_in['entryId'],
                 'task': Task.objects.get(pk=data_in['task']),
                 'user': User.objects.get(user_id=data_in['user']),
-                'start_time': datetime.fromtimestamp(data_in['startTime']),
-                'end_time': datetime.fromtimestamp(data_in['endTime']) if 'endTime' in data_in else None,
+                'start_time': datetime.fromtimestamp(data_in['startTime']/1000),
+                'end_time': datetime.fromtimestamp(data_in['endTime']/1000) if 'endTime' in data_in else None,
             }
         )
 
@@ -157,6 +157,17 @@ class TaskEntryApiView(View):
             'created': created,
             'entryId': entry.pk if created else None
         })
+
+    def delete(self, request):
+        data_in = get_json_request(request)
+        if data_in is None:
+            return INVALID_JSON_REQUEST
+
+        if 'entryId' not in data_in:
+            return INVALID_OBJECT_ID
+
+        TaskEntry.objects.filter(pk=data_in['entryId']).delete()
+        return JsonResult({'deleted': True})
 
     def get(self, request):
         entries = TaskEntry.objects.all()
@@ -179,8 +190,8 @@ class TaskEntryApiView(View):
                 'entryId': entry.pk,
                 'task': entry.task.pk,
                 'user': entry.user.user_id,
-                'startTime': dateformat.format(entry.start_time, 'U'),
-                'endTime': dateformat.format(entry.end_time, 'U') if entry.end_time else None
+                'startTime': int(dateformat.format(entry.start_time, 'U')) * 1000,
+                'endTime': (int(dateformat.format(entry.end_time, 'U')) * 1000) if entry.end_time else None
             })
 
         return JsonResult(data=data)

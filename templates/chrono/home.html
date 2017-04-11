@@ -43,36 +43,70 @@
 {% verbatim %}
 <body ng-app="chrono" ng-controller="mainController">
     <header>
-        <h1>Chrono</h1>
-        <a><span>{{ auth.user.displayName }}</span><i class="fa fa-chevron-down"></i></a>
+        <div id="app-info">
+            <img src="/static/img/logo.png">
+            <h1>Chrono</h1>
+        </div>
+        <div id="user-info">
+            <a><span>{{ auth.user.displayName }}</span><i class="fa fa-chevron-down"></i></a>
+        </div>
     </header>
+    <aside>
+        <header>
+            <h2>Projects</h2>
+        </header>
+        <div id="projects">
+            <a ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" href="#project-{{project.projectId}}">{{ project.name }}</a>
+        </div>
+        <div id="add-project-inputs">
+            <h3>Add new project</h3>
+            <button ng-click="db.addProject(selectedTeam, newProjectName)"><i class="fa fa-check"></i>Submit</button>
+            <label>Select Team:</label>
+            <select ng-model="selectedTeam" ng-options="team.teamId as team.name for team in db.teams">
+            </select>
+            <label>Name: </label>
+            <input ng-model="newProjectName" placeholder="Enter project name">
+        </div>
+    </aside>
     <main>
-        <select ng-model="selectedTeam" ng-options="team.teamId as team.name for team in db.teams">
-        </select>
 
-        <input ng-model="newProjectName"><button ng-click="db.addProject(selectedTeam, newProjectName)">Add project</button>
 
-        <div ng-if="project.team == selectedTeam" ng-repeat="project in db.projects">
-            <h2>{{ project.name }}</h2>
-            <button ng-click="db.deleteProject(project.projectId)">Delete</button>
+        <div ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" id="project-{{project.projectId}}" >
+            <header>
+                <h2>{{ project.name }}</h2>
+                <button ng-click="db.deleteProject(project.projectId)"><i class="fa fa-trash"></i></button>
+            </header>
 
-            <div ng-repeat="task in project.tasks">
-                <h3>{{ task.name }}</h3>
-
-                <button ng-click="db.deleteTask(task.taskId)">Delete</button>
-                <button ng-click="db.startTask(task.taskId)">Start</button>
-
-                <div ng-repeat="entry in task.entries">
-                    <span>{{ entry.startTime | date : 'medium' }}</span>
-                    <span ng-if="entry.endTime"> - {{ entry.endTime | date : 'medium' }}</span>
-                    <span ng-if="!entry.endTime">
-                        active
-                        <button ng-click="db.stopTask(task.taskId, entry.entryId)">Stop</button>
-                    </span>
+            <div id="tasks">
+                <div ng-repeat="task in project.tasks" class="task {{ task.active ? 'active' : '' }}">
+                    <h3>{{ task.name }}</h3>
+                    <div class="time-elements">
+                        <div ng-repeat="entry in task.entries">
+                            <date>{{ entry.startTime | date: 'short' }}</date>
+                            <time ng-if="entry.endTime">{{ (entry.endTime - entry.startTime) | date: 'H:mm:ss': 'UTC' }}</time>
+                            <span ng-if="!entry.endTime">
+                                active
+                                <!-- <button ng-click="db.stopTask(task.taskId, entry.entryId)">Stop</button> -->
+                            </span>
+                            <button ng-click="db.deleteTaskEntry(entry.entryId)" class="fa fa-trash-o"></button>
+                        </div>
+                    </div>
+                    <div class="task-action-buttons">
+                        <button ng-click="db.deleteTask(task.taskId)">Delete</button>
+                        <button ng-if="!task.active" ng-click="db.startTask(task.taskId)" }}>Start</button>
+                        <button ng-if="task.active" ng-click="db.stopTask(task.taskId)" }}>Stop</button>
+                    </div>
                 </div>
 
+                <div class="task new-task">
+                    <h3><input ng-model="newTaskName" placeholder="Enter task name"></h3>
+                    <div class="time-elements">
+                    </div>
+                    <div class="task-action-buttons">
+                        <span></span><button ng-click="db.addTask(project.projectId, newTaskName)">Add task</button>
+                    </div>
+                </div>
             </div>
-            <input ng-model="newTaskName"><button ng-click="db.addTask(project.projectId, newTaskName)">Add task</button>
         </div>
     </main>
 </body>
