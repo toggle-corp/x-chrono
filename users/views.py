@@ -5,7 +5,7 @@ from django.views.generic import View
 from chrono.json_utils import *
 from users.models import *
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class UserApiView(View):
 
     def post(self, request):
@@ -47,6 +47,7 @@ class UserApiView(View):
         return JsonResult(data=data)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class TeamApiView(View):
 
     def post(self, request):

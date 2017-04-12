@@ -8,6 +8,7 @@ from users.models import *
 from tasks.models import *
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class ProjectApiView(View):
 
     def post(self, request):
@@ -66,6 +67,7 @@ class ProjectApiView(View):
         return JsonResult(data=data)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class TaskApiView(View):
 
     def post(self, request):
@@ -135,6 +137,7 @@ class TaskApiView(View):
         return JsonResult(data=data)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class TaskEntryApiView(View):
 
     def post(self, request):
