@@ -7,7 +7,7 @@ chrono.controller('mainController',  ['$scope', '$http', function($scope, $http)
     $http.defaults.xsrfCookieName = 'csrftoken';
     $http.defaults.xsrfHeaderName = 'X-CSRFToken';
 
-    $scope.mainSpinnerVisible = true;
+    $scope.dataLoaded = false;
 
     // Try signing in
     auth.init($scope, $http).then(function() {
@@ -15,8 +15,9 @@ chrono.controller('mainController',  ['$scope', '$http', function($scope, $http)
         // Do everything here
 
         database.init($scope, $http);
+        stats.init($scope);
         return database.loadAll().then(function() {
-            $scope.mainSpinnerVisible = false;
+            $scope.dataLoaded = true;
             $scope.selectedTeam = database.teams[0].teamId;
             $scope.$apply();
         });
@@ -56,7 +57,10 @@ chrono.directive('progressClick', function() {
         },
         link: function(scope, element, attr) {
             element.on('click', function() {
-                progressClick(element, scope.progressClick());
+                let promise = scope.progressClick();
+                if (promise) {
+                    progressClick(element, promise);
+                }
             });
         },
     };

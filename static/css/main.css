@@ -201,5 +201,39 @@ body {
               font-weight: 400;
               outline: none;
               cursor: pointer; }
+  body #stats {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; }
+    body #stats header {
+      flex-basis: 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 0 32px; }
+      body #stats header button {
+        background-color: transparent;
+        color: #8e44ad;
+        cursor: pointer;
+        border: none;
+        outline: none;
+        font-size: 3em; }
+    body #stats main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-basis: calc(100% - 80px);
+      width: 100%; }
+      body #stats main svg .line {
+        fill: none;
+        stroke-width: 2px; }
 
 /*# sourceMappingURL=main.css.map */

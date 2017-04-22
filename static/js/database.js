@@ -323,6 +323,7 @@ let database = {
         if (!task.entries) {
             task.entries = [];
         }
+
         task.active = !(!task.entries.find(e => !e.endTime));
         task.entries.sort((e1, e2) => (e2.startTime - e1.startTime));
         task.entries.forEach((e) => {

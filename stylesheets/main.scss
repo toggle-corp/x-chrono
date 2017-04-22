@@ -259,4 +259,50 @@ body{
 
         }
     }
+
+    #stats {
+        position: absolute;
+        top: $header-height;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        header {
+            flex-basis: $header-height;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 32px;
+
+            button {
+                background-color: transparent;
+                color: $primary-color;
+                cursor: pointer;
+                border: none;
+                outline: none;
+                font-size: 3em;
+            }
+        }
+
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-basis: calc(100% - #{$header-height});
+            width: 100%;
+
+            svg {
+                .line {
+                    fill: none;
+                    stroke-width: 2px;
+                }
+            }
+        }
+    }
 }

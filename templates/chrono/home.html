@@ -37,6 +37,9 @@
     <script src="{% static 'js/database.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
 
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="{% static 'js/stats.js' %}"></script>
+
     <link rel="stylesheet" href="{% static 'css/modal.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500|Roboto:300,400,500" rel="stylesheet">
@@ -49,7 +52,7 @@
     <header>
         <div id="app-info">
             <img src="/static/img/logo.png">
-            <h1>Chrono <span class="fa fa-spinner fa-spin" ng-show="mainSpinnerVisible"></span></h1>
+            <h1>Chrono <span class="fa fa-spinner fa-spin" ng-show="!dataLoaded"></span></h1>
         </div>
         <div id="user-info">
             <a><span>{{ auth.user.displayName }}</span><i class="fa fa-chevron-down"></i></a>
@@ -77,7 +80,10 @@
         <div ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" id="project-{{project.projectId}}" >
             <header>
                 <h2>{{ project.name }}</h2>
-                <button progress-click="db.deleteProject(project.projectId)"><i class="fa fa-trash"></i></button>
+                <div>
+                    <button ng-click="stats.show(project.projectId)" ng-show="dataLoaded"><i class="fa fa-area-chart"></i></button>
+                    <button progress-click="db.deleteProject(project.projectId)"><i class="fa fa-trash"></i></button>
+                </div>
             </header>
 
             <div id="tasks">
@@ -127,6 +133,21 @@
                 <button data-modal-action="save">Save</button>
             </footer>
         </div>
+    </div>
+
+    <div id="stats" ng-show="statsShown">
+        <header>
+            <div>
+                Filter by date range: <input id="stat-start-date" type="date" ng-change="stats.refreshChart(stats.data)" ng-model="statStartDate"> - <input id="stat-end-date" ng-change="stats.refreshChart(stats.data)" ng-model="statEndDate" type="date">
+            </div>
+            <button ng-click="statsShown=false;"><i class="fa fa-times"></i></button>
+        </header>
+        <main>
+            <svg width="800" height="500">
+                <g transform="translate(16, 16)">
+                </g>
+            </svg>
+        </main>
     </div>
 </body>
 {% endverbatim %}
