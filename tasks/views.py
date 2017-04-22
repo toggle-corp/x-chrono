@@ -7,6 +7,8 @@ from chrono.json_utils import *
 from users.models import *
 from tasks.models import *
 
+from time import sleep
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ProjectApiView(View):
@@ -27,7 +29,11 @@ class ProjectApiView(View):
 
         return JsonResult({
             'created': created,
-            'projectId': project.pk if created else None
+            'project': {
+                'projectId': project.pk,
+                'name': project.name,
+                'team': project.team.pk,
+             } if project else None
         })
 
     def delete(self, request):
@@ -86,7 +92,11 @@ class TaskApiView(View):
 
         return JsonResult({
             'created': created,
-            'taskid': task.pk if created else None
+            'task': {
+                'taskId': task.pk,
+                'name': task.name,
+                'project': task.project.pk
+            } if task else None
         })
 
     def delete(self, request):
@@ -158,7 +168,13 @@ class TaskEntryApiView(View):
 
         return JsonResult({
             'created': created,
-            'entryId': entry.pk if created else None
+            'entry': {
+                'entryId': entry.pk,
+                'task': entry.task.pk,
+                'user': entry.user.user_id,
+                'startTime': int(dateformat.format(entry.start_time, 'U')) * 1000,
+                'endTime': (int(dateformat.format(entry.end_time, 'U')) * 1000) if entry.end_time else None
+            } if entry else None
         })
 
     def delete(self, request):

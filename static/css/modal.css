@@ -1,0 +1,60 @@
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  background-color: #f0f0f0;
+  color: #515151;
+  line-height: 1.8; }
+  body a, body a:hover, body a:visited, body a:active, body a:focus {
+    outline: none;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 500;
+    cursor: pointer; }
+
+.modal-container {
+  position: absolute;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.1); }
+  .modal-container .modal {
+    display: flex;
+    flex-direction: column;
+    min-height: 250px;
+    background-color: #fff; }
+    .modal-container .modal header {
+      flex-basis: 48px;
+      padding: 0px 16px;
+      display: flex;
+      align-items: center;
+      background-color: #8e44ad; }
+      .modal-container .modal header h2 {
+        color: #fff;
+        font-weight: 400; }
+    .modal-container .modal main {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around; }
+    .modal-container .modal footer {
+      flex-basis: 48px;
+      padding: 0px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #8e44ad; }
+      .modal-container .modal footer button {
+        background-color: transparent;
+        padding: 6px 8px;
+        cursor: pointer;
+        border: none;
+        outline: none;
+        color: #8e44ad; }
+
+/*# sourceMappingURL=modal.css.map */

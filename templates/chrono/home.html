@@ -31,21 +31,25 @@
     var entryApi = '{% url "entry_api" %}';
     </script>
 
+    <script src="{% static 'js/modal.js' %}"></script>
     <script src="{% static 'js/angular.min.js' %}"></script>
     <script src="{% static 'js/sign-in.js' %}"></script>
     <script src="{% static 'js/database.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
 
+    <link rel="stylesheet" href="{% static 'css/modal.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500|Roboto:300,400,500" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/logo.png' %}"/>
 </head>
 {% verbatim %}
 <body ng-app="chrono" ng-controller="mainController">
     <header>
         <div id="app-info">
             <img src="/static/img/logo.png">
-            <h1>Chrono</h1>
+            <h1>Chrono <span class="fa fa-spinner fa-spin" ng-show="mainSpinnerVisible"></span></h1>
         </div>
         <div id="user-info">
             <a><span>{{ auth.user.displayName }}</span><i class="fa fa-chevron-down"></i></a>
@@ -60,21 +64,20 @@
         </div>
         <div id="add-project-inputs">
             <h3>Add new project</h3>
-            <button ng-click="db.addProject(selectedTeam, newProjectName)"><i class="fa fa-check"></i>Submit</button>
             <label>Select Team:</label>
             <select ng-model="selectedTeam" ng-options="team.teamId as team.name for team in db.teams">
             </select>
             <label>Name: </label>
             <input ng-model="newProjectName" placeholder="Enter project name">
+            <button progress-click="db.addProject(selectedTeam, newProjectName)"><i class="fa fa-plus"></i>Add</button>
         </div>
     </aside>
     <main>
 
-
         <div ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" id="project-{{project.projectId}}" >
             <header>
                 <h2>{{ project.name }}</h2>
-                <button ng-click="db.deleteProject(project.projectId)"><i class="fa fa-trash"></i></button>
+                <button progress-click="db.deleteProject(project.projectId)"><i class="fa fa-trash"></i></button>
             </header>
 
             <div id="tasks">
@@ -83,18 +86,20 @@
                     <div class="time-elements">
                         <div ng-repeat="entry in task.entries">
                             <date>{{ entry.startTime | date: 'short' }}</date>
-                            <time ng-if="entry.endTime">{{ (entry.endTime - entry.startTime) | date: 'H:mm:ss': 'UTC' }}</time>
-                            <span ng-if="!entry.endTime">
-                                active
-                                <!-- <button ng-click="db.stopTask(task.taskId, entry.entryId)">Stop</button> -->
-                            </span>
-                            <button ng-click="db.deleteTaskEntry(entry.entryId)" class="fa fa-trash-o"></button>
+                            <div>
+                                <time ng-if="entry.endTime">{{ (entry.endTime - entry.startTime) | date: 'HH:mm:ss': 'UTC' }}</time>
+                                <span ng-if="!entry.endTime">active</span>
+                            </div>
+                            <div>
+                                <button ng-click="db.editTaskEntry(task.taskId, entry.entryId);"><i class="fa fa-edit"></i></button>
+                                <button progress-click="db.deleteTaskEntry(task.taskId, entry.entryId)"><i class="fa fa-trash-o"></i></button>
+                            </div>
                         </div>
                     </div>
                     <div class="task-action-buttons">
-                        <button ng-click="db.deleteTask(task.taskId)">Delete</button>
-                        <button ng-if="!task.active" ng-click="db.startTask(task.taskId)" }}>Start</button>
-                        <button ng-if="task.active" ng-click="db.stopTask(task.taskId)" }}>Stop</button>
+                        <button progress-click="db.deleteTask(task.taskId)">Delete</button>
+                        <button ng-if="!task.active" progress-click="db.startTask(task.taskId)" }}>Start</button>
+                        <button ng-if="task.active" progress-click="db.stopTask(task.taskId)" }}>Stop</button>
                     </div>
                 </div>
 
@@ -103,12 +108,26 @@
                     <div class="time-elements">
                     </div>
                     <div class="task-action-buttons">
-                        <span></span><button ng-click="db.addTask(project.projectId, newTaskName)">Add task</button>
+                        <span></span><button ng-click="newTaskName = '';" progress-click="db.addTask(project.projectId, newTaskName);">Add task</button>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+
+    <div id="edit-entry-modal" class="modal-container">
+        <div class="modal">
+            <header><h2>Edit task</h2></header>
+            <main>
+                <label>Start time:</label><input type="datetime-local" ng-model="editEntryStartTime">
+                <label> End time:</label><input type="datetime-local" ng-model="editEntryEndTime">
+            </main>
+            <footer>
+                <button data-modal-action="close">Close</button>
+                <button data-modal-action="save">Save</button>
+            </footer>
+        </div>
+    </div>
 </body>
 {% endverbatim %}
 </html>

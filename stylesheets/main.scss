@@ -14,6 +14,9 @@ body{
         margin: 0;
         text-transform: uppercase;
     }
+    select {
+        background-color: #fff;
+    }
     > header{
         flex-basis: 100%;
         height: $header-height;
@@ -48,7 +51,7 @@ body{
         }
 
     }
-    aside{
+    > aside{
         flex-basis: 30%;
         background-color: #f0f0f0;
         border-right: 1px solid $primary-color;
@@ -98,13 +101,15 @@ body{
                 text-transform: uppercase;
             }
             h3{
-                flex-basis: 67%;
+                flex-basis: 100%;
                 font-weight: 400;
             }
             button{
+                margin-left: auto;
                 border: none;
                 background-color: transparent;
                 color: $primary-color;
+                cursor: pointer;
 
                 .fa{
                     margin-right: 8px;
@@ -124,7 +129,7 @@ body{
         }
     }
 
-    main{
+    > main{
         flex-basis: 70%;
         height: calc(100vh - #{$header-height});
         overflow-y: auto;
@@ -156,6 +161,7 @@ body{
                     border-radius: 50%;
                     width: 32px;
                     height: 32px;
+                    cursor: pointer;
                 }
             }
             #tasks{
@@ -165,7 +171,7 @@ body{
                 flex-wrap: wrap;
 
                 .task{
-                    width: 300px;
+                    width: 312px;
                     margin: 10px;
                     border: 1px solid rgba(0, 0, 0, 0.1);
 
@@ -207,6 +213,24 @@ body{
 
                             &:nth-child(odd){
                                 background-color: #fff;
+                            }
+
+                            >:first-child {
+                                flex-basis: 50%;
+                            }
+                            >:nth-child(2) {
+                                flex-basis: 30%;
+                            }
+                            >:last-child{
+                                flex-basis: 20%;
+                            }
+
+                            button {
+                                background-color: transparent;
+                                border: none;
+                                outline: none;
+                                cursor: pointer;
+                                color: $primary-color;
                             }
                         }
                     }
