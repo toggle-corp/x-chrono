@@ -97,34 +97,36 @@ let stats = {
         let data = [];
         for (let i=0; i<project.tasks.length; i++) {
             let task = project.tasks[i];
-            let taskData = [];
 
-            let dateHours = {};
-            for (let j=0; j<task.entries.length; j++) {
-                let entry = task.entries[j];
-                if (entry.endTime) {
-                    let date = new Date(entry.startTime).toDateString();
-                    let hours = (entry.endTime - entry.startTime)/36e5;
+            if (task.entries.length > 0) {
+                let dateHours = {};
+                for (let j=0; j<task.entries.length; j++) {
+                    let entry = task.entries[j];
+                    if (entry.endTime) {
+                        let date = new Date(entry.startTime).toDateString();
+                        let hours = (entry.endTime - entry.startTime)/36e5;
 
-                    if (!dateHours[date]) {
-                        dateHours[date] = 0;
+                        if (!dateHours[date]) {
+                            dateHours[date] = 0;
+                        }
+                        dateHours[date] += hours;
                     }
-                    dateHours[date] += hours;
                 }
-            }
 
-            for (let date in dateHours) {
-                taskData.push({
-                    date: new Date(date),
-                    hours: dateHours[date],
+                let taskData = [];
+                for (let date in dateHours) {
+                    taskData.push({
+                        date: new Date(date),
+                        hours: dateHours[date],
+                    });
+                }
+
+                taskData.sort((t1, t2) => (t1.date - t2.date));
+                data.push({
+                    name: task.name,
+                    values: taskData,
                 });
             }
-
-            taskData.sort((t1, t2) => (t1.date - t2.date));
-            data.push({
-                name: task.name,
-                values: taskData,
-            });
         }
         return data;
     },
