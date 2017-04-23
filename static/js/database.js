@@ -118,6 +118,10 @@ let database = {
         let project = { projectId: projectId };
         let that = this;
 
+        if (!confirm('Deleting this project will delete it for all members. Are you sure you want to do this?')) {
+            return;
+        }
+
         return new Promise((resolve, reject) => {
             that.http.delete(projectApi, { data: JSON.stringify(project) }).then(
                 function success(response) {
@@ -140,7 +144,8 @@ let database = {
 
         let task = {
             taskId: null, name: name,
-            project: projectId
+            project: projectId,
+            planStart: null, planEnd: null,
         };
         let that = this;
 
@@ -163,9 +168,67 @@ let database = {
         });
     },
 
+    editTask: function(taskId) {
+        let task = this.tasks.find(t => t.taskId == taskId);
+        if (!task) {
+            return;
+        }
+
+        this.scope.editTaskName = task.name;
+        this.scope.editTaskPlanStart = task.planStart ? new Date(task.planStart) : null;
+        this.scope.editTaskPlanEnd = task.planEnd ? new Date(task.planEnd) : null;
+
+        let that = this;
+        let modal = new Modal(document.getElementById('edit-task-modal'), progressClick);
+        modal.show((action) => {
+            if (action == 'save') {
+                let newTask = {
+                    taskId: taskId,
+                    name: that.scope.editTaskName,
+                    project: task.project,
+                    planStart: Math.floor(that.scope.editTaskPlanStart.getTime()),
+                    planEnd: Math.floor(that.scope.editTaskPlanEnd.getTime()),
+                };
+
+                return new Promise((resolve, reject) => {
+                    that.http.post(taskApi, newTask).then(
+                        function success(response) {
+                            response.data.data.task.entries = task.entries;
+
+                            let index = that.tasks.findIndex(t => t.taskId == taskId);
+                            that.tasks[index] = response.data.data.task;
+                            let project = that.projects.find(p => p.projectId == task.project);
+                            index = project.tasks.findIndex(t => t.taskId == taskId);
+                            project.tasks[index] = response.data.data.task;
+                            that.refreshTask(task);
+                            resolve();
+                        },
+                        function error(response) {
+                            reject('Cannot edit task\n' + JSON.stringify({response: response}))
+                        }
+                    );
+                });
+            }
+
+            else if (action == 'delete') {
+                let promise = that.deleteTask(taskId);
+                if (promise) {
+                    return promise.then(() => {
+                        modal.close('delete');
+                    });
+                }
+                return promise;
+            }
+        });
+    },
+
     deleteTask: function(taskId) {
         let task = { taskId: taskId };
         let that = this;
+
+        if (!confirm('Deleting this task will delete it for all members. Are you sure you want to do this?')) {
+            return;
+        }
 
         return new Promise((resolve, reject) => {
             that.http.delete(taskApi, { data: JSON.stringify(task) }).then(
@@ -243,7 +306,7 @@ let database = {
                     resolve();
                 },
                 function error(response) {
-                    reject('Cannot start task\n' + JSON.stringify({response: response}))
+                    reject('Cannot stop task\n' + JSON.stringify({response: response}))
                 }
             );
         });
@@ -311,7 +374,7 @@ let database = {
                                 resolve();
                             },
                             function error(response) {
-                                reject('Cannot start task\n' + JSON.stringify({response: response}))
+                                reject('Cannot edit task\n' + JSON.stringify({response: response}))
                             }
                         );
                     });

@@ -17,7 +17,9 @@ class Modal {
                     if (that.handler) {
                         let promise = that.handler(button.dataset.modalAction);
                         if (!promise) {
-                            that.close(button.dataset.modalAction);
+                            if (!button.dataset.modalPersist) {
+                                that.close(button.dataset.modalAction);
+                            }
                             return;
                         }
 
@@ -25,14 +27,18 @@ class Modal {
                             promise = that.progressClick(button, promise);
                         }
                         promise.then(() => {
-                            that.close(button.dataset.modalAction);
+                            if (!button.dataset.modalPersist) {
+                                that.close(button.dataset.modalAction);
+                            }
                         }).catch((error) => {
                             if (that.reject) {
                                 that.reject(error);
                             }
                         });
                     } else {
-                        that.close(button.dataset.modalAction);
+                        if (!button.dataset.modalPersist) {
+                            that.close(button.dataset.modalAction);
+                        }
                     }
 
                 };

@@ -110,6 +110,7 @@ body{
                 background-color: transparent;
                 color: $primary-color;
                 cursor: pointer;
+                padding: 8px;
 
                 .fa{
                     margin-right: 8px;
@@ -164,6 +165,22 @@ body{
                     cursor: pointer;
                 }
             }
+            .tabs {
+                display: flex;
+                height: 36px;
+                align-items: center;
+                background-color: white;
+
+                .tab {
+                    padding: 6px 16px;
+                    cursor: pointer;
+                    text-transform: uppercase;
+                    font-size: $font-size-sm;
+                    &.active {
+                        border-bottom: 1px solid $primary-color;
+                    }
+                }
+            }
             #tasks{
                 display: flex;
                 align-items: flex-start;
@@ -171,7 +188,7 @@ body{
                 flex-wrap: wrap;
 
                 .task{
-                    width: 312px;
+                    width: 310px;
                     margin: 10px;
                     border: 1px solid rgba(0, 0, 0, 0.1);
 
@@ -301,6 +318,65 @@ body{
                 .line {
                     fill: none;
                     stroke-width: 2px;
+                }
+            }
+        }
+    }
+
+    #edit-entry-modal {
+        main {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+
+            > div {
+                >* {
+                    display: block;
+                    margin-top: 4px;
+                }
+            }
+        }
+    }
+
+    #edit-task-modal {
+        main {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+
+            section {
+                margin-bottom: 10px;
+                > label {
+                    display: block;
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+                    margin-bottom: 6px;
+                }
+
+                > div {
+                    width: 320px;
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 6px;
+
+                    >label {
+                        flex-basis: 96px;
+                    }
+
+                    input {
+                        flex-basis: calc(100% - 96px);
+                    }
+
+                    button {
+                        color: #fff;
+                        border: none;
+                        outline: none;
+                        background-color: $primary-color;
+                        padding: 6px 8px;
+                        cursor: pointer;
+                    }
+                    input {
+                        padding: 0 4px;
+                    }
                 }
             }
         }

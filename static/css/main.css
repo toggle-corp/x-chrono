@@ -96,7 +96,8 @@ body {
         border: none;
         background-color: transparent;
         color: #8e44ad;
-        cursor: pointer; }
+        cursor: pointer;
+        padding: 8px; }
         body > aside #add-project-inputs button .fa {
           margin-right: 8px; }
       body > aside #add-project-inputs label {
@@ -136,13 +137,25 @@ body {
           width: 32px;
           height: 32px;
           cursor: pointer; }
+      body > main > div .tabs {
+        display: flex;
+        height: 36px;
+        align-items: center;
+        background-color: white; }
+        body > main > div .tabs .tab {
+          padding: 6px 16px;
+          cursor: pointer;
+          text-transform: uppercase;
+          font-size: 13px; }
+          body > main > div .tabs .tab.active {
+            border-bottom: 1px solid #8e44ad; }
       body > main > div #tasks {
         display: flex;
         align-items: flex-start;
         justify-content: flex-start;
         flex-wrap: wrap; }
         body > main > div #tasks .task {
-          width: 312px;
+          width: 310px;
           margin: 10px;
           border: 1px solid rgba(0, 0, 0, 0.1); }
           body > main > div #tasks .task h3 {
@@ -235,5 +248,40 @@ body {
       body #stats main svg .line {
         fill: none;
         stroke-width: 2px; }
+  body #edit-entry-modal main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; }
+    body #edit-entry-modal main > div > * {
+      display: block;
+      margin-top: 4px; }
+  body #edit-task-modal main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; }
+    body #edit-task-modal main section {
+      margin-bottom: 10px; }
+      body #edit-task-modal main section > label {
+        display: block;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        margin-bottom: 6px; }
+      body #edit-task-modal main section > div {
+        width: 320px;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 6px; }
+        body #edit-task-modal main section > div > label {
+          flex-basis: 96px; }
+        body #edit-task-modal main section > div input {
+          flex-basis: calc(100% - 96px); }
+        body #edit-task-modal main section > div button {
+          color: #fff;
+          border: none;
+          outline: none;
+          background-color: #8e44ad;
+          padding: 6px 8px;
+          cursor: pointer; }
+        body #edit-task-modal main section > div input {
+          padding: 0 4px; }
 
 /*# sourceMappingURL=main.css.map */

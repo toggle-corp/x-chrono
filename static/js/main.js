@@ -8,6 +8,7 @@ chrono.controller('mainController',  ['$scope', '$http', function($scope, $http)
     $http.defaults.xsrfHeaderName = 'X-CSRFToken';
 
     $scope.dataLoaded = false;
+    $scope.taskTab = 'active';
 
     // Try signing in
     auth.init($scope, $http).then(function() {

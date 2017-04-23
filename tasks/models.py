@@ -17,6 +17,9 @@ class Task(models.Model):
     name = models.CharField(max_length=300)
     project = models.ForeignKey(Project)
 
+    plan_start = models.DateField(null=True, blank=True, default=None)
+    plan_end = models.DateField(null=True, blank=True, default=None)
+
     def __str__(self):
         return self.name
 
