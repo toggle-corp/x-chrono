@@ -69,10 +69,10 @@ let stats = {
             .attr('stroke', d => 'hsl(' + Math.random() * 360 + ', 60%, 40%)')
             .attr('d', d => line(d.values));
 
-        task.append('text')
-            .datum(d => ({ name: d.name, value: d.values[d.values.length-1] }))
-            .attr('transform', d => 'translate(' + xScale(d.value.date) + ', ' + yScale(d.value.hours) + ')')
-            .text(d => d.name);
+        // task.append('text')
+        //     .datum(d => ({ name: d.name, value: d.values[d.values.length-1] }))
+        //     .attr('transform', d => 'translate(' + xScale(d.value.date) + ', ' + yScale(d.value.hours) + ')')
+        //     .text(d => d.name);
 
         // Remove unnecessary data
         selection.exit().remove();
@@ -129,5 +129,9 @@ let stats = {
             }
         }
         return data;
+    },
+
+    export: function(projectId) {
+        window.location.href = exportUrl.replace('0', ''+projectId);
     },
 };

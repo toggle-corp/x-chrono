@@ -29,6 +29,8 @@
     var projectApi = '{% url "project_api" %}';
     var taskApi = '{% url "task_api" %}';
     var entryApi = '{% url "entry_api" %}';
+
+    let exportUrl = '{% url "export_project" 0 %}';
     </script>
 
     <script src="{% static 'js/modal.js' %}"></script>
@@ -81,6 +83,7 @@
             <header>
                 <h2>{{ project.name }}</h2>
                 <div>
+                    <button ng-click="stats.export(project.projectId);" ng-show="dataLoaded"><i class="fa fa-file-excel-o"></i></button>
                     <button ng-click="stats.show(project.projectId)" ng-show="dataLoaded"><i class="fa fa-area-chart"></i></button>
                     <button progress-click="db.deleteProject(project.projectId)"><i class="fa fa-trash"></i></button>
                 </div>

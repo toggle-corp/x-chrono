@@ -30,6 +30,12 @@ class TaskEntry(models.Model):
     start_time = models.DateTimeField(default=datetime.now)
     end_time = models.DateTimeField(null=True, blank=True, default=None)
 
+    def get_hours(self):
+        if not self.end_time:
+            return 0
+        df = self.end_time - self.start_time
+        return df.seconds / 3600
+
     def __str__(self):
         return self.task.name + ' by ' + self.user.display_name
 
