@@ -186,8 +186,8 @@ let database = {
                     taskId: taskId,
                     name: that.scope.editTaskName,
                     project: task.project,
-                    planStart: Math.floor(that.scope.editTaskPlanStart.getTime()),
-                    planEnd: Math.floor(that.scope.editTaskPlanEnd.getTime()),
+                    planStart: that.scope.editTaskPlanStart ? Math.floor(that.scope.editTaskPlanStart.getTime()) : null,
+                    planEnd: that.scope.editTaskPlanEnd ? Math.floor(that.scope.editTaskPlanEnd.getTime()) : null,
                 };
 
                 return new Promise((resolve, reject) => {
