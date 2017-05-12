@@ -91,6 +91,7 @@ class TaskApiView(View):
                 'project': Project.objects.get(pk=data_in['project']),
                 'plan_start': datetime.fromtimestamp(int(data_in['planStart'])/1000) if data_in.get('planStart') else None,
                 'plan_end': datetime.fromtimestamp(int(data_in['planEnd'])/1000) if data_in.get('planEnd') else None,
+                'active': data_in['active'],
             }
         )
 
@@ -102,6 +103,7 @@ class TaskApiView(View):
                 'project': task.project.pk,
                 'planStart': int(dateformat.format(task.plan_start, 'U')) * 1000 if task.plan_start else None,
                 'planEnd': int(dateformat.format(task.plan_end, 'U')) * 1000 if task.plan_end else None,
+                'active': task.active,
             } if task else None
         })
 
@@ -138,6 +140,7 @@ class TaskApiView(View):
                 'project': task.project.pk,
                 'planStart': int(dateformat.format(task.plan_start, 'U')) * 1000 if task.plan_start else None,
                 'planEnd': int(dateformat.format(task.plan_end, 'U')) * 1000 if task.plan_end else None,
+                'active': task.active,
             }
             if user_id:
                 obj['entries'] = [
@@ -173,6 +176,11 @@ class TaskEntryApiView(View):
                 'end_time': datetime.fromtimestamp(int(data_in['endTime'])/1000) if data_in.get('endTime') else None,
             }
         )
+
+        if data_in.get('starting'):
+            task = entry.task
+            task.active = True
+            task.save()
 
         return JsonResult({
             'created': created,

@@ -146,6 +146,7 @@ let database = {
             taskId: null, name: name,
             project: projectId,
             planStart: null, planEnd: null,
+            active: false,
         };
         let that = this;
 
@@ -177,6 +178,7 @@ let database = {
         this.scope.editTaskName = task.name;
         this.scope.editTaskPlanStart = task.planStart ? new Date(task.planStart) : null;
         this.scope.editTaskPlanEnd = task.planEnd ? new Date(task.planEnd) : null;
+        this.scope.editTaskActive = task.active;
 
         let that = this;
         let modal = new Modal(document.getElementById('edit-task-modal'), progressClick);
@@ -188,6 +190,7 @@ let database = {
                     project: task.project,
                     planStart: that.scope.editTaskPlanStart ? Math.floor(that.scope.editTaskPlanStart.getTime()) : null,
                     planEnd: that.scope.editTaskPlanEnd ? Math.floor(that.scope.editTaskPlanEnd.getTime()) : null,
+                    active: that.scope.editTaskActive,
                 };
 
                 return new Promise((resolve, reject) => {
@@ -252,6 +255,7 @@ let database = {
         let taskEntry = {
             entryId: null, task: taskId,
             user: auth.userId, startTime: Math.floor(Date.now()),
+            starting: true,
         };
         let that = this;
 
@@ -260,6 +264,8 @@ let database = {
                 function success(response) {
                     let task = that.tasks.find(t => t.taskId == taskId);
                     task.entries.push(response.data.data.entry);
+                    task.active = true;
+
                     that.refreshTask(task);
                     resolve();
                 },
@@ -387,7 +393,7 @@ let database = {
             task.entries = [];
         }
 
-        task.active = !(!task.entries.find(e => !e.endTime));
+        task.running = !(!task.entries.find(e => !e.endTime));
         task.entries.sort((e1, e2) => (e2.startTime - e1.startTime));
         task.entries.forEach((e) => {
             if (e.endTime && e.endTime < e.startTime) {

@@ -95,7 +95,7 @@
             </div>
 
             <div id="tasks">
-                <div ng-repeat="task in project.tasks" class="task {{ task.active ? 'active' : '' }}" ng-show="taskTab == 'all' || (task.entries.length && taskTab == 'active')">
+                <div ng-repeat="task in project.tasks" class="task {{ task.running ? 'active' : '' }}" ng-show="taskTab == 'all' || task.active">
                     <h3>{{ task.name }}</h3>
                     <div class="time-elements">
                         <div ng-repeat="entry in task.entries">
@@ -111,10 +111,9 @@
                         </div>
                     </div>
                     <div class="task-action-buttons">
-                        <div ng-show="taskTab != 'all'"></div>
-                        <button ng-show="taskTab == 'all'" ng-click="db.editTask(task.taskId)">Edit</button>
-                        <button ng-if="!task.active" progress-click="db.startTask(task.taskId)" }}>Start</button>
-                        <button ng-if="task.active" progress-click="db.stopTask(task.taskId)" }}>Stop</button>
+                        <button ng-click="db.editTask(task.taskId)">Edit</button>
+                        <button ng-if="!task.running" progress-click="db.startTask(task.taskId)" }}>Start</button>
+                        <button ng-if="task.running" progress-click="db.stopTask(task.taskId)" }}>Stop</button>
                     </div>
                 </div>
 
@@ -173,7 +172,11 @@
                     </div>
                 </section>
                 <section>
-                    <label>Danger</label>
+                    <label>Status</label>
+                    <div>
+                        <label>Active: </label>
+                        <input type="checkbox" ng-model="editTaskActive">
+                    </div>
                     <div>
                         <div></div>
                         <button data-modal-action="delete" data-modal-persist="true">Delete</button>

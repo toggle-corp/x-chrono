@@ -52,7 +52,7 @@ body{
 
     }
     > aside{
-        flex-basis: 30%;
+        flex-basis: 25%;
         background-color: #f0f0f0;
         border-right: 1px solid $primary-color;
         height: calc(100vh - #{$header-height});
@@ -131,7 +131,7 @@ body{
     }
 
     > main{
-        flex-basis: 70%;
+        flex-basis: 75%;
         height: calc(100vh - #{$header-height});
         overflow-y: auto;
 
@@ -362,7 +362,7 @@ body{
                         flex-basis: 96px;
                     }
 
-                    input {
+                    input[type="text"], input[type="date"] {
                         flex-basis: calc(100% - 96px);
                     }
 

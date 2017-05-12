@@ -20,6 +20,8 @@ class Task(models.Model):
     plan_start = models.DateField(null=True, blank=True, default=None)
     plan_end = models.DateField(null=True, blank=True, default=None)
 
+    active = models.BooleanField(default=False)
+
     def __str__(self):
         return self.name
 

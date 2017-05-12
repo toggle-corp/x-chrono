@@ -51,7 +51,7 @@ body {
     body > header #user-info {
       color: inherit; }
   body > aside {
-    flex-basis: 30%;
+    flex-basis: 25%;
     background-color: #f0f0f0;
     border-right: 1px solid #8e44ad;
     height: calc(100vh - 80px); }
@@ -110,7 +110,7 @@ body {
         flex-basis: 67%;
         outline: none; }
   body > main {
-    flex-basis: 70%;
+    flex-basis: 75%;
     height: calc(100vh - 80px);
     overflow-y: auto; }
     body > main > div {
@@ -272,7 +272,7 @@ body {
         margin-bottom: 6px; }
         body #edit-task-modal main section > div > label {
           flex-basis: 96px; }
-        body #edit-task-modal main section > div input {
+        body #edit-task-modal main section > div input[type="text"], body #edit-task-modal main section > div input[type="date"] {
           flex-basis: calc(100% - 96px); }
         body #edit-task-modal main section > div button {
           color: #fff;
