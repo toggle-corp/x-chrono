@@ -1,16 +1,19 @@
+* {
+  box-sizing: border-box; }
+
 body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Cantarell', sans-serif;
   font-weight: 400;
   font-size: 14px;
   background-color: #f0f0f0;
   color: #515151;
-  line-height: 1.8; }
+  line-height: 1.5; }
   body a, body a:hover, body a:visited, body a:active, body a:focus {
     outline: none;
     text-decoration: none;
     text-transform: uppercase;
-    font-weight: 500;
+    font-weight: 700;
     cursor: pointer; }
 
 .modal-container {
@@ -21,15 +24,14 @@ body {
   width: 100vw;
   height: 100vh;
   z-index: 1000;
-  background-color: rgba(0, 0, 0, 0.1); }
+  background-color: rgba(0, 0, 0, 0.5); }
   .modal-container .modal {
-    display: flex;
-    flex-direction: column;
-    min-height: 250px;
-    background-color: #fff; }
+    min-height: 320px;
+    background-color: #fff;
+    box-shadow: 0 5px 48px -5px rgba(0, 0, 0, 0.8); }
     .modal-container .modal header {
-      flex-basis: 48px;
-      padding: 0px 16px;
+      min-height: 64px;
+      padding: 0px 24px;
       display: flex;
       align-items: center;
       background-color: #8e44ad; }
@@ -37,18 +39,19 @@ body {
         color: #fff;
         font-weight: 400; }
     .modal-container .modal main {
-      flex: 1;
-      padding: 16px; }
+      padding: 16px 24px 0 24px;
+      min-height: calc(320px - 64px - 56px); }
     .modal-container .modal footer {
-      flex-basis: 48px;
-      padding: 0px 16px;
+      min-height: 56px;
+      padding: 0px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-top: 1px solid #8e44ad; }
+      background-color: #f0f0f0; }
       .modal-container .modal footer button {
+        font-family: inherit;
+        text-transform: uppercase;
         background-color: transparent;
-        padding: 6px 8px;
         cursor: pointer;
         border: none;
         outline: none;

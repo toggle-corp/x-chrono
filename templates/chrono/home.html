@@ -44,6 +44,7 @@
 
     <link rel="stylesheet" href="{% static 'css/modal.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Cantarell:400,700" rel="stylesheet"> 
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500|Roboto:300,400,500" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
@@ -54,12 +55,13 @@
     <header>
         <div id="app-info">
             <img src="/static/img/logo.png">
-            <h1>Chrono <span class="fa fa-spinner fa-spin" ng-show="!dataLoaded"></span></h1>
+            <h1>Chrono <span class="fa fa-circle-o-notch fa-spin" ng-show="!dataLoaded"></span></h1>
         </div>
         <div id="user-info">
             <a><span>{{ auth.user.displayName }}</span><i class="fa fa-chevron-down"></i></a>
         </div>
     </header>
+     
     <aside>
         <header>
             <h2>Projects</h2>
@@ -68,35 +70,53 @@
             <a ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" href="#project-{{project.projectId}}">{{ project.name }}</a>
         </div>
         <div id="add-project-inputs">
-            <h3>Add new project</h3>
-            <label>Select Team:</label>
-            <select ng-model="selectedTeam" ng-options="team.teamId as team.name for team in db.teams">
-            </select>
-            <label>Name: </label>
-            <input ng-model="newProjectName" placeholder="Enter project name">
-            <button progress-click="db.addProject(selectedTeam, newProjectName)"><i class="fa fa-plus"></i>Add</button>
+            <header>
+                <h3>Add new project</h3>
+            </header>
+            <div class="content">
+                <div class="input-group">
+                    <label>Select Team:</label>
+                    <select ng-model="selectedTeam" ng-options="team.teamId as team.name for team in db.teams">
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Name: </label>
+                    <input ng-model="newProjectName" placeholder="Enter project name">
+                </div>
+                <div class="action-buttons">
+                    <button progress-click="db.addProject(selectedTeam, newProjectName)"><i class="fa fa-plus"></i>Add</button>
+                </div>
+            </div>
         </div>
     </aside>
+     
     <main>
-
         <div ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" id="project-{{project.projectId}}" >
             <header>
                 <h2>{{ project.name }}</h2>
-                <div>
-                    <button ng-click="stats.export(project.projectId);" ng-show="dataLoaded"><i class="fa fa-file-excel-o"></i></button>
-                    <button ng-click="stats.show(project.projectId)" ng-show="dataLoaded"><i class="fa fa-area-chart"></i></button>
-                    <button progress-click="db.deleteProject(project.projectId)"><i class="fa fa-trash"></i></button>
+                <div class="action-buttons">
+                    <button ng-click="stats.export(project.projectId);" ng-show="dataLoaded" title="Export to excel sheet"><i class="fa fa-file-excel-o"></i></button>
+                    <button ng-click="stats.show(project.projectId)" ng-show="dataLoaded"><i class="fa fa-area-chart" title="Show project status graph"></i></button>
+                    <button progress-click="db.deleteProject(project.projectId)" title="Delete project"><i class="fa fa-trash"></i></button>
                 </div>
-            </header>
+                <div class="tabs">
+                    <div class="tab {{ taskTab == 'active' ? 'active' : '' }}" ng-click="taskTab = 'active';">Active tasks</div>
+                    <div class="tab {{ taskTab == 'all' ? 'active' : '' }}" ng-click="taskTab = 'all';">All tasks</div>
+                </div>
 
-            <div class="tabs">
-                <div class="tab {{ taskTab == 'active' ? 'active' : '' }}" ng-click="taskTab = 'active';">Active tasks</div>
-                <div class="tab {{ taskTab == 'all' ? 'active' : '' }}" ng-click="taskTab = 'all';">All tasks</div>
-            </div>
+            </header>
 
             <div id="tasks">
                 <div ng-repeat="task in project.tasks" class="task {{ task.running ? 'active' : '' }}" ng-show="taskTab == 'all' || task.active">
-                    <h3>{{ task.name }}</h3>
+                    <header>
+                        <h3>{{ task.name }}</h3>
+                        <div class="task-action-buttons">
+                            <button ng-click="db.editTask(task.taskId)" title="Edit task"><i class="fa fa-edit"></i></button>
+                            <button ng-if="!task.running" progress-click="db.startTask(task.taskId)" }} title="Start task"><i class="fa fa-play" ></i></button>
+                            <button ng-if="task.running" progress-click="db.stopTask(task.taskId)" }} title="Stop task"><i class="fa fa-stop"></i></button>
+                        </div>
+                    </header>
+                     
                     <div class="time-elements">
                         <div ng-repeat="entry in task.entries">
                             <date>{{ entry.startTime | date: 'short' }}</date>
@@ -105,24 +125,21 @@
                                 <span ng-if="!entry.endTime">active</span>
                             </div>
                             <div>
-                                <button ng-click="db.editTaskEntry(task.taskId, entry.entryId);"><i class="fa fa-edit"></i></button>
-                                <button progress-click="db.deleteTaskEntry(task.taskId, entry.entryId)"><i class="fa fa-trash-o"></i></button>
+                                <button ng-click="db.editTaskEntry(task.taskId, entry.entryId);" title="Edit"><i class="fa fa-edit"></i></button>
+                                <button progress-click="db.deleteTaskEntry(task.taskId, entry.entryId)" title="Delete"><i class="fa fa-trash-o"></i></button>
                             </div>
                         </div>
-                    </div>
-                    <div class="task-action-buttons">
-                        <button ng-click="db.editTask(task.taskId)">Edit</button>
-                        <button ng-if="!task.running" progress-click="db.startTask(task.taskId)" }}>Start</button>
-                        <button ng-if="task.running" progress-click="db.stopTask(task.taskId)" }}>Stop</button>
                     </div>
                 </div>
 
                 <div class="task new-task" ng-show="taskTab == 'all'">
-                    <h3><input ng-model="newTaskName" placeholder="Enter task name"></h3>
+                    <header>
+                        <h3><input ng-model="newTaskName" placeholder="Enter task name"></h3>
+                        <div class="task-action-buttons">
+                            <span></span><button ng-click="newTaskName = '';" progress-click="db.addTask(project.projectId, newTaskName);"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </header>
                     <div class="time-elements">
-                    </div>
-                    <div class="task-action-buttons">
-                        <span></span><button ng-click="newTaskName = '';" progress-click="db.addTask(project.projectId, newTaskName);">Add task</button>
                     </div>
                 </div>
             </div>
@@ -174,12 +191,10 @@
                 <section>
                     <label>Status</label>
                     <div>
-                        <label>Active: </label>
-                        <input type="checkbox" ng-model="editTaskActive">
+                        <label class="radio-input"><input type="checkbox" ng-model="editTaskActive">Active</label>
+                        <button data-modal-action="delete" data-modal-persist="true">Delete</button>
                     </div>
                     <div>
-                        <div></div>
-                        <button data-modal-action="delete" data-modal-persist="true">Delete</button>
                     </div>
                 </section>
             </main>

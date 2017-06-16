@@ -1,16 +1,19 @@
+* {
+  box-sizing: border-box; }
+
 body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Cantarell', sans-serif;
   font-weight: 400;
   font-size: 14px;
   background-color: #f0f0f0;
   color: #515151;
-  line-height: 1.8; }
+  line-height: 1.5; }
   body a, body a:hover, body a:visited, body a:active, body a:focus {
     outline: none;
     text-decoration: none;
     text-transform: uppercase;
-    font-weight: 500;
+    font-weight: 700;
     cursor: pointer; }
 
 body {
@@ -19,22 +22,17 @@ body {
   justify-content: space-between;
   height: 100vh;
   overflow: hidden; }
-  body * {
-    box-sizing: border-box; }
   body h1, body h2, body h3, body h4 {
-    margin: 0;
-    text-transform: uppercase; }
-  body select {
-    background-color: #fff; }
+    margin: 0; }
   body > header {
     flex-basis: 100%;
     height: 80px;
-    background-color: #fff;
     display: flex;
-    color: #8e44ad;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     padding: 0 24px;
+    background-color: #8e44ad;
+    color: #fff;
     z-index: 1;
     border-bottom: 1px solid #8e44ad; }
     body > header #app-info {
@@ -43,18 +41,29 @@ body {
       body > header #app-info img {
         height: 2.6em;
         width: 2.6em;
+        margin-right: 10px;
         object-fit: contain;
-        object-position: center; }
+        object-position: center;
+        filter: grayscale(50%) brightness(120%); }
       body > header #app-info h1 {
-        font-size: 2.6em;
-        font-weight: 300; }
+        font-size: 2.4em;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.1em; }
     body > header #user-info {
-      color: inherit; }
+      color: rgba(255, 255, 255, 0.6);
+      transition: color 0.2s ease-in-out;
+      text-transform: none; }
+      body > header #user-info .fa {
+        margin-left: 8px; }
+      body > header #user-info:hover {
+        color: rgba(255, 255, 255, 0.96); }
   body > aside {
     flex-basis: 25%;
     background-color: #f0f0f0;
-    border-right: 1px solid #8e44ad;
-    height: calc(100vh - 80px); }
+    height: calc(100vh - 80px);
+    z-index: 1;
+    box-shadow: 3px 0 10px -5px rgba(0, 0, 0, 0.3); }
     body > aside > header {
       height: 72px;
       display: flex;
@@ -63,14 +72,15 @@ body {
       background-color: #fff;
       border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
       body > aside > header h2 {
-        font-weight: 400; }
+        font-weight: 400;
+        font-size: 24px; }
     body > aside #projects {
-      height: calc(100% - 144px - 72px);
+      height: calc(100% - 200px - 72px);
       overflow-y: scroll; }
       body > aside #projects a {
         display: block;
         width: 100%;
-        padding: 8px 16px;
+        padding: 16px 16px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         color: #8e44ad; }
         body > aside #projects a:hover {
@@ -78,101 +88,136 @@ body {
     body > aside #add-project-inputs {
       border-top: 1px solid rgba(0, 0, 0, 0.1);
       background-color: #fff;
-      height: 144px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 10px; }
-      body > aside #add-project-inputs input, body > aside #add-project-inputs select, body > aside #add-project-inputs button {
-        font-family: inherit;
-        outline: none;
-        text-transform: uppercase; }
-      body > aside #add-project-inputs h3 {
-        flex-basis: 100%;
-        font-weight: 400; }
-      body > aside #add-project-inputs button {
-        margin-left: auto;
-        border: none;
-        background-color: transparent;
-        color: #8e44ad;
-        cursor: pointer;
-        padding: 8px; }
-        body > aside #add-project-inputs button .fa {
-          margin-right: 8px; }
-      body > aside #add-project-inputs label {
-        flex-basis: 33%;
-        text-transform: uppercase;
-        color: rgba(0, 0, 0, 0.5);
-        font-size: 0.9em; }
-      body > aside #add-project-inputs input, body > aside #add-project-inputs select {
-        padding: 4px 8px;
-        flex-basis: 67%;
-        outline: none; }
+      height: 200px;
+      flex-wrap: wrap; }
+      body > aside #add-project-inputs header {
+        padding: 0 16px;
+        height: 48px;
+        display: flex;
+        align-items: center; }
+        body > aside #add-project-inputs header h3 {
+          font-weight: 700; }
+      body > aside #add-project-inputs .content {
+        padding: 0 16px; }
+        body > aside #add-project-inputs .content .input-group {
+          min-height: 36px;
+          display: flex;
+          align-items: center; }
+          body > aside #add-project-inputs .content .input-group input, body > aside #add-project-inputs .content .input-group select {
+            font-family: inherit;
+            outline: none; }
+          body > aside #add-project-inputs .content .input-group label {
+            flex-basis: 33%;
+            color: rgba(0, 0, 0, 0.5);
+            font-size: 13px; }
+          body > aside #add-project-inputs .content .input-group input, body > aside #add-project-inputs .content .input-group select {
+            padding: 4px 8px;
+            flex-basis: 67%;
+            outline: none;
+            font-size: 13px;
+            background-color: #fff; }
+        body > aside #add-project-inputs .content .action-buttons {
+          min-height: 48px;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end; }
+          body > aside #add-project-inputs .content .action-buttons button {
+            border: none;
+            text-transform: uppercase;
+            background-color: #8e44ad;
+            color: #fff;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 3px;
+            font-weight: 700;
+            font-family: inherit; }
+            body > aside #add-project-inputs .content .action-buttons button .fa {
+              margin-right: 6px; }
   body > main {
     flex-basis: 75%;
     height: calc(100vh - 80px);
-    overflow-y: auto; }
+    overflow-y: auto;
+    background-color: #e3e3e3; }
     body > main > div {
       min-height: 100vh; }
       body > main > div > header {
-        height: 72px;
-        background-color: #fff;
-        color: #8e44ad;
-        border: 1px solid rgba(0, 0, 0, 0.1);
+        background-color: #fafafa;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        border-bottom: 2px solid rgba(0, 0, 0, 0.1);
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
-        padding: 0 16px;
         position: sticky;
         top: 0;
-        box-shadow: 0 5px 15px -10px rgba(0, 0, 0, 0.5); }
+        padding: 0 24px; }
         body > main > div > header h2 {
-          font-weight: 400; }
-        body > main > div > header button {
+          font-weight: 400;
+          height: 56px;
+          display: flex;
+          align-items: center;
+          font-size: 24px; }
+        body > main > div > header .action-buttons button {
+          color: inherit;
           background-color: #fff;
-          color: #8e44ad;
-          border: 1px solid #8e44ad;
+          border: 2px solid rgba(0, 0, 0, 0.5);
           border-radius: 50%;
-          width: 32px;
-          height: 32px;
-          cursor: pointer; }
-      body > main > div .tabs {
-        display: flex;
-        height: 36px;
-        align-items: center;
-        background-color: white; }
-        body > main > div .tabs .tab {
-          padding: 6px 16px;
+          width: 36px;
+          height: 36px;
           cursor: pointer;
-          text-transform: uppercase;
-          font-size: 13px; }
-          body > main > div .tabs .tab.active {
-            border-bottom: 1px solid #8e44ad; }
+          margin-left: 4px;
+          font-size: 15px; }
+          body > main > div > header .action-buttons button:hover {
+            color: #8e44ad;
+            border: 2px solid #8e44ad; }
+        body > main > div > header .tabs {
+          margin: 0 -16px;
+          flex-basis: 100%;
+          display: flex;
+          height: 36px;
+          align-items: center; }
+          body > main > div > header .tabs .tab {
+            padding: 6px 16px;
+            cursor: pointer;
+            text-transform: uppercase; }
+            body > main > div > header .tabs .tab.active {
+              border-bottom: 2px solid #8e44ad; }
       body > main > div #tasks {
         display: flex;
         align-items: flex-start;
         justify-content: flex-start;
-        flex-wrap: wrap; }
+        flex-wrap: wrap;
+        padding: 10px 16px; }
         body > main > div #tasks .task {
-          width: 310px;
-          margin: 10px;
-          border: 1px solid rgba(0, 0, 0, 0.1); }
-          body > main > div #tasks .task h3 {
-            background-color: #8e44ad;
+          width: 320px;
+          margin: 8px;
+          box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 0.5);
+          background-color: #f5f5f5; }
+          body > main > div #tasks .task header {
             height: 48px;
-            padding: 0 10px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            color: #fff;
-            font-weight: 400; }
-            body > main > div #tasks .task h3 input {
-              background-color: transparent;
-              border: none;
-              outline: none; }
-          body > main > div #tasks .task.active h3 {
+            background-color: #fff; }
+            body > main > div #tasks .task header h3 {
+              font-weight: 400;
+              color: #8e44ad;
+              padding: 0 16px; }
+              body > main > div #tasks .task header h3 input {
+                width: 100%;
+                font-family: inherit;
+                font-size: 15px;
+                background-color: transparent;
+                border: none;
+                outline: none;
+                border-bottom: 2px solid rgba(0, 0, 0, 0.1); }
+                body > main > div #tasks .task header h3 input:focus {
+                  border-bottom: 2px solid #8e44ad; }
+          body > main > div #tasks .task.active header {
             background-color: #27ae60; }
-          body > main > div #tasks .task.new-task h3 {
+            body > main > div #tasks .task.active header * {
+              color: #fff; }
+          body > main > div #tasks .task.new-task header {
             background-color: #fff; }
           body > main > div #tasks .task .time-elements {
             height: 300px;
@@ -184,7 +229,7 @@ body {
               align-items: center;
               height: 32px; }
               body > main > div #tasks .task .time-elements > div:nth-child(odd) {
-                background-color: #fff; }
+                background-color: #eaeaea; }
               body > main > div #tasks .task .time-elements > div > :first-child {
                 flex-basis: 50%; }
               body > main > div #tasks .task .time-elements > div > :nth-child(2) {
@@ -196,24 +241,23 @@ body {
                 border: none;
                 outline: none;
                 cursor: pointer;
-                color: #8e44ad; }
+                color: rgba(0, 0, 0, 0.5); }
+                body > main > div #tasks .task .time-elements > div button:hover {
+                  color: #8e44ad; }
           body > main > div #tasks .task .task-action-buttons {
-            height: 48px;
-            padding: 0 10px;
-            display: flex;
-            justify-content: space-between;
-            background-color: #fff; }
+            padding: 0 10px; }
             body > main > div #tasks .task .task-action-buttons button {
-              font-size: 1.1em;
-              letter-spacing: 0.05em;
+              color: rgba(0, 0, 0, 0.5);
+              font-size: 18px;
+              margin-left: 8px;
               background-color: transparent;
-              color: #8e44ad;
               border: none;
               font-family: inherit;
               text-transform: uppercase;
-              font-weight: 400;
               outline: none;
               cursor: pointer; }
+              body > main > div #tasks .task .task-action-buttons button:hover {
+                color: #8e44ad; }
   body #stats {
     position: absolute;
     top: 80px;
@@ -224,7 +268,8 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center; }
+    align-items: center;
+    z-index: 111; }
     body #stats header {
       flex-basis: 80px;
       display: flex;
@@ -238,7 +283,7 @@ body {
         cursor: pointer;
         border: none;
         outline: none;
-        font-size: 3em; }
+        font-size: 2em; }
     body #stats main {
       display: flex;
       justify-content: center;
@@ -248,10 +293,8 @@ body {
       body #stats main svg .line {
         fill: none;
         stroke-width: 2px; }
-  body #edit-entry-modal main {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around; }
+  body #edit-entry-modal main > div {
+    padding: 10px 0; }
     body #edit-entry-modal main > div > * {
       display: block;
       margin-top: 4px; }
@@ -263,8 +306,10 @@ body {
       margin-bottom: 10px; }
       body #edit-task-modal main section > label {
         display: block;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        margin-bottom: 6px; }
+        margin-bottom: 6px;
+        font-size: 11px;
+        text-transform: uppercase;
+        color: rgba(0, 0, 0, 0.5); }
       body #edit-task-modal main section > div {
         width: 320px;
         display: flex;
@@ -273,14 +318,19 @@ body {
         body #edit-task-modal main section > div > label {
           flex-basis: 96px; }
         body #edit-task-modal main section > div input[type="text"], body #edit-task-modal main section > div input[type="date"] {
-          flex-basis: calc(100% - 96px); }
+          flex-basis: calc(100% - 96px);
+          font-family: inherit; }
         body #edit-task-modal main section > div button {
-          color: #fff;
+          font-family: inherit;
           border: none;
           outline: none;
-          background-color: #8e44ad;
-          padding: 6px 8px;
+          background-color: transparent;
+          color: #e74c3c;
+          text-transform: uppercase;
           cursor: pointer; }
+        body #edit-task-modal main section > div .radio-input {
+          display: flex;
+          align-items: center; }
         body #edit-task-modal main section > div input {
           padding: 0 4px; }
 

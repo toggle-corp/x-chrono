@@ -1,10 +1,14 @@
 @import 'colors';
 @import 'dimensions';
 
+* {
+    box-sizing: border-box;
+}
+
 body{
     margin: 0;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 400;
+    font-family: 'Cantarell', sans-serif;
+    font-weight: $font-weight-normal;
     font-size: $font-size-md;
     background-color: $background-color;
     color: $text-color;

@@ -8,17 +8,16 @@
     width: 100vw;
     height: 100vh;
     z-index: 1000;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.5);
 
     .modal {
-        display: flex;
-        flex-direction: column;
-        min-height: 250px;
+        min-height: 320px;
         background-color: #fff;
+        box-shadow: 0 5px 48px -5px rgba(0, 0, 0, 0.8);
 
         header {
-            flex-basis: 48px;
-            padding: 0px 16px;
+            min-height: 64px;
+            padding: 0px 24px;
             display: flex;
             align-items: center;
             background-color: $primary-color;
@@ -27,21 +26,24 @@
                 font-weight: $font-weight-normal;
             }
         }
+         
         main {
-            flex: 1;
-            padding: 16px;
+            padding: 16px 24px 0 24px;
+            min-height: calc(320px - 64px - 56px);
         }
+         
         footer {
-            flex-basis: 48px;
-            padding: 0px 16px;
+            min-height: 56px;
+            padding: 0px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid $primary-color;
+            background-color: #f0f0f0;
 
             button {
+                font-family: inherit;
+                text-transform: uppercase;
                 background-color: transparent;
-                padding: 6px 8px;
                 cursor: pointer;
                 border: none;
                 outline: none;
