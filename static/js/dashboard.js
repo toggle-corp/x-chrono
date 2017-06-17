@@ -84,6 +84,14 @@ const visualizationCenter = {
             }
         });
 
+        taskHours.forEach(task => {
+            userIds.forEach(user => {
+                if (!task[user]) {
+                    task[user] = 0;
+                }
+            });
+        });
+
         this.barChart.redraw(taskHours, userIds,
             users.reduce((a, b) => { a[b.pk] = b.color; return a; }, {}));
     }
