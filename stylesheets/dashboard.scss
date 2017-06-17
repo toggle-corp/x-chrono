@@ -1,0 +1,133 @@
+@import 'base';
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-wrap: wrap;
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        margin: 0;
+    }
+
+    > header {
+        flex-basis: 100%;
+        height: $header-height;
+        display: flex;
+        align-items:center;
+        justify-content: space-between;
+        padding: 0 24px;
+        background-color: $primary-color;
+        color: #fff;
+        z-index: 1;
+
+        .app-info{
+            align-items: center;
+            display: flex;
+
+            img {
+                height: 2.6em;
+                width: 2.6em;
+                margin-right: 10px;
+                object-fit: contain;
+                object-position: center;
+                filter: grayscale(50%) brightness(120%);
+            }
+             
+            h1 {
+                font-size: 2.4em;
+                font-weight: $font-weight-normal;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+            }
+        }
+    }
+}
+
+main {
+    flex-basis: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    height: calc(100vh - #{$header-height});
+
+    > header {
+        flex-basis: 100%;
+        background-color: #fff;
+        height: $header-height;
+
+        .filters {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .filter {
+            display: flex;
+            height: 36px;
+            flex-basis: 15%;
+            align-items: center;
+            margin: 8px;
+
+            label {
+                margin-right: 10px;
+            }
+
+            > input,
+            > div {
+                flex-basis: 90%;
+                min-height: 100%;
+            }
+
+            > input,
+            .selectize-input {
+                min-height: 100%;
+                padding: 8px;
+                border: 1px solid rgba(0, 0, 0, .4);
+                border-radius: 0;
+                box-shadow: none;
+            }
+        }
+    }
+
+    > .content {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .graph {
+        background-color: #fff;
+        display: block;
+        height: calc(50vh - #{$header-height} - 32px);
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .graph-1 {
+        flex-basis: calc(70% - 16px);
+        order: 1;
+        margin: 16px 0 0 16px;
+    }
+
+    .graph-2 {
+        flex-basis: calc(30% - 32px);
+        order: 2;
+        margin: 16px 16px 0 16px;
+    }
+
+    .graph-3 {
+        flex-basis: calc(100% - 32px);
+        order: 3;
+        margin: 16px;
+    }
+
+}

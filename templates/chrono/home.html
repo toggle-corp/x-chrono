@@ -33,14 +33,11 @@
     let exportUrl = '{% url "export_project" 0 %}';
     </script>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
     <script src="{% static 'js/modal.js' %}"></script>
-    <script src="{% static 'js/angular.min.js' %}"></script>
     <script src="{% static 'js/sign-in.js' %}"></script>
     <script src="{% static 'js/database.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
-
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="{% static 'js/stats.js' %}"></script>
 
     <link rel="stylesheet" href="{% static 'css/modal.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
@@ -67,7 +64,7 @@
             <h2>Projects</h2>
         </header>
         <div id="projects">
-            <a ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" href="#project-{{project.pk}}">{{ project.name }}</a>
+            <a ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" href="#{{project.slug}}">{{ project.name }}</a>
         </div>
         <div id="add-project-inputs">
             <header>
@@ -91,12 +88,10 @@
     </aside>
      
     <main>
-        <div ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" id="project-{{project.pk}}" >
+        <div ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" id="{{project.slug}}" >
             <header>
                 <h2>{{ project.name }}</h2>
                 <div class="action-buttons">
-                    <button ng-click="stats.export(project.pk);" ng-show="dataLoaded" title="Export to excel sheet"><i class="fa fa-file-excel-o"></i></button>
-                    <button ng-click="stats.show(project.pk)" ng-show="dataLoaded"><i class="fa fa-area-chart" title="Show project status graph"></i></button>
                     <button progress-click="db.deleteProject(project.pk)" title="Delete project"><i class="fa fa-trash"></i></button>
                 </div>
                 <div class="tabs">
@@ -203,21 +198,6 @@
                 <button data-modal-action="save">Save</button>
             </footer>
         </div>
-    </div>
-
-    <div id="stats" ng-show="statsShown">
-        <header>
-            <div>
-                Filter by date range: <input id="stat-start-date" type="date" ng-change="stats.refreshChart(stats.data)" ng-model="statStartDate"> - <input id="stat-end-date" ng-change="stats.refreshChart(stats.data)" ng-model="statEndDate" type="date">
-            </div>
-            <button ng-click="statsShown=false;"><i class="fa fa-times"></i></button>
-        </header>
-        <main>
-            <svg width="800" height="500">
-                <g transform="translate(16, 16)">
-                </g>
-            </svg>
-        </main>
     </div>
 </body>
 {% endverbatim %}

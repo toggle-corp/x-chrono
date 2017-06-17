@@ -1,4 +1,5 @@
 from django.db import models
+from django.template.defaultfilters import slugify
 
 from datetime import datetime
 
@@ -8,9 +9,16 @@ from users.models import User, Team
 class Project(models.Model):
     name = models.CharField(max_length=300)
     team = models.ForeignKey(Team)
+    slug = models.SlugField(default=None, null=True, blank=True)
+
+    # TODO: Probably make slug and team unique together
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Project, self).save(*args, *kwargs)
 
 
 class Task(models.Model):

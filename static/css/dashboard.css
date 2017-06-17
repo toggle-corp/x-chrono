@@ -1,0 +1,113 @@
+* {
+  box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Cantarell', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  background-color: #f0f0f0;
+  color: #515151;
+  line-height: 1.5; }
+  body a, body a:hover, body a:visited, body a:active, body a:focus {
+    outline: none;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 700;
+    cursor: pointer; }
+
+* {
+  box-sizing: border-box; }
+
+body {
+  display: flex;
+  flex-wrap: wrap; }
+  body h1,
+  body h2,
+  body h3,
+  body h4 {
+    margin: 0; }
+  body > header {
+    flex-basis: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    background-color: #8e44ad;
+    color: #fff;
+    z-index: 1; }
+    body > header .app-info {
+      align-items: center;
+      display: flex; }
+      body > header .app-info img {
+        height: 2.6em;
+        width: 2.6em;
+        margin-right: 10px;
+        object-fit: contain;
+        object-position: center;
+        filter: grayscale(50%) brightness(120%); }
+      body > header .app-info h1 {
+        font-size: 2.4em;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.1em; }
+
+main {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  height: calc(100vh - 80px); }
+  main > header {
+    flex-basis: 100%;
+    background-color: #fff;
+    height: 80px; }
+    main > header .filters {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center; }
+    main > header .filter {
+      display: flex;
+      height: 36px;
+      flex-basis: 15%;
+      align-items: center;
+      margin: 8px; }
+      main > header .filter label {
+        margin-right: 10px; }
+      main > header .filter > input,
+      main > header .filter > div {
+        flex-basis: 90%;
+        min-height: 100%; }
+      main > header .filter > input,
+      main > header .filter .selectize-input {
+        min-height: 100%;
+        padding: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.4);
+        border-radius: 0;
+        box-shadow: none; }
+  main > .content {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%; }
+  main .graph {
+    background-color: #fff;
+    display: block;
+    height: calc(50vh - 80px - 32px); }
+    main .graph svg {
+      width: 100%;
+      height: 100%; }
+  main .graph-1 {
+    flex-basis: calc(70% - 16px);
+    order: 1;
+    margin: 16px 0 0 16px; }
+  main .graph-2 {
+    flex-basis: calc(30% - 32px);
+    order: 2;
+    margin: 16px 16px 0 16px; }
+  main .graph-3 {
+    flex-basis: calc(100% - 32px);
+    order: 3;
+    margin: 16px; }
+
+/*# sourceMappingURL=dashboard.css.map */

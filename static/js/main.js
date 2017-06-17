@@ -16,7 +16,6 @@ chrono.controller('mainController',  ['$scope', '$http', function($scope, $http)
         // Do everything here
 
         database.init($scope, $http);
-        stats.init($scope);
         return database.loadAll().then(function() {
             $scope.dataLoaded = true;
             $scope.selectedTeam = database.teams[0].pk;
@@ -41,7 +40,7 @@ function progressClick(element, promise) {
         element.data('inprogress', false);
     };
 
-    element.html('<i class="fa fa-spinner fa-spin"></i>');
+    element.html('<i class="fa fa-circle-o-notch fa-spin"></i>');
     return promise.then(() => {
         done();
     }).catch((error) => {
