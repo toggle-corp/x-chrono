@@ -25,4 +25,4 @@ class Team(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        super(Team, self).save(*args, *kwargs)
+        super(Team, self).save(*args, **kwargs)
