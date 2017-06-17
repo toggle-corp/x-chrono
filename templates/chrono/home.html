@@ -15,7 +15,7 @@
     <script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
     <script>
     // Initialize Firebase
-    var config = {
+    let config = {
         apiKey: "AIzaSyDV5SEaetn38UksDXF3a0mQPFY4UH1nPU4",
         authDomain: "chrono-50f8f.firebaseapp.com",
         databaseURL: "https://chrono-50f8f.firebaseio.com",
@@ -24,11 +24,11 @@
     };
     firebase.initializeApp(config);
 
-    var userApi = '{% url "user_api" %}';
-    var teamApi = '{% url "team_api" %}';
-    var projectApi = '{% url "project_api" %}';
-    var taskApi = '{% url "task_api" %}';
-    var entryApi = '{% url "entry_api" %}';
+    let userApi = '/api/v1/users/';
+    let teamApi = '/api/v1/teams/';
+    let projectApi = '/api/v1/projects/';
+    let taskApi = '/api/v1/tasks/';
+    let entryApi = '/api/v1/entries/';
 
     let exportUrl = '{% url "export_project" 0 %}';
     </script>
@@ -67,7 +67,7 @@
             <h2>Projects</h2>
         </header>
         <div id="projects">
-            <a ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" href="#project-{{project.projectId}}">{{ project.name }}</a>
+            <a ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" href="#project-{{project.pk}}">{{ project.name }}</a>
         </div>
         <div id="add-project-inputs">
             <header>
@@ -76,7 +76,7 @@
             <div class="content">
                 <div class="input-group">
                     <label>Select Team:</label>
-                    <select ng-model="selectedTeam" ng-options="team.teamId as team.name for team in db.teams">
+                    <select ng-model="selectedTeam" ng-options="team.pk as team.name for team in db.teams">
                     </select>
                 </div>
                 <div class="input-group">
@@ -91,13 +91,13 @@
     </aside>
      
     <main>
-        <div ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" id="project-{{project.projectId}}" >
+        <div ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" id="project-{{project.pk}}" >
             <header>
                 <h2>{{ project.name }}</h2>
                 <div class="action-buttons">
-                    <button ng-click="stats.export(project.projectId);" ng-show="dataLoaded" title="Export to excel sheet"><i class="fa fa-file-excel-o"></i></button>
-                    <button ng-click="stats.show(project.projectId)" ng-show="dataLoaded"><i class="fa fa-area-chart" title="Show project status graph"></i></button>
-                    <button progress-click="db.deleteProject(project.projectId)" title="Delete project"><i class="fa fa-trash"></i></button>
+                    <button ng-click="stats.export(project.pk);" ng-show="dataLoaded" title="Export to excel sheet"><i class="fa fa-file-excel-o"></i></button>
+                    <button ng-click="stats.show(project.pk)" ng-show="dataLoaded"><i class="fa fa-area-chart" title="Show project status graph"></i></button>
+                    <button progress-click="db.deleteProject(project.pk)" title="Delete project"><i class="fa fa-trash"></i></button>
                 </div>
                 <div class="tabs">
                     <div class="tab {{ taskTab == 'active' ? 'active' : '' }}" ng-click="taskTab = 'active';">Active tasks</div>
@@ -111,22 +111,22 @@
                     <header>
                         <h3>{{ task.name }}</h3>
                         <div class="task-action-buttons">
-                            <button ng-click="db.editTask(task.taskId)" title="Edit task"><i class="fa fa-edit"></i></button>
-                            <button ng-if="!task.running" progress-click="db.startTask(task.taskId)" }} title="Start task"><i class="fa fa-play" ></i></button>
-                            <button ng-if="task.running" progress-click="db.stopTask(task.taskId)" }} title="Stop task"><i class="fa fa-stop"></i></button>
+                            <button ng-click="db.editTask(task.pk)" title="Edit task"><i class="fa fa-edit"></i></button>
+                            <button ng-if="!task.running" progress-click="db.startTask(task.pk)" }} title="Start task"><i class="fa fa-play" ></i></button>
+                            <button ng-if="task.running" progress-click="db.stopTask(task.pk)" }} title="Stop task"><i class="fa fa-stop"></i></button>
                         </div>
                     </header>
                      
                     <div class="time-elements">
                         <div ng-repeat="entry in task.entries">
-                            <date>{{ entry.startTime | date: 'short' }}</date>
+                            <date>{{ entry.start_time | date: 'short' }}</date>
                             <div>
-                                <time ng-if="entry.endTime">{{ (entry.endTime - entry.startTime) | date: 'HH:mm:ss': 'UTC' }}</time>
-                                <span ng-if="!entry.endTime">active</span>
+                                <time ng-if="entry.end_time">{{ entry.dt }}</time>
+                                <span ng-if="!entry.end_time">active</span>
                             </div>
                             <div>
-                                <button ng-click="db.editTaskEntry(task.taskId, entry.entryId);" title="Edit"><i class="fa fa-edit"></i></button>
-                                <button progress-click="db.deleteTaskEntry(task.taskId, entry.entryId)" title="Delete"><i class="fa fa-trash-o"></i></button>
+                                <button ng-click="db.editTaskEntry(task.pk, entry.pk);" title="Edit"><i class="fa fa-edit"></i></button>
+                                <button progress-click="db.deleteTaskEntry(task.pk, entry.pk)" title="Delete"><i class="fa fa-trash-o"></i></button>
                             </div>
                         </div>
                     </div>
@@ -136,7 +136,7 @@
                     <header>
                         <h3><input ng-model="newTaskName" placeholder="Enter task name"></h3>
                         <div class="task-action-buttons">
-                            <span></span><button ng-click="newTaskName = '';" progress-click="db.addTask(project.projectId, newTaskName);"><i class="fa fa-plus"></i></button>
+                            <span></span><button ng-click="newTaskName = '';" progress-click="db.addTask(project.pk, newTaskName);"><i class="fa fa-plus"></i></button>
                         </div>
                     </header>
                     <div class="time-elements">

@@ -266,6 +266,8 @@ body{
                         background-color: #fff;
 
                         h3 {
+                            width: calc(100% - 96px);
+                            line-height: 14px;
                             font-weight: $font-weight-normal;
                             color: $primary-color;
                             padding: 0 16px;

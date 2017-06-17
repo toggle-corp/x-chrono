@@ -22,36 +22,36 @@ let database = {
     loadTeams: function() {
         let that = this;
         return new Promise(function(resolve, reject) {
-            that.http.get(teamApi, { params: {userId: auth.userId} }).then(
+            that.http.get(teamApi, { params: {user_id: auth.userId} }).then(
                 function success(response) {
-                    if (response.data.status) {
-                        that.teams = response.data.data;
+                    if (response.data) {
+                        that.teams = response.data;
                         resolve();
                     } else {
-                        reject('Failed to load teams\n' + JSON.stringify({response: response}))
+                        reject('Failed to load teams\n' + JSON.stringify({response: response}));
                     }
                 },
                 function error(response) {
-                    reject('Failed to load teams\n' + JSON.stringify({response: response}))
+                    reject('Failed to load teams\n' + JSON.stringify({response: response}));
                 }
-            )
+            );
         });
     },
 
     loadProjects: function() {
         let that = this;
         return new Promise(function(resolve, reject) {
-            that.http.get(projectApi, { params: { userId: auth.userId } }).then(
+            that.http.get(projectApi, { params: { user_id: auth.userId } }).then(
                 function success(response) {
-                    if (response.data.status) {
-                        that.projects = response.data.data;
+                    if (response.data) {
+                        that.projects = response.data;
                         resolve();
                     } else {
-                        reject('Failed to load projects\n' + JSON.stringify({response: response}))
+                        reject('Failed to load projects\n' + JSON.stringify({response: response}));
                     }
                 },
                 function error(response) {
-                    reject('Failed to load projects\n' + JSON.stringify({response: response}))
+                    reject('Failed to load projects\n' + JSON.stringify({response: response}));
                 }
             );
         });
@@ -60,17 +60,17 @@ let database = {
     loadTasks: function() {
         let that = this;
         return new Promise(function(resolve, reject) {
-            that.http.get(taskApi, { params: { userId: auth.userId } }).then(
+            that.http.get(taskApi, { params: { user_id: auth.userId } }).then(
                 function success(response) {
-                    if (response.data.status) {
-                        that.tasks = response.data.data;
+                    if (response.data) {
+                        that.tasks = response.data;
                         resolve();
                     } else {
                         reject('Failed to load tasks\n' + JSON.stringify({response: response}));
                     }
                 },
                 function error(response) {
-                    reject('Failed to load tasks\n' + JSON.stringify({response: response}))
+                    reject('Failed to load tasks\n' + JSON.stringify({response: response}));
                 }
             );
         });
@@ -82,7 +82,7 @@ let database = {
         }
         for (let i=0; i<this.tasks.length; i++) {
             let task = this.tasks[i];
-            let project = this.projects.find(p => p.projectId == task.project);
+            let project = this.projects.find(p => p.pk == task.project);
             if (project) {
                 project.tasks.push(task);
             }
@@ -92,11 +92,11 @@ let database = {
     },
 
     addProject: function(teamId, name) {
-        if (!name || name.length == 0)
+        if (!name || name.length === 0)
             return;
 
         let project = {
-            projectId: null, name: name,
+            name: name,
             team: teamId
         };
         let that = this;
@@ -104,7 +104,7 @@ let database = {
         return new Promise((resolve, reject) => {
             that.http.post(projectApi, project).then(
                 function success(response) {
-                    that.projects.push(response.data.data.project);
+                    that.projects.push(response.data);
                     resolve();
                 },
                 function error(response) {
@@ -115,7 +115,6 @@ let database = {
     },
 
     deleteProject: function(projectId) {
-        let project = { projectId: projectId };
         let that = this;
 
         if (!confirm('Deleting this project will delete it for all members. Are you sure you want to do this?')) {
@@ -123,29 +122,29 @@ let database = {
         }
 
         return new Promise((resolve, reject) => {
-            that.http.delete(projectApi, { data: JSON.stringify(project) }).then(
+            that.http.delete(projectApi + projectId + '/').then(
                 function success(response) {
-                    let index = that.projects.findIndex(p => p.projectId == projectId);
+                    let index = that.projects.findIndex(p => p.pk == projectId);
                     if (index >= 0) {
                         that.projects.splice(index, 1);
                     }
                     resolve();
                 },
                 function error(response) {
-                    reject('Cannot delete project\n' + JSON.stringify({response: response}))
+                    reject('Cannot delete project\n' + JSON.stringify({response: response}));
                 }
             );
         });
     },
 
     addTask: function(projectId, name) {
-        if (!name || name.length == 0)
+        if (!name || name.length === 0)
             return;
 
         let task = {
-            taskId: null, name: name,
+            name: name,
             project: projectId,
-            planStart: null, planEnd: null,
+            plan_start: null, plan_end: null,
             active: false,
         };
         let that = this;
@@ -153,31 +152,31 @@ let database = {
         return new Promise((resolve, reject) => {
             that.http.post(taskApi, task).then(
                 function success(response) {
-                    that.tasks.push(response.data.data.task);
-                    let project = that.projects.find(p => p.projectId == projectId);
+                    that.tasks.push(response.data);
+                    let project = that.projects.find(p => p.pk == projectId);
                     if (!project.tasks) {
                         project.tasks = [];
                     }
-                    project.tasks.push(response.data.data.task);
-                    that.refreshTask(response.data.data.task);
+                    project.tasks.push(response.data);
+                    that.refreshTask(response.data);
                     resolve();
                 },
                 function error(response) {
-                    reject('Cannot add task\n' + JSON.stringify({response: response}))
+                    reject('Cannot add task\n' + JSON.stringify({response: response}));
                 }
             );
         });
     },
 
     editTask: function(taskId) {
-        let task = this.tasks.find(t => t.taskId == taskId);
+        let task = this.tasks.find(t => t.pk == taskId);
         if (!task) {
             return;
         }
 
         this.scope.editTaskName = task.name;
-        this.scope.editTaskPlanStart = task.planStart ? new Date(task.planStart) : null;
-        this.scope.editTaskPlanEnd = task.planEnd ? new Date(task.planEnd) : null;
+        this.scope.editTaskPlanStart = task.plan_start ? new Date(task.plan_start) : null;
+        this.scope.editTaskPlanEnd = task.plan_end ? new Date(task.plan_end) : null;
         this.scope.editTaskActive = task.active;
 
         let that = this;
@@ -185,29 +184,29 @@ let database = {
         modal.show((action) => {
             if (action == 'save') {
                 let newTask = {
-                    taskId: taskId,
+                    pk: taskId,
                     name: that.scope.editTaskName,
                     project: task.project,
-                    planStart: that.scope.editTaskPlanStart ? Math.floor(that.scope.editTaskPlanStart.getTime()) : null,
-                    planEnd: that.scope.editTaskPlanEnd ? Math.floor(that.scope.editTaskPlanEnd.getTime()) : null,
+                    plan_start: that.scope.editTaskPlanStart ? that.scope.editTaskPlanStart.toISOString().split('T')[0] : null,
+                    plan_end: that.scope.editTaskPlanEnd ? that.scope.editTaskPlanEnd.toISOString().split('T')[0] : null,
                     active: that.scope.editTaskActive,
                 };
 
                 return new Promise((resolve, reject) => {
-                    that.http.post(taskApi, newTask).then(
+                    that.http.put(taskApi + taskId + '/', newTask).then(
                         function success(response) {
-                            response.data.data.task.entries = task.entries;
+                            response.data.entries = task.entries;
 
-                            let index = that.tasks.findIndex(t => t.taskId == taskId);
-                            that.tasks[index] = response.data.data.task;
-                            let project = that.projects.find(p => p.projectId == task.project);
-                            index = project.tasks.findIndex(t => t.taskId == taskId);
-                            project.tasks[index] = response.data.data.task;
+                            let index = that.tasks.findIndex(t => t.pk == taskId);
+                            that.tasks[index] = response.data;
+                            let project = that.projects.find(p => p.pk == task.project);
+                            index = project.tasks.findIndex(t => t.pk == taskId);
+                            project.tasks[index] = response.data;
                             that.refreshTask(task);
                             resolve();
                         },
                         function error(response) {
-                            reject('Cannot edit task\n' + JSON.stringify({response: response}))
+                            reject('Cannot edit task\n' + JSON.stringify({response: response}));
                         }
                     );
                 });
@@ -226,7 +225,6 @@ let database = {
     },
 
     deleteTask: function(taskId) {
-        let task = { taskId: taskId };
         let that = this;
 
         if (!confirm('Deleting this task will delete it for all members. Are you sure you want to do this?')) {
@@ -234,18 +232,18 @@ let database = {
         }
 
         return new Promise((resolve, reject) => {
-            that.http.delete(taskApi, { data: JSON.stringify(task) }).then(
+            that.http.delete(taskApi + taskId + '/').then(
                 function success(response) {
-                    let index = that.tasks.findIndex(t => t.taskId == taskId);
-                    let project = that.projects.find(p => p.projectId == that.tasks[index].project);
-                    let index2 = project.tasks.findIndex(t => t.taskId == taskId);
+                    let index = that.tasks.findIndex(t => t.pk == taskId);
+                    let project = that.projects.find(p => p.pk == that.tasks[index].project);
+                    let index2 = project.tasks.findIndex(t => t.pk == taskId);
                     project.tasks.splice(index2, 1);
                     that.tasks.splice(index, 1);
 
                     resolve();
                 },
                 function error(response) {
-                    reject('Cannot delete task\n' + JSON.stringify({response: response}))
+                    reject('Cannot delete task\n' + JSON.stringify({response: response}));
                 }
             );
         });
@@ -253,8 +251,8 @@ let database = {
 
     startTask: function(taskId) {
         let taskEntry = {
-            entryId: null, task: taskId,
-            user: auth.userId, startTime: Math.floor(Date.now()),
+            task: taskId,
+            user: auth.userPk, start_time: new Date().toISOString().split('.')[0],
             starting: true,
         };
         let that = this;
@@ -262,125 +260,125 @@ let database = {
         return new Promise((resolve, reject) => {
             that.http.post(entryApi, taskEntry).then(
                 function success(response) {
-                    let task = that.tasks.find(t => t.taskId == taskId);
-                    task.entries.push(response.data.data.entry);
+                    let task = that.tasks.find(t => t.pk == taskId);
+                    task.entries.push(response.data);
                     task.active = true;
 
                     that.refreshTask(task);
                     resolve();
                 },
                 function error(response) {
-                    reject('Cannot start task\n' + JSON.stringify({response: response}))
+                    reject('Cannot start task\n' + JSON.stringify({response: response}));
                 }
             );
         });
     },
 
     stopTask: function(taskId, entryId) {
-        let task = this.tasks.find(t => t.taskId == taskId);
+        let task = this.tasks.find(t => t.pk == taskId);
         if (!task)
             return;
 
         let entry = null;
         if (!entryId) {
-            entry = task.entries.find(e => !e.endTime);
-            entryId = entry.entryId;
+            entry = task.entries.find(e => !e.end_time);
+            entryId = entry.pk;
         }
         else {
-            entry = task.entries.find(e => e.entryId == entryId);
+            entry = task.entries.find(e => e.pk == entryId);
         }
 
         if (!entry)
             return;
 
         let taskEntry = {
-            entryId: entryId, task: taskId,
-            user: auth.userId,
-            startTime: parseInt(entry.startTime),
-            endTime: Math.floor(Date.now()),
+            pk: entryId, task: taskId,
+            user: auth.userPk,
+            start_time: entry.start_time,
+            end_time: new Date().toISOString().split('.')[0],
         };
 
         let that = this;
 
         return new Promise((resolve, reject) => {
-            that.http.post(entryApi, taskEntry).then(
+            that.http.put(entryApi + entryId + '/', taskEntry).then(
                 function success(response) {
-                    let task = that.tasks.find(t => t.taskId == taskId);
-                    let index = task.entries.findIndex(e => e.entryId == entryId);
-                    task.entries[index] = response.data.data.entry;
+                    let task = that.tasks.find(t => t.pk == taskId);
+                    let index = task.entries.findIndex(e => e.pk == entryId);
+                    task.entries[index] = response.data;
                     that.refreshTask(task);
                     resolve();
                 },
                 function error(response) {
-                    reject('Cannot stop task\n' + JSON.stringify({response: response}))
+                    reject('Cannot stop task\n' + JSON.stringify({response: response}));
                 }
             );
         });
     },
 
     deleteTaskEntry: function(taskId, entryId) {
-        let entry = { entryId: entryId };
         let that = this;
         return new Promise((resolve, reject) => {
-            that.http.delete(entryApi, { data: JSON.stringify(entry) }).then(
+            that.http.delete(entryApi + entryId + '/').then(
                 function success(response) {
-                    let task = that.tasks.find(t => t.taskId == taskId);
-                    let index = task.entries.findIndex(e => e.entryId == entryId);
+                    let task = that.tasks.find(t => t.pk == taskId);
+                    let index = task.entries.findIndex(e => e.pk == entryId);
                     task.entries.splice(index, 1);
                     that.refreshTask(task);
                     resolve();
                 },
                 function error(response) {
-                    reject('Cannot delete entryy\n' + JSON.stringify({response: response}))
+                    reject('Cannot delete entryy\n' + JSON.stringify({response: response}));
                 }
             );
         });
     },
 
     editTaskEntry: function(taskId, entryId) {
-        let task = this.tasks.find(t => t.taskId == taskId);
+        let task = this.tasks.find(t => t.pk == taskId);
         if (!task)
             return;
 
         let entry = null;
         if (!entryId) {
-            entry = task.entries.find(e => !e.endTime);
-            entryId = entry.entryId;
+            entry = task.entries.find(e => !e.end_time);
+            entryId = entry.pk;
         }
         else {
-            entry = task.entries.find(e => e.entryId == entryId);
+            entry = task.entries.find(e => e.pk == entryId);
         }
 
         if (!entry)
             return;
 
-        this.scope.editEntryStartTime = new Date(entry.startTime);
-        this.scope.editEntryEndTime = (entry.endTime)?new Date(entry.endTime):null;
+        this.scope.editEntryStartTime = new Date(entry.start_time);
+        this.scope.editEntryEndTime = (entry.end_time)?new Date(entry.end_time):null;
 
         let that = this;
         new Modal(document.getElementById('edit-entry-modal'), progressClick)
             .show((action) => {
                 if (action == 'save') {
                     let taskEntry = {
-                        entryId: entryId, task: taskId,
-                        user: auth.userId,
-                        startTime: Math.floor(that.scope.editEntryStartTime.getTime())
+                        pk: entryId, task: taskId,
+                        user: auth.userPk,
+                        start_time: that.scope.editEntryStartTime.toISOString().split('.')[0],
+                        end_time: null,
                     };
                     if (that.scope.editEntryEndTime) {
-                        taskEntry.endTime = Math.floor(that.scope.editEntryEndTime.getTime());
+                        taskEntry.end_time = that.scope.editEntryEndTime.toISOString().split('.')[0];
                     }
 
                     return new Promise((resolve, reject) => {
-                        that.http.post(entryApi, taskEntry).then(
+                        that.http.put(entryApi + entryId + '/', taskEntry).then(
                             function success(response) {
-                                let task = that.tasks.find(t => t.taskId == taskId);
-                                let index = task.entries.findIndex(e => e.entryId == entryId);
-                                task.entries[index] = response.data.data.entry;
+                                let task = that.tasks.find(t => t.pk == taskId);
+                                let index = task.entries.findIndex(e => e.pk == entryId);
+                                task.entries[index] = response.data;
                                 that.refreshTask(task);
                                 resolve();
                             },
                             function error(response) {
-                                reject('Cannot edit task\n' + JSON.stringify({response: response}))
+                                reject('Cannot edit task\n' + JSON.stringify({response: response}));
                             }
                         );
                     });
@@ -393,12 +391,40 @@ let database = {
             task.entries = [];
         }
 
-        task.running = !(!task.entries.find(e => !e.endTime));
-        task.entries.sort((e1, e2) => (e2.startTime - e1.startTime));
+        task.running = !(!task.entries.find(e => !e.end_time));
+        task.entries.sort((e1, e2) => (new Date(e2.start_time) - new Date(e1.start_time)));
         task.entries.forEach((e) => {
-            if (e.endTime && e.endTime < e.startTime) {
-                e.endTime = e.startTime;
+            if (e.end_time && e.end_time < e.start_time) {
+                e.end_time = e.start_time;
+            }
+
+            if (e.end_time) {
+                e.dt = getDiff(new Date(e.end_time), new Date(e.start_time));
             }
         });
     },
 };
+
+
+function prependZero(n) {
+    if (n <= 9) {
+        return '0' + n;
+    }
+    return '' + n;
+}
+
+
+function getDiff(date1, date2) {
+    let diff = date1.getTime() - date2.getTime();
+    let hh = Math.floor(diff/1000/60/60);
+
+    diff -= hh*1000*60*60;
+    let mm = Math.floor(diff/1000/60);
+
+    diff -= mm*1000*60;
+    let ss = Math.floor(diff/1000);
+
+    return prependZero(hh) + ':' +
+        prependZero(mm) + ':' +
+        prependZero(ss);
+}

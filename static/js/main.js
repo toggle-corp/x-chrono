@@ -19,7 +19,7 @@ chrono.controller('mainController',  ['$scope', '$http', function($scope, $http)
         stats.init($scope);
         return database.loadAll().then(function() {
             $scope.dataLoaded = true;
-            $scope.selectedTeam = database.teams[0].teamId;
+            $scope.selectedTeam = database.teams[0].pk;
             $scope.$apply();
         });
     }).catch(function(error) {

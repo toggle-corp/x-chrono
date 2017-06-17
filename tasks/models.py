@@ -2,7 +2,7 @@ from django.db import models
 
 from datetime import datetime
 
-from users.models import *
+from users.models import User, Team
 
 
 class Project(models.Model):
@@ -27,7 +27,7 @@ class Task(models.Model):
 
 
 class TaskEntry(models.Model):
-    task = models.ForeignKey(Task)
+    task = models.ForeignKey(Task, related_name='entries')
     user = models.ForeignKey(User)
     start_time = models.DateTimeField(default=datetime.now)
     end_time = models.DateTimeField(null=True, blank=True, default=None)

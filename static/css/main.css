@@ -200,6 +200,8 @@ body {
             align-items: center;
             background-color: #fff; }
             body > main > div #tasks .task header h3 {
+              width: calc(100% - 96px);
+              line-height: 14px;
               font-weight: 400;
               color: #8e44ad;
               padding: 0 16px; }
