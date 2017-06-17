@@ -3,32 +3,11 @@ const visualizationCenter = {
         this.lineChart = new LineChart('#line-chart');
         this.pieChart = new PieChart('#pie-chart');
         this.barChart = new BarChart('#bar-chart');
+
+        $('#export-table').click(() => this.export());
     },
 
     redraw(data) {
-        /* const lineChartData = [
-            {
-                userId: 5,
-                data: [
-                    { value: 50, date: new Date(2017, 6, 5), },
-                    { value: 48, date: new Date(2017, 6, 6), },
-                    { value: 38, date: new Date(2017, 6, 7), },
-                    { value: 60, date: new Date(2017, 6, 8), },
-                ],
-                color: 'steelblue',
-            },
-            {
-                userId: 3,
-                data: [
-                    { value: 40, date: new Date(2017, 6, 5), },
-                    { value: 44, date: new Date(2017, 6, 6), },
-                    { value: 55, date: new Date(2017, 6, 7), },
-                    { value: 23, date: new Date(2017, 6, 8), },
-                ],
-                color: 'orange',
-            },
-        ];*/
-
         const userHours = [];
         data.entries.forEach(d => {
             const date = new Date(d.start_time);
@@ -45,6 +24,7 @@ const visualizationCenter = {
             } else {
                 userHours.push({
                     userId: d.user,
+                    userName: users.find(u => u.pk == d.user).displayName,
                     data: [{ date: date, value: hours }],
                     color: users.find(u => u.pk == d.user).color,
                 });
@@ -59,6 +39,7 @@ const visualizationCenter = {
         tasks.filter(task => task.active).forEach(task => {
             activeTaskHours.push({
                 taskId: task.pk,
+                taskName: task.name,
                 color: task.color,
                 value: data.entries.filter(d => d.task == task.pk).reduce((a, b) => a + b.hours, 0),
             });
@@ -66,8 +47,8 @@ const visualizationCenter = {
         this.pieChart.redraw(activeTaskHours);
 
 
-        const userIds = users.map(u => u.pk);
         const taskHours = [];
+        const userIds = [];
         data.entries.forEach(d => {
             const hours = d.hours;
             const task = taskHours.find(t => t.taskId == d.task);
@@ -78,22 +59,85 @@ const visualizationCenter = {
                     task[d.user] = hours;
                 }
             } else {
-                const newTask = { taskId: d.task };
+                const newTask = {
+                    taskId: d.task,
+                    taskName: tasks.find(t => t.pk == d.task).name,
+                };
                 newTask[d.user] = hours;
                 taskHours.push(newTask);
+            }
+
+            if (userIds.indexOf(d.user) < 0) {
+                userIds.push(d.user);
             }
         });
 
         taskHours.forEach(task => {
-            userIds.forEach(user => {
-                if (!task[user]) {
-                    task[user] = 0;
+            users.forEach(user => {
+                if (!task[user.pk]) {
+                    task[user.pk] = 0;
                 }
             });
         });
 
         this.barChart.redraw(taskHours, userIds,
-            users.reduce((a, b) => { a[b.pk] = b.color; return a; }, {}));
+            users.map(user => ({ id: user.pk, name: user.displayName, color: user.color })));
+
+
+        // The table
+        const table = $('<table></table>');
+        $('.table .content').empty().append(table);
+
+        const header = $('<thead></thead>');
+        table.append(header);
+
+        header.append('<tr></tr>');
+        header.find('tr').append('<th></th>');
+        userIds.forEach(userId => {
+            header.find('tr').append('<th>' + users.find(u => u.pk == userId).displayName);
+        });
+        header.find('tr').append('<th>Total</th>');
+
+        const body = $('<tbody></tbody>');
+        table.append(body);
+
+        taskHours.forEach(task => {
+            const row = $('<tr></tr>');
+            body.append(row);
+
+            row.append('<td>' + task.taskName + '</td>');
+
+            let total = 0;
+            userIds.forEach(userId => {
+                row.append('<td class="hours">' + parseInt(task[userId]) + '</td>');
+                total += parseInt(task[userId]);
+            });
+
+            row.append('<td class="hours">' + total + '</td>');
+        });
+
+        const row = $('<tr></tr>');
+        body.append(row);
+        row.append('<td>Total</td>');
+
+        let total = 0;
+        userIds.forEach(userId => {
+            let subTotal = taskHours.reduce((a, b) => a + parseInt(b[userId]), 0);
+            total += subTotal;
+            row.append('<td class="hours">' + subTotal + '</td>');
+        });
+        row.append('<td class="hours">' + total + '</td>');
+    },
+
+    export() {
+        const dataType = 'data:application/vnd.ms-excel';
+        const tableWrapper = $('.table .content')[0];
+        const tableHtml = tableWrapper.outerHTML.replace(/ /g, '%20');
+
+        const a = $('<a></a>');
+        a[0].href = dataType + ', ' + tableHtml;
+        a[0].download = projectName + ' ' + teamName + ' - ' + new Date().toDateString()  + '.xlsx';
+        a[0].click();
     }
 };
 

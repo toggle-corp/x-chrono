@@ -29,6 +29,9 @@
     <script>
         const summaryAPI = '/api/v1/summary/{{ project.pk }}/';
 
+        const teamName = '{{ team }}';
+        const projectName = '{{ project }}';
+
         const tasks = [
             {% for task in project.task_set.all %}
             {
@@ -103,17 +106,30 @@
 
         <div class='content'>
             <div class="graph graph-1">
+                <label>Hours spent on tasks</label>
                 <svg id="bar-chart"></svg>
             </div>
 
             <div class="graph graph-2">
+                <label>Active tasks</label>
                 <svg id="pie-chart"></svg>
             </div>
 
             <div class="graph graph-3">
+                <label>Hours spent by people</label>
                 <svg id="line-chart"></svg>
             </div>
 
+            <div class="table">
+                <header>
+                    <label>Hours summary</label>
+                    <div class="action-buttons">
+                        <a id="export-table"><span class="fa fa-file-excel-o"></span> Export to excel</a>
+                    </div>
+                </header>
+                <div class="content">
+                </div>
+            </div>
         </div>
     </main>
 </body>

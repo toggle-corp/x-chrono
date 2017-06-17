@@ -107,10 +107,16 @@ main {
   main .graph {
     background-color: #fff;
     display: block;
-    height: calc(50vh - 80px - 32px); }
+    height: calc(50vh - 80px - 32px);
+    position: relative; }
     main .graph svg {
       width: 100%;
       height: 100%; }
+    main .graph label {
+      font-weight: 700;
+      left: 16px;
+      position: absolute;
+      top: 16px; }
   main .graph-1 {
     flex-basis: calc(70% - 16px);
     order: 1;
@@ -123,5 +129,45 @@ main {
     flex-basis: calc(100% - 32px);
     order: 3;
     margin: 16px; }
+  main .table {
+    background-color: #fff;
+    flex-basis: calc(100% - 32px);
+    margin: 16px;
+    order: 4; }
+    main .table header {
+      height: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px; }
+    main .table label {
+      font-weight: 700; }
+    main .table a {
+      text-transform: none; }
+    main .table .content {
+      padding: 16px;
+      display: flex;
+      justify-content: center; }
+    main .table table {
+      border-spacing: 0; }
+    main .table thead {
+      text-align: right;
+      background-color: rgba(0, 0, 0, 0.03); }
+    main .table td,
+    main .table th {
+      padding: 8px;
+      border: 0;
+      min-width: 96px; }
+      main .table td.hours,
+      main .table th.hours {
+        text-align: right; }
+      main .table td:first-child,
+      main .table th:first-child {
+        background-color: rgba(0, 0, 0, 0.02); }
+      main .table td:last-child,
+      main .table th:last-child {
+        background-color: rgba(0, 0, 0, 0.03); }
+    main .table tr:last-child {
+      background-color: rgba(0, 0, 0, 0.1); }
 
 /*# sourceMappingURL=dashboard.css.map */
