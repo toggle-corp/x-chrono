@@ -18,7 +18,7 @@ class Project(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        super(Project, self).save(*args, *kwargs)
+        super(Project, self).save(*args, **kwargs)
 
 
 class Task(models.Model):
@@ -45,6 +45,12 @@ class TaskEntry(models.Model):
             return 0
         df = self.end_time - self.start_time
         return df.seconds / 3600
+
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            self.task.active = True
+            self.task.save()
+        super(TaskEntry, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.task.name + ' by ' + self.user.display_name

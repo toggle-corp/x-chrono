@@ -57,7 +57,8 @@ main {
   flex-basis: 100%;
   display: flex;
   flex-wrap: wrap;
-  height: calc(100vh - 80px); }
+  height: calc(100vh - 80px);
+  justify-content: center; }
   main > header {
     flex-basis: 100%;
     background-color: #fff;
@@ -67,6 +68,19 @@ main {
       display: flex;
       align-items: center;
       justify-content: center; }
+    main > header .action-buttons {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      height: 100%; }
+    main > header button {
+      background-color: #8e44ad;
+      border: 0;
+      color: #fff;
+      cursor: pointer;
+      height: 38px;
+      outline: none;
+      padding: 8px; }
     main > header .filter {
       display: flex;
       height: 36px;
@@ -78,7 +92,7 @@ main {
       main > header .filter > input,
       main > header .filter > div {
         flex-basis: 90%;
-        min-height: 100%; }
+        height: 36px; }
       main > header .filter > input,
       main > header .filter .selectize-input {
         min-height: 100%;
@@ -89,7 +103,7 @@ main {
   main > .content {
     display: flex;
     flex-wrap: wrap;
-    width: 100%; }
+    width: 70%; }
   main .graph {
     background-color: #fff;
     display: block;

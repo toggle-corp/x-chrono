@@ -54,6 +54,7 @@ main {
     display: flex;
     flex-wrap: wrap;
     height: calc(100vh - #{$header-height});
+    justify-content: center;
 
     > header {
         flex-basis: 100%;
@@ -65,6 +66,23 @@ main {
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .action-buttons {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            height: 100%;
+        }
+
+        button {
+            background-color: $primary-color;
+            border: 0;
+            color: #fff;
+            cursor: pointer;
+            height: 38px;
+            outline: none;
+            padding: 8px;
         }
 
         .filter {
@@ -81,7 +99,7 @@ main {
             > input,
             > div {
                 flex-basis: 90%;
-                min-height: 100%;
+                height: 36px;
             }
 
             > input,
@@ -98,7 +116,7 @@ main {
     > .content {
         display: flex;
         flex-wrap: wrap;
-        width: 100%;
+        width: 70%;
     }
 
     .graph {

@@ -28,6 +28,29 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'img/logo.png' %}"/>
     <script>
         const summaryAPI = '/api/v1/summary/{{ project.pk }}/';
+
+        const tasks = [
+            {% for task in project.task_set.all %}
+            {
+                pk: {{ task.pk }},
+                name: '{{ task.name|escapejs }}',
+                active: {% if task.active %}true{% else %}false{% endif %},
+                color: getColor('{{ task.name|escapejs }}'),
+            },
+            {% endfor %}
+        ];
+
+        const users = [
+            {% for user in project.team.members.all %}
+            {
+                pk: {{ user.pk }},
+                displayName: '{{ user.display_name|escapejs }}',
+                photoUrl: '{{ user.photo_url|escapejs }}',
+                color: getColor('{{ user.display_name|escapejs }}'),
+            },
+            {% endfor %}
+        ];
+
     </script>
 
 </head>
@@ -35,7 +58,7 @@
     <header>
         <div class="app-info">
             <img src="{% static 'img/logo.png' %}">
-            <h1>{{ project }} <!--span class="fa fa-circle-o-notch fa-spin"></span--></h1>
+            <h1>{{ project }}</h1>
         </div>
     </header>
 
@@ -70,6 +93,10 @@
                         <option value="{{ task.pk }}">{{ task.name }}</option>
                         {% endfor %}
                     </select>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="apply-filters">Apply filters</button>
                 </div>
             </div>
         </header>

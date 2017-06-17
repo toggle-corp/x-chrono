@@ -1,13 +1,101 @@
+const visualizationCenter = {
+    init() {
+        this.lineChart = new LineChart('#line-chart');
+        this.pieChart = new PieChart('#pie-chart');
+        this.barChart = new BarChart('#bar-chart');
+    },
+
+    redraw(data) {
+        /* const lineChartData = [
+            {
+                userId: 5,
+                data: [
+                    { value: 50, date: new Date(2017, 6, 5), },
+                    { value: 48, date: new Date(2017, 6, 6), },
+                    { value: 38, date: new Date(2017, 6, 7), },
+                    { value: 60, date: new Date(2017, 6, 8), },
+                ],
+                color: 'steelblue',
+            },
+            {
+                userId: 3,
+                data: [
+                    { value: 40, date: new Date(2017, 6, 5), },
+                    { value: 44, date: new Date(2017, 6, 6), },
+                    { value: 55, date: new Date(2017, 6, 7), },
+                    { value: 23, date: new Date(2017, 6, 8), },
+                ],
+                color: 'orange',
+            },
+        ];*/
+
+        const userHours = [];
+        data.entries.forEach(d => {
+            const date = new Date(d.start_time);
+            const hours = d.hours;
+
+            const user = userHours.find(u => u.userId == d.user);
+            if (user) {
+                const dateHours = user.data.find(dt => dt.date.toDateString() == date.toDateString());
+                if (dateHours) {
+                    dateHours.value += hours;
+                } else {
+                    user.data.push({ date: date, value: hours });
+                }
+            } else {
+                userHours.push({
+                    userId: d.user,
+                    data: [{ date: date, value: hours }],
+                    color: users.find(u => u.pk == d.user).color,
+                });
+            }
+        });
+
+        userHours.forEach(u => u.data.sort((d1, d2) => d1.date - d2.date));
+        this.lineChart.redraw(userHours);
+
+
+        const activeTaskHours = [];
+        tasks.filter(task => task.active).forEach(task => {
+            activeTaskHours.push({
+                taskId: task.pk,
+                color: task.color,
+                value: data.entries.filter(d => d.task == task.pk).reduce((a, b) => a + b.hours, 0),
+            });
+        });
+        this.pieChart.redraw(activeTaskHours);
+
+
+        const userIds = users.map(u => u.pk);
+        const taskHours = [];
+        data.entries.forEach(d => {
+            const hours = d.hours;
+            const task = taskHours.find(t => t.taskId == d.task);
+            if (task) {
+                if (task[d.user]) {
+                    task[d.user] += hours;
+                } else {
+                    task[d.user] = hours;
+                }
+            } else {
+                const newTask = { taskId: d.task };
+                newTask[d.user] = hours;
+                taskHours.push(newTask);
+            }
+        });
+
+        this.barChart.redraw(taskHours, userIds,
+            users.reduce((a, b) => { a[b.pk] = b.color; return a; }, {}));
+    }
+};
+
 const syncManager = {
-    init: function() {
-        $('#start-date-filter').change(() => this.fetch());
-        $('#start-date-filter').change(() => this.fetch());
-        $('#users-filter').change(() => this.fetch());
-        $('#tasks-filter').change(() => this.fetch());
+    init() {
+        $('#apply-filters').click(() => this.fetch());
         this.fetch();
     },
 
-    fetch: function() {
+    fetch() {
         const startDate = $('#start-date-filter').val();
         const endDate = $('#end-date-filter').val();
         const users = $('#users-filter').val();
@@ -31,6 +119,7 @@ const syncManager = {
         return fetch(summaryAPI + '?' + params.join('&'))
             .then(response => response.json())
             .then(json => {
+                visualizationCenter.redraw(json);
                 return json;
             });
 
@@ -38,81 +127,25 @@ const syncManager = {
 };
 
 $(document).ready(function() {
+    visualizationCenter.init();
     syncManager.init();
+
     $('select').selectize();
-
-    const lineChart = new LineChart('#line-chart');
-    const data = [
-        {
-            userId: 5,
-            data: [
-                { value: 50, date: new Date(2017, 6, 5), },
-                { value: 48, date: new Date(2017, 6, 6), },
-                { value: 38, date: new Date(2017, 6, 7), },
-                { value: 60, date: new Date(2017, 6, 8), },
-            ],
-            color: 'steelblue',
-        },
-        {
-            userId: 3,
-            data: [
-                { value: 40, date: new Date(2017, 6, 5), },
-                { value: 44, date: new Date(2017, 6, 6), },
-                { value: 55, date: new Date(2017, 6, 7), },
-                { value: 23, date: new Date(2017, 6, 8), },
-            ],
-            color: 'orange',
-        },
-    ];
-    lineChart.redraw(data);
-
-
-    const pieChart = new PieChart('#pie-chart');
-    pieChart.redraw([
-        { taskId: 1, value: 200, color: 'burlywood', },
-        { taskId: 2, value: 100, color: 'orange', },
-        { taskId: 3, value: 56, color: 'cornflowerblue', },
-        { taskId: 4, value: 176, color: 'hotpink', },
-    ]);
-
-
-    const barChart = new BarChart('#bar-chart');
-    barChart.redraw([
-        {
-            taskId: 1,
-            data: [
-                { userId: 1, value: 40, },
-                { userId: 2, value: 38, },
-                { userId: 3, value: 23, },
-                { userId: 4, value: 48, },
-            ],
-        },
-        {
-            taskId: 2,
-            data: [
-                { userId: 1, value: 46, },
-                { userId: 2, value: 32, },
-                { userId: 3, value: 10, },
-                { userId: 4, value: 30, },
-            ],
-        },
-        {
-            taskId: 3,
-            data: [
-                { userId: 1, value: 22, },
-                { userId: 2, value: 20, },
-                { userId: 3, value: 19, },
-                { userId: 4, value: 30, },
-            ],
-        },
-        {
-            taskId: 4,
-            data: [
-                { userId: 1, value: 23, },
-                { userId: 2, value: 34, },
-                { userId: 3, value: 30, },
-                { userId: 4, value: 50, },
-            ],
-        },
-    ]);
 });
+
+
+function getColor(str) {
+    const hash = hashCode(str);
+    const color = 'hsl(' + (hash % 360) + ',' +
+        (45 + hash % 40) + '%,' +
+        (85 + hash % 10) + '%)';
+    return color;
+}
+
+function hashCode(str) { // java String#hashCode
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+       hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
+}

@@ -253,7 +253,6 @@ let database = {
         let taskEntry = {
             task: taskId,
             user: auth.userPk, start_time: new Date().toISOString().split('.')[0],
-            starting: true,
         };
         let that = this;
 
