@@ -1,6 +1,7 @@
 const visualizationCenter = {
     init() {
-        this.lineChart = new LineChart('#line-chart');
+        // this.lineChart = new LineChart('#line-chart');
+        this.areaChart = new AreaChart('#area-chart');
         this.pieChart = new PieChart('#pie-chart');
         this.barChart = new BarChart('#bar-chart');
 
@@ -8,7 +9,7 @@ const visualizationCenter = {
     },
 
     redraw(data) {
-        const userHours = [];
+        /*const userHours = [];
         data.entries.forEach(d => {
             const date = new Date(d.start_time);
             const hours = d.hours;
@@ -32,7 +33,45 @@ const visualizationCenter = {
         });
 
         userHours.forEach(u => u.data.sort((d1, d2) => d1.date - d2.date));
-        this.lineChart.redraw(userHours);
+        this.lineChart.redraw(userHours);*/
+
+        const dayHours = [];
+        let userIds = [];
+        data.entries.forEach(d => {
+            const date = new Date(new Date(d.start_time).toDateString());
+            const hours = d.hours;
+
+            const day = dayHours.find(dt => dt.date.toString() === date.toString());
+            if (day) {
+                if (day[d.user]) {
+                    day[d.user] += hours;
+                }
+                else {
+                    day[d.user] = hours;
+                }
+            } else {
+                const newDay = { date: date };
+                newDay[d.user] = hours;
+                dayHours.push(newDay);
+            }
+
+            if (userIds.indexOf(d.user) < 0) {
+                userIds.push(d.user);
+            }
+        });
+
+        dayHours.forEach(day => {
+            userIds.forEach(userId => {
+                if (!day[userId]) {
+                    day[userId] = 0;
+                }
+            });
+        });
+
+        dayHours.sort((d1, d2) => d1.date - d2.date);
+
+        this.areaChart.redraw(dayHours, userIds,
+            users.map(u => ({ name: u.displayName, id: u.pk, color: u.color })));
 
 
         const activeTaskHours = [];
@@ -48,7 +87,7 @@ const visualizationCenter = {
 
 
         const taskHours = [];
-        const userIds = [];
+        userIds = [];
         data.entries.forEach(d => {
             const hours = d.hours;
             const task = taskHours.find(t => t.taskId == d.task);
@@ -189,8 +228,9 @@ $(document).ready(function() {
 function getColor(str) {
     const hash = hashCode(str);
     const color = 'hsl(' + (hash % 360) + ',' +
-        (45 + hash % 40) + '%,' +
-        (85 + hash % 10) + '%)';
+        '40%, 75%)';
+        //(45 + hash % 40) + '%,' +
+        //(85 + hash % 10) + '%)';
     return color;
 }
 

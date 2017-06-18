@@ -147,7 +147,7 @@ main {
     .graph-2 {
         flex-basis: calc(30% - 32px);
         order: 2;
-        margin: 16px 16px 0 16px;
+        margin: 16px 16px 0;
     }
 
     .graph-3 {
@@ -159,7 +159,7 @@ main {
     .table {
         background-color: #fff;
         flex-basis: calc(100% - 32px);
-        margin: 16px;
+        margin: 0 16px 16px;
         order: 4;
 
         header {
