@@ -1,15 +1,36 @@
 const visualizationCenter = {
     init() {
-        // this.lineChart = new LineChart('#line-chart');
-        this.areaChart = new AreaChart('#area-chart');
-        this.pieChart = new PieChart('#pie-chart');
-        this.barChart = new BarChart('#bar-chart');
+        $('#line-chart').closest('.svg-container').hide();
+        this.areaChart = new AreaChart('#area-chart', '#area-chart-legend');
+
+        $('#line-chart').closest('.svg-container').show();
+        $('#area-chart').closest('.svg-container').hide();
+        this.lineChart = new LineChart('#line-chart', '#line-chart-legend');
+
+        this.pieChart = new PieChart('#pie-chart', '#pie-chart-legend');
+        this.barChart = new BarChart('#bar-chart', '#bar-chart-legend');
 
         $('#export-table').click(() => this.export());
+
+        $('#switch-line-area').click(function() {
+            const activeChart = $(this).data('active-chart');
+            if (activeChart == 'line') {
+                $('#line-chart').closest('.svg-container').hide();
+                $('#area-chart').closest('.svg-container').show();
+                $(this).removeClass('fa-area-chart').addClass('fa-line-chart');
+                $(this).data('active-chart', 'area');
+            }
+            else {
+                $('#area-chart').closest('.svg-container').hide();
+                $('#line-chart').closest('.svg-container').show();
+                $(this).removeClass('fa-line-chart').addClass('fa-area-chart');
+                $(this).data('active-chart', 'line');
+            }
+        });
     },
 
     redraw(data) {
-        /*const userHours = [];
+        const userHours = [];
         data.entries.forEach(d => {
             const date = new Date(d.start_time);
             const hours = d.hours;
@@ -33,7 +54,7 @@ const visualizationCenter = {
         });
 
         userHours.forEach(u => u.data.sort((d1, d2) => d1.date - d2.date));
-        this.lineChart.redraw(userHours);*/
+        this.lineChart.redraw(userHours);
 
         const dayHours = [];
         let userIds = [];
@@ -76,17 +97,21 @@ const visualizationCenter = {
 
         const activeTaskHours = [];
         tasks.filter(task => task.active).forEach(task => {
-            activeTaskHours.push({
-                taskId: task.pk,
-                taskName: task.name,
-                color: task.color,
-                value: data.entries.filter(d => d.task == task.pk).reduce((a, b) => a + b.hours, 0),
-            });
+            const hours = data.entries.filter(d => d.task == task.pk).reduce((a, b) => a + b.hours, 0);
+
+            if (hours > 0) {
+                activeTaskHours.push({
+                    taskId: task.pk,
+                    taskName: task.name,
+                    color: task.color,
+                    value: hours
+                });
+            }
         });
         this.pieChart.redraw(activeTaskHours);
 
 
-        const taskHours = [];
+        let taskHours = [];
         userIds = [];
         data.entries.forEach(d => {
             const hours = d.hours;
@@ -131,7 +156,7 @@ const visualizationCenter = {
         table.append(header);
 
         header.append('<tr></tr>');
-        header.find('tr').append('<th></th>');
+        header.find('tr').append('<th>Tasks</th>');
         userIds.forEach(userId => {
             header.find('tr').append('<th>' + users.find(u => u.pk == userId).displayName);
         });
@@ -148,8 +173,8 @@ const visualizationCenter = {
 
             let total = 0;
             userIds.forEach(userId => {
-                row.append('<td class="hours">' + parseInt(task[userId]) + '</td>');
-                total += parseInt(task[userId]);
+                row.append('<td class="hours">' + Math.round(task[userId]) + '</td>');
+                total += Math.round(task[userId]);
             });
 
             row.append('<td class="hours">' + total + '</td>');
@@ -161,7 +186,7 @@ const visualizationCenter = {
 
         let total = 0;
         userIds.forEach(userId => {
-            let subTotal = taskHours.reduce((a, b) => a + parseInt(b[userId]), 0);
+            let subTotal = taskHours.reduce((a, b) => a + Math.round(b[userId]), 0);
             total += subTotal;
             row.append('<td class="hours">' + subTotal + '</td>');
         });
@@ -227,17 +252,35 @@ $(document).ready(function() {
 
 function getColor(str) {
     const hash = hashCode(str);
-    const color = 'hsl(' + (hash % 360) + ',' +
-        '40%, 75%)';
-        //(45 + hash % 40) + '%,' +
-        //(85 + hash % 10) + '%)';
+    let h = (hash>>>0)/0xffffffff;
+    let s = '60%';
+    let l = '60%';
+    h = Math.pow(h, -10);
+    const color = 'hsl(' + Math.ceil(h*360) + ',' + s + ',' + l + ')';
     return color;
 }
 
-function hashCode(str) { // java String#hashCode
-    var hash = 0;
-    for (var i = 0; i < str.length; i++) {
-       hash = str.charCodeAt(i) + ((hash << 5) - hash);
+function hashCode(str) {
+    let hash = 0, i, chr;
+    str = padRight(str, '1234567abcdef', 128);
+
+    for (let i = 0; i < str.length; i++) {
+        chr   = str.charCodeAt(i);
+        hash  = ((hash << 5) - hash) + chr;
+        hash |= 0;
     }
     return hash;
+}
+
+function padRight(s, c, n) {
+    if (! s || ! c || s.length >= n) {
+        return s;
+    }
+
+    var max = (n - s.length)/c.length;
+    for (var i = 0; i < max; i++) {
+        s += c;
+    }
+    s = s.substring(0, s.length - s.length%n);
+    return s;
 }

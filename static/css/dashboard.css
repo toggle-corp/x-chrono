@@ -21,7 +21,9 @@ body {
 
 body {
   display: flex;
-  flex-wrap: wrap; }
+  flex-wrap: wrap;
+  justify-content: center;
+  background-color: #dadada; }
   body h1,
   body h2,
   body h3,
@@ -35,10 +37,13 @@ body {
     justify-content: space-between;
     padding: 0 24px;
     background-color: #8e44ad;
+    box-shadow: 0 5px 25px -7px rgba(0, 0, 0, 0.5);
     color: #fff;
     z-index: 1; }
     body > header .app-info {
+      flex-basis: 30%;
       align-items: center;
+      color: inherit;
       display: flex; }
       body > header .app-info img {
         height: 2.6em;
@@ -48,81 +53,126 @@ body {
         object-position: center;
         filter: grayscale(50%) brightness(120%); }
       body > header .app-info h1 {
-        font-size: 2.4em;
+        font-size: 2em;
         font-weight: 400;
         text-transform: uppercase;
-        letter-spacing: 0.1em; }
-
-main {
-  flex-basis: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  height: calc(100vh - 80px);
-  justify-content: center; }
-  main > header {
-    flex-basis: 100%;
-    background-color: #fff;
-    height: 80px; }
-    main > header .filters {
-      height: 100%;
-      display: flex;
+        letter-spacing: 0.1em;
+        line-height: 0.7; }
+        body > header .app-info h1 small {
+          font-size: 0.6em;
+          color: rgba(255, 255, 255, 0.77); }
+    body > header .filters {
+      flex-basis: 70%;
       align-items: center;
-      justify-content: center; }
-    main > header .action-buttons {
+      display: flex;
+      height: 100%;
+      justify-content: flex-end; }
+    body > header .action-buttons {
       align-items: center;
       display: flex;
       justify-content: center;
       height: 100%; }
-    main > header button {
-      background-color: #8e44ad;
+    body > header button {
+      background-color: rgba(255, 255, 255, 0.3);
       border: 0;
       color: #fff;
       cursor: pointer;
-      height: 38px;
       outline: none;
-      padding: 8px; }
-    main > header .filter {
+      padding: 8px 24px;
+      text-transform: uppercase; }
+    body > header .filter {
       display: flex;
-      height: 36px;
-      flex-basis: 15%;
+      flex-basis: 20%;
       align-items: center;
       margin: 8px; }
-      main > header .filter label {
-        margin-right: 10px; }
-      main > header .filter > input,
-      main > header .filter > div {
+      body > header .filter.date-filter {
+        flex-basis: 14%; }
+      body > header .filter label {
+        margin-right: 10px;
+        color: rgba(255, 255, 255, 0.66);
+        text-transform: uppercase;
+        font-size: 0.9em; }
+        body > header .filter label:after {
+          content: ':'; }
+      body > header .filter > input {
         flex-basis: 90%;
-        height: 36px; }
-      main > header .filter > input,
-      main > header .filter .selectize-input {
-        min-height: 100%;
-        padding: 8px;
-        border: 1px solid rgba(0, 0, 0, 0.4);
-        border-radius: 0;
-        box-shadow: none; }
-  main > .content {
-    display: flex;
-    flex-wrap: wrap;
-    width: 70%; }
-  main .graph {
+        padding: 1px 8px;
+        background-color: transparent;
+        border: none;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        outline: none;
+        color: #fff; }
+      body > header .filter .selectize-control {
+        flex-basis: 90%; }
+        body > header .filter .selectize-control .selectize-input {
+          padding: 2px 8px;
+          background-color: transparent;
+          color: #fff;
+          border: none;
+          border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+          border-radius: 0;
+          box-shadow: none; }
+        body > header .filter .selectize-control .item {
+          margin: 0;
+          background-color: transparent;
+          color: #fff;
+          line-height: 1; }
+          body > header .filter .selectize-control .item:after {
+            content: ","; }
+        body > header .filter .selectize-control input::placeholder {
+          color: rgba(255, 255, 255, 0.5); }
+
+main {
+  flex-basis: 90%;
+  display: flex;
+  flex-wrap: wrap; }
+  main section {
     background-color: #fff;
-    display: block;
-    height: calc(50vh - 80px - 32px);
-    position: relative; }
-    main .graph svg {
-      width: 100%;
-      height: 100%; }
-    main .graph label {
-      font-weight: 700;
-      left: 16px;
-      position: absolute;
-      top: 16px; }
+    height: 60vh;
+    box-shadow: 0 5px 25px -10px rgba(0, 0, 0, 0.5); }
+    main section header {
+      height: 56px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between; }
+      main section header button {
+        background-color: transparent;
+        border: 0;
+        outline: none;
+        cursor: pointer;
+        text-transform: uppercase; }
+        main section header button.short-button {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%; }
+        main section header button:not(.short-button) {
+          padding: 8px 16px; }
+        main section header button:hover {
+          background-color: rgba(0, 0, 0, 0.06);
+          color: #8e44ad; }
+      main section header .fa {
+        margin-right: 8px; }
+    main section .content {
+      height: calc(100% - 56px);
+      width: 100%; }
+      main section .content .svg-container {
+        width: 100%;
+        height: 100%;
+        display: flex; }
+        main section .content .svg-container svg {
+          flex-basis: calc(100% - 240px); }
+        main section .content .svg-container > div {
+          flex-basis: 240px; }
+      main section .content svg {
+        height: 100%;
+        width: 100%; }
   main .graph-1 {
-    flex-basis: calc(70% - 16px);
+    flex-basis: calc(60% - 16px);
     order: 1;
     margin: 16px 0 0 16px; }
   main .graph-2 {
-    flex-basis: calc(30% - 32px);
+    flex-basis: calc(40% - 32px);
     order: 2;
     margin: 16px 16px 0; }
   main .graph-3 {
@@ -130,44 +180,90 @@ main {
     order: 3;
     margin: 16px; }
   main .table {
-    background-color: #fff;
     flex-basis: calc(100% - 32px);
     margin: 0 16px 16px;
     order: 4; }
-    main .table header {
-      height: 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px; }
-    main .table label {
-      font-weight: 700; }
-    main .table a {
-      text-transform: none; }
-    main .table .content {
-      padding: 16px;
-      display: flex;
-      justify-content: center; }
     main .table table {
+      height: 100%;
+      width: 100%;
       border-spacing: 0; }
     main .table thead {
-      text-align: right;
-      background-color: rgba(0, 0, 0, 0.03); }
-    main .table td,
-    main .table th {
-      padding: 8px;
-      border: 0;
-      min-width: 96px; }
-      main .table td.hours,
-      main .table th.hours {
+      background-color: #8e44ad;
+      color: #fff;
+      text-transform: uppercase; }
+      main .table thead th {
+        font-weight: 400;
+        padding: 10px 24px; }
+        main .table thead th:first-child {
+          text-align: left; }
+        main .table thead th:not(:first-child) {
+          text-align: right; }
+    main .table td {
+      padding: 10px 24px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06); }
+      main .table td.hours {
         text-align: right; }
-      main .table td:first-child,
-      main .table th:first-child {
-        background-color: rgba(0, 0, 0, 0.02); }
-      main .table td:last-child,
-      main .table th:last-child {
-        background-color: rgba(0, 0, 0, 0.03); }
-    main .table tr:last-child {
-      background-color: rgba(0, 0, 0, 0.1); }
+      main .table td:first-child {
+        background-color: rgba(0, 0, 0, 0.05); }
+      main .table td:last-child {
+        background-color: rgba(0, 0, 0, 0.05); }
+    main .table tbody tr:last-child {
+      background-color: #f0f0f0;
+      font-weight: 700; }
+  main #pie-chart,
+  main #bar-chart {
+    height: calc(80% - 5px); }
+  main #pie-chart-legend,
+  main #bar-chart-legend {
+    background-color: #f0f0f0;
+    height: 20%;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center; }
+    main #pie-chart-legend .legend-element,
+    main #bar-chart-legend .legend-element {
+      display: flex;
+      align-items: center;
+      flex-basis: 33.33%;
+      padding: 5px;
+      line-height: 1; }
+      main #pie-chart-legend .legend-element span,
+      main #bar-chart-legend .legend-element span {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px; }
+  main #line-chart-legend,
+  main #area-chart-legend {
+    padding: 24px;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px; }
+    main #line-chart-legend .legend-element,
+    main #area-chart-legend .legend-element {
+      display: flex;
+      align-items: center;
+      padding: 5px;
+      line-height: 1; }
+      main #line-chart-legend .legend-element span,
+      main #area-chart-legend .legend-element span {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px; }
+  main #bar-chart-legend .legend-element {
+    flex-basis: 25%; }
+
+footer {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 96px;
+  color: rgba(0, 0, 0, 0.3);
+  font-size: 1.44em; }
 
 /*# sourceMappingURL=dashboard.css.map */

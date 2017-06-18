@@ -15,7 +15,7 @@
     <script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
     <script>
     // Initialize Firebase
-    let config = {
+    const config = {
         apiKey: "AIzaSyDV5SEaetn38UksDXF3a0mQPFY4UH1nPU4",
         authDomain: "chrono-50f8f.firebaseapp.com",
         databaseURL: "https://chrono-50f8f.firebaseio.com",
@@ -25,12 +25,10 @@
     firebase.initializeApp(config);
 
     let userApi = '/api/v1/users/';
-    let teamApi = '/api/v1/teams/';
-    let projectApi = '/api/v1/projects/';
-    let taskApi = '/api/v1/tasks/';
-    let entryApi = '/api/v1/entries/';
-
-    let exportUrl = '{% url "export_project" 0 %}';
+    const teamApi = '/api/v1/teams/';
+    const projectApi = '/api/v1/projects/';
+    const taskApi = '/api/v1/tasks/';
+    const entryApi = '/api/v1/entries/';
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
@@ -92,6 +90,7 @@
             <header>
                 <h2>{{ project.name }}</h2>
                 <div class="action-buttons">
+                    <a target="_blank" href="{{ getDashboardUrl(project) }}" title="View stats"><i class="fa fa-area-chart"></i></a>
                     <button progress-click="db.deleteProject(project.pk)" title="Delete project"><i class="fa fa-trash"></i></button>
                 </div>
                 <div class="tabs">

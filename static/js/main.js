@@ -10,6 +10,11 @@ chrono.controller('mainController',  ['$scope', '$http', function($scope, $http)
     $scope.dataLoaded = false;
     $scope.taskTab = 'active';
 
+    $scope.getDashboardUrl = function(project) {
+        return database.teams.find(t => t.pk == project.team).slug +
+            '/' + project.slug + '/';
+    };
+
     // Try signing in
     auth.init($scope, $http).then(function() {
         // We are now signed in

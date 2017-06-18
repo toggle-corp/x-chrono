@@ -1,5 +1,5 @@
 class LineChart {
-    constructor(svgElement) {
+    constructor(svgElement, legendContainer) {
         const svg = d3.select(svgElement);
 
         const margin = { top: 48, right: 128, bottom: 32, left: 48 };
@@ -8,6 +8,8 @@ class LineChart {
 
         const g = svg.append('g')
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+        this.legend = d3.select(legendContainer);
 
         this.width = width;
         this.height = height;
@@ -56,21 +58,51 @@ class LineChart {
             .attr('stroke', user => user.color)
             .attr('stroke-linejoin', 'round')
             .attr('stroke-linecap', 'round')
-            .attr('stroke-width', 1.5)
+            .attr('stroke-width', 2.5)
             .attr('d', user => this.line(user.data));
+
+        user.selectAll('circle')
+            .data(user => user.data.map(d => ({ name: user.userName, date: d.date, value: d.value, color: user.color })))
+            .enter()
+            .append('circle')
+            .attr('fill', d => d.color)
+            .attr('r', 5)
+            .attr('cx', d => this.x(d.date))
+            .attr('cy', d => this.y(d.value))
+            .on('mouseenter', function(d) {
+                d3.select(this)
+                    .attr('r', 7);
+            })
+            .on('mouseout', function(d) {
+                d3.select(this)
+                    .attr('r', 5);
+            })
+            .append('title')
+            .text(d => d.name + ' (' + Math.round(d.value) + ' hrs)');
 
         user.append('text')
             .datum(user => ({ userName: user.userName, data: user.data[user.data.length - 1] }))
             .attr('transform', d => ('translate(' + this.x(d.data.date) + ',' + this.y(d.data.value) + ')' ))
-            .attr('x', 3)
+            .attr('x', 6)
             .attr('dy', '0.35em')
             .text(d => d.userName);
+
+        const legend = this.legend
+            .selectAll('.legend-element')
+            .data(data)
+            .enter().append('div')
+            .attr('class', 'legend-element');
+
+        legend.append('span')
+            .style('background-color', user => user.color);
+        legend.append('label')
+            .text(user => user.userName);
     }
 }
 
 
 class AreaChart {
-    constructor(svgElement) {
+    constructor(svgElement, legendContainer) {
         const svg = d3.select(svgElement);
 
         const margin = { top: 48, right: 16, bottom: 32, left: 48 };
@@ -79,6 +111,8 @@ class AreaChart {
 
         const g = svg.append('g')
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+        this.legend = d3.select(legendContainer);
 
         this.width = width;
         this.height = height;
@@ -96,6 +130,7 @@ class AreaChart {
     }
 
     redraw(data, keys, objects) {
+        this.g.selectAll('*').remove();
         this.x.domain(d3.extent(data, d => d.date));
         this.y.domain([0, d3.max(data, d => keys.reduce((a, b) => a + d[b], 0))]);
 
@@ -117,46 +152,52 @@ class AreaChart {
             .attr('class', 'layer');
 
         layer.append('path')
-            .style('fill', d => objects.find(o => o.id == d.key).color)
-            .attr('d', this.area);
+            .attr('fill', d => objects.find(o => o.id == d.key).color)
+            .attr('stroke', 'rgba(0, 0, 0, 0.1)')
+            .attr('stroke-width', 2)
+            .attr('d', this.area)
+            .on('mouseenter', function(d) {
+                d3.select(this)
+                    .attr('stroke-width', 4)
+                    .attr('stroke', 'rgba(0, 0, 0, 0.3)');
+            })
+            .on('mouseout', function(d) {
+                d3.select(this)
+                    .attr('stroke-width', 2)
+                    .attr('stroke', 'rgba(0, 0, 0, 0.1)');
+            })
+            .append('title')
+            .text(d => objects.find(o => o.id == d.key).name);
 
-        const legend = this.g.append('g')
-            .attr('font-size', 10)
-            .attr('text-anchor', 'end')
-            .selectAll('g')
+        const legend = this.legend
+            .selectAll('.legend-element')
             .data(keys)
-            .enter().append('g')
-            .attr('transform', (d, i) => 'translate(0,' + i*20 + ')');
+            .enter().append('div')
+            .attr('class', 'legend-element');
 
-        legend.append('rect')
-            .attr('x', this.width - 19)
-            .attr('width', 19)
-            .attr('height', 19)
-            .attr('fill', key => objects.find(o => o.id == key).color);
-
-        legend.append('text')
-            .attr('x', this.width - 24)
-            .attr('y', 9.5)
-            .attr('dy', '0.32em')
+        legend.append('span')
+            .style('background-color', key => objects.find(o => o.id == key).color);
+        legend.append('label')
             .text(key => objects.find(o => o.id == key).name);
     }
 }
 
 
 class PieChart {
-    constructor(svgElement) {
+    constructor(svgElement, legendContainer) {
         const svg = d3.select(svgElement);
 
         const width = +$(svgElement).width();
         const height = +$(svgElement).height();
         const radius = Math.min(width, height) / 2;
 
-        const g = svg.append('g')
-            .attr('transform', 'translate(' + width/2 + ',' + (height/2+16) + ')');
+        const g = svg.append('g');
 
         this.svg = svg;
         this.g = g;
         this.radius = radius;
+        this.width = width;
+        this.height = height;
 
         this.pie = d3.pie()
             .sort(null)
@@ -166,37 +207,51 @@ class PieChart {
             .outerRadius(this.radius - 32)
             .innerRadius(0);
 
-        this.label = d3.arc()
-            .outerRadius(50)
-            .innerRadius(50);
+        this.legend = d3.select(legendContainer);
     }
 
     redraw(data) {
         this.g.selectAll('*').remove();
 
-        this.g.selectAll('.arc')
+        this.g.append('g')
+            .attr('transform', 'translate(' + (this.width/2) + ',' + (this.height/2) + ')')
+            .selectAll('.arc')
             .data(this.pie(data))
             .enter().append('g')
             .attr('class', 'arc')
             .append('path')
             .attr('d', this.path)
-            .attr('fill', d => d.data.color);
+            .attr('fill', d => d.data.color)
+            .attr('stroke-width', 3)
+            .on('mouseenter', function(d) {
+                d3.select(this)
+                    .attr('stroke', 'rgba(0, 0, 0, 0.1)')
+                    .attr('transform', 'scale(1.05)');
+            })
+            .on('mouseout', function(d) {
+                d3.select(this)
+                    .attr('stroke', null)
+                    .attr('transform', null);
+            })
+            .append('title')
+            .text(d => d.data.taskName + ' (' + Math.round(d.data.value) + ' hrs)');
 
-        const getAngle = (d) => (180 / Math.PI * (d.startAngle + d.endAngle)/2 - 90);
-        this.g.selectAll('.arc-text')
-            .data(this.pie(data))
-            .enter().append('g')
-            .attr('class', 'arc-text')
-            .append('text')
-            .attr('transform', d => 'translate(' + this.label.centroid(d) + ') rotate(' + getAngle(d) + ')')
-            .attr('dy', '0.35em')
-            .text(d => d.data.taskName);
+        const legend = this.legend
+            .selectAll('.legend-element')
+            .data(data)
+            .enter().append('div')
+            .attr('class', 'legend-element');
+
+        legend.append('span')
+            .style('background-color', task => task.color);
+        legend.append('label')
+            .text(task => task.taskName);
     }
 }
 
 
 class BarChart {
-    constructor(svgElement) {
+    constructor(svgElement, legendContainer) {
         const svg = d3.select(svgElement);
 
         const margin = { top: 48, right: 16, bottom: 32, left: 48 };
@@ -206,12 +261,14 @@ class BarChart {
         const g = svg.append('g')
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
+        this.legend = d3.select(legendContainer);
+
         this.width = width;
         this.height = height;
         this.svg = svg;
         this.g = g;
 
-        this.x = d3.scaleBand().rangeRound([0, this.width]).paddingInner(0.1).align(0.1);
+        this.x = d3.scaleBand().rangeRound([0, this.width]).padding(0.5).align(0.1);
         this.y = d3.scaleLinear().rangeRound([this.height, 0]);
 
         this.stack = d3.stack();
@@ -246,27 +303,32 @@ class BarChart {
             .attr('x', d => this.x(d.data.taskName))
             .attr('y', d => this.y(d[1]))
             .attr('height', d => this.y(d[0]) - this.y(d[1]))
-            .attr('width', this.x.bandwidth());
+            .attr('width', this.x.bandwidth())
+            .attr('stroke-width', 3)
+            .attr('transform-origin', '50% 50%')
+            .on('mouseenter', function(d) {
+                d3.select(this)
+                    .attr('stroke', 'rgba(0, 0, 0, 0.1)')
+                    .attr('transform', 'scale(1.05)');
+            })
+            .on('mouseout', function(d) {
+                d3.select(this)
+                    .attr('stroke', null)
+                    .attr('transform', null);
+            })
+            .append('title')
+            .text(d => d.data.taskName + ' (' + Math.round(d[1] - d[0]) + ' hrs)');
 
-        const legend = this.g.append('g')
-            .attr('font-size', 10)
-            .attr('text-anchor', 'end')
-            .selectAll('g')
+
+        const legend = this.legend
+            .selectAll('.legend-element')
             .data(keys)
-            .enter().append('g')
-            .attr('transform', (d, i) => 'translate(0,' + i*20 + ')');
+            .enter().append('div')
+            .attr('class', 'legend-element');
 
-        legend.append('rect')
-            .attr('x', this.width - 19)
-            .attr('width', 19)
-            .attr('height', 19)
-            .attr('fill', key => objects.find(o => o.id == key).color);
-
-        legend.append('text')
-            .attr('x', this.width - 24)
-            .attr('y', 9.5)
-            .attr('dy', '0.32em')
+        legend.append('span')
+            .style('background-color', key => objects.find(o => o.id == key).color);
+        legend.append('label')
             .text(key => objects.find(o => o.id == key).name);
-
     }
 }

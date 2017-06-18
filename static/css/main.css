@@ -157,7 +157,10 @@ body {
           display: flex;
           align-items: center;
           font-size: 24px; }
-        body > main > div > header .action-buttons button {
+        body > main > div > header .action-buttons button, body > main > div > header .action-buttons a {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
           color: inherit;
           background-color: #fff;
           border: 2px solid rgba(0, 0, 0, 0.5);
@@ -167,7 +170,7 @@ body {
           cursor: pointer;
           margin-left: 4px;
           font-size: 15px; }
-          body > main > div > header .action-buttons button:hover {
+          body > main > div > header .action-buttons button:hover, body > main > div > header .action-buttons a:hover {
             color: #8e44ad;
             border: 2px solid #8e44ad; }
         body > main > div > header .tabs {
@@ -201,7 +204,7 @@ body {
             background-color: #fff; }
             body > main > div #tasks .task header h3 {
               width: calc(100% - 100px);
-              line-height: 14px;
+              line-height: 1;
               font-weight: 400;
               color: #8e44ad;
               padding: 0 16px; }

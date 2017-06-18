@@ -59,80 +59,101 @@
 </head>
 <body>
     <header>
-        <div class="app-info">
+        <a class="app-info" href="{% url 'home' %}" target="_blank">
             <img src="{% static 'img/logo.png' %}">
-            <h1>{{ project }}</h1>
+            <h1>Chrono<br><small>{{ team }} / {{ project }}</small></h1>
+        </a>
+        <div class="filters">
+            <div class="filter date-filter">
+                <label>From</label>
+                <input id="start-date-filter" type="date">
+            </div>
+
+            <div class="filter date-filter">
+                <label>To</label>
+                <input id="end-date-filter" type="date">
+            </div>
+
+            <div class="filter">
+                <label>Users</label>
+                <select id="users-filter" multiple>
+                    <option value="">Filter by people</option>
+                    {% for user in project.team.members.all %}
+                    <option value="{{ user.pk }}">{{ user.display_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter">
+                <label>Tasks</label>
+                <select id="tasks-filter" multiple>
+                    <option value="">Filter by tasks</option>
+                    {% for task in project.task_set.all %}
+                    <option value="{{ task.pk }}">{{ task.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="action-buttons">
+                <button id="apply-filters">Apply filters</button>
+            </div>
         </div>
     </header>
 
     <main>
-        <header>
-            <div class="filters">
-                <div class="filter">
-                    <label>From</label>
-                    <input id="start-date-filter" type="date">
-                </div>
-
-                <div class="filter">
-                    <label>To</label>
-                    <input id="end-date-filter" type="date">
-                </div>
-
-                <div class="filter">
-                    <label>Users</label>
-                    <select id="users-filter" multiple>
-                        <option value="">Filter by people</option>
-                        {% for user in project.team.members.all %}
-                        <option value="{{ user.pk }}">{{ user.display_name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="filter">
-                    <label>Tasks</label>
-                    <select id="tasks-filter" multiple>
-                        <option value="">Filter by tasks</option>
-                        {% for task in project.task_set.all %}
-                        <option value="{{ task.pk }}">{{ task.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="action-buttons">
-                    <button id="apply-filters">Apply filters</button>
-                </div>
-            </div>
-        </header>
-
-        <div class='content'>
-            <div class="graph graph-1">
-                <label>Hours spent on tasks</label>
+        <section class="graph graph-1">
+            <header>
+                <h3>Hours spent on tasks</h3>
+            </header>
+            <div class="content">
                 <svg id="bar-chart"></svg>
+                <div id="bar-chart-legend"></div>
             </div>
+        </section>
 
-            <div class="graph graph-2">
-                <label>Active tasks</label>
+        <section class="graph graph-2">
+            <header>
+                <h3>Active tasks</h3>
+            </header>
+            <div class="content">
                 <svg id="pie-chart"></svg>
+                <div id="pie-chart-legend"></div>
             </div>
+        </section>
 
-            <div class="graph graph-3">
-                <!--label>Hours spent by people</label>
-                <svg id="line-chart"></svg-->
-                <label>Hours spent per day</label>
-                <svg id="area-chart"></svg>
-            </div>
-
-            <div class="table">
-                <header>
-                    <label>Hours summary</label>
-                    <div class="action-buttons">
-                        <a id="export-table"><span class="fa fa-file-excel-o"></span> Export to excel</a>
-                    </div>
-                </header>
-                <div class="content">
+        <section class="graph graph-3">
+            <header>
+                <h3>Hours spent per day</h3>
+                <div class="action-buttons">
+                    <button id="switch-line-area" class="short-button fa fa-area-chart" data-active-chart="line"></button>
+                </div>
+            </header>
+            <div class='content'>
+                <div class="svg-container">
+                    <svg id="line-chart"></svg>
+                    <div id="line-chart-legend"></div>
+                </div>
+                <div class="svg-container">
+                    <svg id="area-chart"></svg>
+                    <div id="area-chart-legend"></div>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <section class="table">
+            <header>
+                <h3>Hours summary</h3>
+                <div class="action-buttons">
+                    <button id="export-table"><span class="fa fa-file-excel-o"></span> Export to excel</button>
+                </div>
+            </header>
+            <div class="content">
+            </div>
+        </section>
     </main>
+
+    <footer>
+        Copyright (c) 2017 Togglecorp All Rights Reserved.
+    </footer>
 </body>
 </html>
