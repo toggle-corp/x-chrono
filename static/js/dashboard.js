@@ -200,7 +200,7 @@ const visualizationCenter = {
 
         const a = $('<a></a>');
         a[0].href = dataType + ', ' + tableHtml;
-        a[0].download = projectName + ' ' + teamName + ' - ' + new Date().toDateString()  + '.xlsx';
+        a[0].download = projectName + ' ' + teamName + ' - ' + new Date().toDateString()  + '.xls';
         a[0].click();
     }
 };
