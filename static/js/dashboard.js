@@ -96,7 +96,7 @@ const visualizationCenter = {
 
 
         const activeTaskHours = [];
-        tasks.filter(task => task.active).forEach(task => {
+        tasks.forEach(task => {
             const hours = data.entries.filter(d => d.task == task.pk).reduce((a, b) => a + b.hours, 0);
 
             if (hours > 0) {
@@ -173,11 +173,11 @@ const visualizationCenter = {
 
             let total = 0;
             userIds.forEach(userId => {
-                row.append('<td class="hours">' + Math.round(task[userId]) + '</td>');
-                total += Math.round(task[userId]);
+                row.append('<td class="hours">' + Math.round(task[userId]*100)/100 + '</td>');
+                total += Math.round(task[userId]*100)/100;
             });
 
-            row.append('<td class="hours">' + total + '</td>');
+            row.append('<td class="hours">' + Math.round(total*100)/100 + '</td>');
         });
 
         const row = $('<tr></tr>');
@@ -186,11 +186,11 @@ const visualizationCenter = {
 
         let total = 0;
         userIds.forEach(userId => {
-            let subTotal = taskHours.reduce((a, b) => a + Math.round(b[userId]), 0);
+            let subTotal = Math.round(taskHours.reduce((a, b) => a + b[userId], 0) * 100)/100;
             total += subTotal;
             row.append('<td class="hours">' + subTotal + '</td>');
         });
-        row.append('<td class="hours">' + total + '</td>');
+        row.append('<td class="hours">' + Math.round(total*100)/100 + '</td>');
     },
 
     export() {
@@ -215,7 +215,8 @@ const syncManager = {
         const startDate = $('#start-date-filter').val();
         const endDate = $('#end-date-filter').val();
         const users = $('#users-filter').val();
-        const tasks = $('#tasks-filter').val();
+        // const tasks = $('#tasks-filter').val();
+        const phases = $('#phases-filter').val();
 
         const params = [];
 
@@ -228,8 +229,11 @@ const syncManager = {
         if (users) {
             params.push('users=' + users.join(','));
         }
-        if (tasks) {
-            params.push('tasks=' + tasks.join(','));
+        // if (tasks) {
+        //     params.push('tasks=' + tasks.join(','));
+        // }
+        if (phases) {
+            params.push('phases=' + phases.join(','));
         }
 
         return fetch(summaryAPI + '?' + params.join('&'))

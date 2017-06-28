@@ -15,22 +15,37 @@
     <script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
     <script>
     // Initialize Firebase
-    const config = {
-        apiKey: "AIzaSyDV5SEaetn38UksDXF3a0mQPFY4UH1nPU4",
-        authDomain: "chrono-50f8f.firebaseapp.com",
-        databaseURL: "https://chrono-50f8f.firebaseio.com",
-        storageBucket: "chrono-50f8f.appspot.com",
-        messagingSenderId: "445187391"
-    };
-    firebase.initializeApp(config);
+        const config = {
+            apiKey: "AIzaSyDV5SEaetn38UksDXF3a0mQPFY4UH1nPU4",
+            authDomain: "chrono-50f8f.firebaseapp.com",
+            databaseURL: "https://chrono-50f8f.firebaseio.com",
+            storageBucket: "chrono-50f8f.appspot.com",
+            messagingSenderId: "445187391"
+        };
+        firebase.initializeApp(config);
 
-    let userApi = '/api/v1/users/';
-    const teamApi = '/api/v1/teams/';
-    const projectApi = '/api/v1/projects/';
-    const taskApi = '/api/v1/tasks/';
-    const entryApi = '/api/v1/entries/';
+        let userApi = '/api/v1/users/';
+        const teamApi = '/api/v1/teams/';
+        const projectApi = '/api/v1/projects/';
+        const phaseApi = '/api/v1/phases/';
+        const taskApi = '/api/v1/tasks/';
+        const entryApi = '/api/v1/entries/';
+
+        const teamId = {{ team.pk }};
+        let teamMembers = [
+            {% for member in team.members.all %}
+            {
+                display_name: '{{ member.display_name|escapejs }}',
+                user_id: '{{ member.user_id }}',
+                pk: {{ member.pk }},
+                email: '{{ member.email|escapejs }}',
+                photo_url: '{{ member.photo_url|escapejs }}',
+            },
+            {% endfor %}
+        ];
     </script>
 
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
     <script src="{% static 'js/modal.js' %}"></script>
     <script src="{% static 'js/sign-in.js' %}"></script>
@@ -53,7 +68,8 @@
             <h1>Chrono <span class="fa fa-circle-o-notch fa-spin" ng-show="!dataLoaded"></span></h1>
         </div>
         <div id="user-info">
-            <a><span>{{ auth.user.displayName }}</span><i class="fa fa-chevron-down"></i></a>
+            <a onclick="teamManager.edit()"><span>{{ team.name }}</span><i></i></a> / 
+            <a><span>{{ auth.user.displayName }}</span><i></i></a>
         </div>
     </header>
      
@@ -62,7 +78,7 @@
             <h2>Projects</h2>
         </header>
         <div id="projects">
-            <a ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" href="#{{project.slug}}">{{ project.name }}</a>
+            <a ng-repeat="project in db.projects" href="#{{project.slug}}">{{ project.name }}</a>
         </div>
         <div id="add-project-inputs">
             <header>
@@ -70,38 +86,33 @@
             </header>
             <div class="content">
                 <div class="input-group">
-                    <label>Select Team:</label>
-                    <select ng-model="selectedTeam" ng-options="team.pk as team.name for team in db.teams">
-                    </select>
-                </div>
-                <div class="input-group">
                     <label>Name: </label>
                     <input ng-model="newProjectName" placeholder="Enter project name">
                 </div>
                 <div class="action-buttons">
-                    <button progress-click="db.addProject(selectedTeam, newProjectName)"><i class="fa fa-plus"></i>Add</button>
+                    <button progress-click="db.addProject(teamId, newProjectName)"><i class="fa fa-plus"></i>Add</button>
                 </div>
             </div>
         </div>
     </aside>
      
     <main>
-        <div ng-if="project.team == selectedTeam" ng-repeat="project in db.projects" id="{{project.slug}}" >
+        <div ng-if="project.team == teamId" ng-repeat="project in db.projects" id="{{project.slug}}" >
             <header>
                 <h2>{{ project.name }}</h2>
                 <div class="action-buttons">
                     <a target="_blank" href="{{ getDashboardUrl(project) }}" title="View stats"><i class="fa fa-area-chart"></i></a>
+                    <button progress-click="db.startPhase(project.pk)" title="Start new phase"><i class="fa fa-hourglass-start"></i></button>
                     <button progress-click="db.deleteProject(project.pk)" title="Delete project"><i class="fa fa-trash"></i></button>
                 </div>
                 <div class="tabs">
-                    <div class="tab {{ taskTab == 'active' ? 'active' : '' }}" ng-click="taskTab = 'active';">Active tasks</div>
-                    <div class="tab {{ taskTab == 'all' ? 'active' : '' }}" ng-click="taskTab = 'all';">All tasks</div>
+                    <div ng-repeat="phase in project.phases" class="tab {{ phaseTab[project.pk] == phase.pk ? 'active': '' }}" ng-click="phaseTab[project.pk] = phase.pk" ng-dblclick="db.editPhase(phase.pk)">{{ phase.name }}</div>
                 </div>
 
             </header>
 
             <div id="tasks">
-                <div ng-repeat="task in project.tasks" class="task {{ task.running ? 'active' : '' }}" ng-show="taskTab == 'all' || task.active">
+                <div ng-repeat="task in db.tasks" class="task {{ task.running ? 'active' : '' }}" ng-show="task.phase == phaseTab[project.pk]">
                     <header>
                         <h3>{{ task.name }}</h3>
                         <div class="task-action-buttons">
@@ -126,11 +137,11 @@
                     </div>
                 </div>
 
-                <div class="task new-task" ng-show="taskTab == 'all'">
+                <div class="task new-task" ng-show="phaseTab[project.pk] == project.activePhaseId">
                     <header>
                         <h3><input ng-model="newTaskName" placeholder="Enter task name"></h3>
                         <div class="task-action-buttons">
-                            <span></span><button ng-click="newTaskName = '';" progress-click="db.addTask(project.pk, newTaskName);"><i class="fa fa-plus"></i></button>
+                            <span></span><button ng-click="newTaskName = '';" progress-click="db.addTask(phaseTab[project.pk], newTaskName);"><i class="fa fa-plus"></i></button>
                         </div>
                     </header>
                     <div class="time-elements">
@@ -172,23 +183,58 @@
                     </div>
                 </section>
                 <section>
-                    <label>Plan schedule</label>
+                    <label>Status</label>
                     <div>
-                        <label>Start: </label>
-                        <input type="date" ng-model="editTaskPlanStart">
+                        <button data-modal-action="delete" data-modal-persist="true">Delete</button>
                     </div>
                     <div>
-                        <label>End: </label>
-                        <input type="date" ng-model="editTaskPlanEnd">
                     </div>
+                </section>
+            </main>
+            <footer>
+                <button data-modal-action="close">Close</button>
+                <button data-modal-action="save">Save</button>
+            </footer>
+        </div>
+    </div>
+
+    <div id="edit-team-modal" class="modal-container">
+        <div class="modal">
+            <header>
+                <h2>{{ team.name }}</h2>
+            </header>
+            <main>
+                <section>
+                    <label>Members</label>
+                    <div class="members"></div>
+                    <div class="search">
+                        <input placeholder="Search user to add" type="search" ng-model="memberSearchQuery" ng-change="db.searchTeamMember(memberSearchQuery)">
+                        <div class="searched-users">
+                        </div>
+                    </div>
+                </section>
+            </main>
+            <footer>
+                <div></div>
+                <button data-modal-action="close">Close</button>
+            </footer>
+        </div>
+    </div>
+
+    <div id="edit-phase-modal" class="modal-container">
+        <div class="modal">
+            <header>
+                <h2>Edit phase</h2>
+            </header>
+            <main>
+                <section>
+                    <label>Name</label>
+                    <input ng-model="editPhaseName">
                 </section>
                 <section>
                     <label>Status</label>
                     <div>
-                        <label class="radio-input"><input type="checkbox" ng-model="editTaskActive">Active</label>
                         <button data-modal-action="delete" data-modal-persist="true">Delete</button>
-                    </div>
-                    <div>
                     </div>
                 </section>
             </main>

@@ -33,12 +33,24 @@
         const projectName = '{{ project }}';
 
         const tasks = [
-            {% for task in project.task_set.all %}
+            {% for phase in project.phase_set.all %}
+            {% for task in phase.task_set.all %}
             {
                 pk: {{ task.pk }},
                 name: '{{ task.name|escapejs }}',
-                active: {% if task.active %}true{% else %}false{% endif %},
                 color: getColor('{{ task.name|escapejs }}'),
+                phase: {{ task.phase.pk }},
+            },
+            {% endfor %}
+            {% endfor %}
+        ];
+
+        const phases = [
+            {% for phase in project.phase_set.all %}
+            {
+                pk: {{ phase.pk }},
+                name: '{{ phase.name|escapejs }}',
+                start_time: new Date('{{ phase.start_time|date:'d-M-Y' }}'),
             },
             {% endfor %}
         ];
@@ -64,6 +76,16 @@
             <h1>Chrono<br><small>{{ team }} / {{ project }}</small></h1>
         </a>
         <div class="filters">
+            <div class="filter">
+                <label>Phases</label>
+                <select id="phases-filter" multiple>
+                    <option value="">All phases</option>
+                    {% for phase in project.phase_set.all %}
+                    <option value="{{ phase.pk }}" {% if forloop.counter0 == 0 %}selected{% endif %}>{{ phase.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
             <div class="filter date-filter">
                 <label>From</label>
                 <input id="start-date-filter" type="date">
@@ -84,6 +106,7 @@
                 </select>
             </div>
 
+            {% comment %}
             <div class="filter">
                 <label>Tasks</label>
                 <select id="tasks-filter" multiple>
@@ -93,6 +116,7 @@
                     {% endfor %}
                 </select>
             </div>
+            {% endcomment %}
 
             <div class="action-buttons">
                 <button id="apply-filters">Apply filters</button>
@@ -103,7 +127,7 @@
     <main>
         <section class="graph graph-1">
             <header>
-                <h3>Hours spent on tasks</h3>
+                <h3>Working hours per task</h3>
             </header>
             <div class="content">
                 <svg id="bar-chart"></svg>
@@ -113,7 +137,7 @@
 
         <section class="graph graph-2">
             <header>
-                <h3>Active tasks</h3>
+                <h3>Working hours per task</h3>
             </header>
             <div class="content">
                 <svg id="pie-chart"></svg>
@@ -123,7 +147,7 @@
 
         <section class="graph graph-3">
             <header>
-                <h3>Hours spent per day</h3>
+                <h3>Working hours per day</h3>
                 <div class="action-buttons">
                     <button id="switch-line-area" class="short-button fa fa-area-chart" data-active-chart="line"></button>
                 </div>

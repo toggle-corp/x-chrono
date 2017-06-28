@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 from rest_framework import viewsets
 from users.api.serializers import UserSerializer, TeamSerializer
 
@@ -12,7 +14,15 @@ class UserViewSet(viewsets.ModelViewSet):
         user_id = self.request.GET.get('user_id')
         if user_id:
             return User.objects.filter(user_id=user_id)
-        return User.objects.all()
+
+        queryset = User.objects.all()
+        q = self.request.GET.get('q')
+        if q:
+            for term in q.split():
+                queryset = User.objects.filter(
+                    Q(display_name__icontains=term) |
+                    Q(email__icontains=term))
+        return queryset
 
 
 class TeamViewSet(viewsets.ModelViewSet):
@@ -20,7 +30,14 @@ class TeamViewSet(viewsets.ModelViewSet):
     serializer_class = TeamSerializer
 
     def get_queryset(self):
+        teams = Team.objects.all()
+
         user_id = self.request.GET.get('user_id')
         if user_id:
-            return Team.objects.filter(members__user_id=user_id)
-        return Team.objects.all()
+            teams = teams.filter(members__user_id=user_id)
+
+        team_id = self.request.GET.get('team_id')
+        if team_id:
+            teams = teams.filter(pk=team_id)
+
+        return teams

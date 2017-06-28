@@ -13,20 +13,24 @@ let database = {
         return this.loadTeams().then(function() {
             return that.loadProjects();
         }).then(function() {
+            return that.loadPhases();
+        }).then(function() {
             return that.loadTasks();
         }).then(function() {
             that.reloadTasksIntoProjects();
+            that.projects.forEach(p => that.gotoFirstPhase(p));
         });
     },
 
     loadTeams: function() {
         let that = this;
         return new Promise(function(resolve, reject) {
-            that.http.get(teamApi, { params: {user_id: auth.userId} }).then(
+            that.http.get(teamApi, { params: {user_id: auth.userId, team_id: teamId} }).then(
                 function success(response) {
                     if (response.data) {
                         that.teams = response.data;
                         resolve();
+                        that.refreshMembers();
                     } else {
                         reject('Failed to load teams\n' + JSON.stringify({response: response}));
                     }
@@ -41,7 +45,7 @@ let database = {
     loadProjects: function() {
         let that = this;
         return new Promise(function(resolve, reject) {
-            that.http.get(projectApi, { params: { user_id: auth.userId } }).then(
+            that.http.get(projectApi, { params: { user_id: auth.userId, team_id: teamId } }).then(
                 function success(response) {
                     if (response.data) {
                         that.projects = response.data;
@@ -57,10 +61,29 @@ let database = {
         });
     },
 
+    loadPhases: function() {
+        let that = this;
+        return new Promise(function(resolve, reject) {
+            that.http.get(phaseApi, { params: { user_id: auth.userId, team_id: teamId } }).then(
+                function success(response) {
+                    if (response.data) {
+                        that.phases = response.data;
+                        resolve();
+                    } else {
+                        reject('Failed to load phases\n' + JSON.stringify({response: response}));
+                    }
+                },
+                function error(response) {
+                    reject('Failed to load phases\n' + JSON.stringify({response: response}));
+                }
+            );
+        });
+    },
+
     loadTasks: function() {
         let that = this;
         return new Promise(function(resolve, reject) {
-            that.http.get(taskApi, { params: { user_id: auth.userId } }).then(
+            that.http.get(taskApi, { params: { user_id: auth.userId, team_id: teamId } }).then(
                 function success(response) {
                     if (response.data) {
                         that.tasks = response.data;
@@ -78,17 +101,59 @@ let database = {
 
     reloadTasksIntoProjects: function() {
         for (let i=0; i<this.projects.length; i++) {
-            this.projects[i].tasks = [];
+            this.projects[i].phases = [];
         }
+        for (let i=0; i<this.phases.length; i++) {
+            let phase = this.phases[i];
+            let project = this.projects.find(p => p.pk == phase.project);
+            if (project) {
+                project.phases.push(phase);
+            }
+        }
+
+        for (let i=0; i<this.phases.length; i++) {
+            this.phases[i].tasks = [];
+        }
+
         for (let i=0; i<this.tasks.length; i++) {
             let task = this.tasks[i];
-            let project = this.projects.find(p => p.pk == task.project);
-            if (project) {
-                project.tasks.push(task);
+            let phase = this.phases.find(p => p.pk == task.phase);
+            if (phase) {
+                phase.tasks.push(task);
             }
-
             this.refreshTask(task);
         }
+
+        this.projects.forEach(p => {
+            if (p.phases && p.phases.length > 0) {
+                p.activePhaseId = p.phases[0].pk;
+            }
+        });
+    },
+
+    startPhase: function(projectId) {
+        let phase = {
+            name: 'New phase',
+            project: projectId,
+        };
+        let that = this;
+
+        return new Promise((resolve, reject) => {
+            that.http.post(phaseApi, phase).then(
+                function success(response) {
+                    that.phases.unshift(response.data);
+                    that.reloadTasksIntoProjects();
+                    resolve();
+
+                    let project = that.projects.find(p => p.pk == response.data.project);
+                    if (project) that.gotoFirstPhase(project);
+                },
+
+                function error(response) {
+                    reject('Cannot start new phase\n' + JSON.stringify({response: response}));
+                }
+            );
+        });
     },
 
     addProject: function(teamId, name) {
@@ -137,15 +202,13 @@ let database = {
         });
     },
 
-    addTask: function(projectId, name) {
+    addTask: function(phaseId, name) {
         if (!name || name.length === 0)
             return;
 
         let task = {
             name: name,
-            project: projectId,
-            plan_start: null, plan_end: null,
-            active: false,
+            phase: phaseId,
         };
         let that = this;
 
@@ -153,11 +216,11 @@ let database = {
             that.http.post(taskApi, task).then(
                 function success(response) {
                     that.tasks.push(response.data);
-                    let project = that.projects.find(p => p.pk == projectId);
-                    if (!project.tasks) {
-                        project.tasks = [];
+                    let phase = that.phases.find(p => p.pk == phaseId);
+                    if (!phase.tasks) {
+                        phase.tasks = [];
                     }
-                    project.tasks.push(response.data);
+                    phase.tasks.push(response.data);
                     that.refreshTask(response.data);
                     resolve();
                 },
@@ -168,6 +231,49 @@ let database = {
         });
     },
 
+    editPhase: function(phaseId) {
+        let phase = this.phases.find(p => p.pk == phaseId);
+        if (!phase) {
+            return;
+        }
+
+        this.scope.editPhaseName = phase.name;
+        let that = this;
+        let modal = new Modal(document.getElementById('edit-phase-modal'), progressClick);
+        modal.show((action) => {
+            if (action == 'save') {
+                let newPhase = {
+                    pk: phase.pk,
+                    name: that.scope.editPhaseName,
+                    project: phase.project,
+                };
+
+                return new Promise((resolve, reject) => {
+                    that.http.put(phaseApi + phaseId + '/', newPhase).then(
+                        function success(response) {
+                            let index = that.phases.findIndex(p => p.pk = phaseId);
+                            that.phases[index] = response.data;
+                            that.reloadTasksIntoProjects();
+                            resolve();
+                        },
+                        function error(response) {
+                            reject('Cannot edit phase\n' + JSON.stringify({response: response}));
+                        }
+                    );
+                });
+            }
+            else if (action == 'delete') {
+                let promise = that.deletePhase(phaseId);
+                if (promise) {
+                    return promise.then(() => {
+                        modal.close('delete');
+                    });
+                }
+                return promise;
+            }
+        });
+    },
+
     editTask: function(taskId) {
         let task = this.tasks.find(t => t.pk == taskId);
         if (!task) {
@@ -175,9 +281,6 @@ let database = {
         }
 
         this.scope.editTaskName = task.name;
-        this.scope.editTaskPlanStart = task.plan_start ? new Date(task.plan_start) : null;
-        this.scope.editTaskPlanEnd = task.plan_end ? new Date(task.plan_end) : null;
-        this.scope.editTaskActive = task.active;
 
         let that = this;
         let modal = new Modal(document.getElementById('edit-task-modal'), progressClick);
@@ -186,10 +289,7 @@ let database = {
                 let newTask = {
                     pk: taskId,
                     name: that.scope.editTaskName,
-                    project: task.project,
-                    plan_start: that.scope.editTaskPlanStart ? that.scope.editTaskPlanStart.toISOString().split('T')[0] : null,
-                    plan_end: that.scope.editTaskPlanEnd ? that.scope.editTaskPlanEnd.toISOString().split('T')[0] : null,
-                    active: that.scope.editTaskActive,
+                    phase: task.phase,
                 };
 
                 return new Promise((resolve, reject) => {
@@ -199,10 +299,11 @@ let database = {
 
                             let index = that.tasks.findIndex(t => t.pk == taskId);
                             that.tasks[index] = response.data;
-                            let project = that.projects.find(p => p.pk == task.project);
-                            index = project.tasks.findIndex(t => t.pk == taskId);
-                            project.tasks[index] = response.data;
+                            let phase = that.phases.find(p => p.pk == task.phase);
+                            index = phase.tasks.findIndex(t => t.pk == taskId);
+                            phase.tasks[index] = response.data;
                             that.refreshTask(task);
+
                             resolve();
                         },
                         function error(response) {
@@ -224,6 +325,34 @@ let database = {
         });
     },
 
+    deletePhase: function(phaseId) {
+        let that = this;
+
+        if (!confirm('Deleting this phase will delete all of its tasks for all members. Are you absolutely sure?')) {
+            return;
+        }
+
+        return new Promise((resolve, reject) => {
+            that.http.delete(phaseApi + phaseId + '/').then(
+                function success(response) {
+                    let index = that.phases.findIndex(p => p.pk == phaseId);
+                    let projectId = that.phases[index].project;
+
+                    that.phases.splice(index, 1);
+                    that.reloadTasksIntoProjects();
+                    resolve();
+
+                    let project = that.projects.find(p => p.pk == projectId);
+                    if (project) that.gotoFirstPhase(project);
+                },
+
+                function error(response) {
+                    reject('Cannot delete phase\n' + JSON.stringify({response: response}));
+                }
+            );
+        });
+    },
+
     deleteTask: function(taskId) {
         let that = this;
 
@@ -235,9 +364,9 @@ let database = {
             that.http.delete(taskApi + taskId + '/').then(
                 function success(response) {
                     let index = that.tasks.findIndex(t => t.pk == taskId);
-                    let project = that.projects.find(p => p.pk == that.tasks[index].project);
-                    let index2 = project.tasks.findIndex(t => t.pk == taskId);
-                    project.tasks.splice(index2, 1);
+                    let phase = that.phases.find(p => p.pk == that.tasks[index].phase);
+                    let index2 = phase.tasks.findIndex(t => t.pk == taskId);
+                    phase.tasks.splice(index2, 1);
                     that.tasks.splice(index, 1);
 
                     resolve();
@@ -261,7 +390,6 @@ let database = {
                 function success(response) {
                     let task = that.tasks.find(t => t.pk == taskId);
                     task.entries.push(response.data);
-                    task.active = true;
 
                     that.refreshTask(task);
                     resolve();
@@ -385,6 +513,12 @@ let database = {
             });
     },
 
+    gotoFirstPhase(project) {
+        if (project.phases && project.phases.length > 0) {
+            this.scope.phaseTab[project.pk] = project.phases[0].pk;
+        }
+    },
+
     refreshTask(task) {
         if (!task.entries) {
             task.entries = [];
@@ -401,6 +535,65 @@ let database = {
                 e.dt = getDiff(new Date(e.end_time), new Date(e.start_time));
             }
         });
+    },
+
+    refreshMembers() {
+        const membersContainer = $('#edit-team-modal .members');
+        membersContainer.empty();
+        teamMembers.forEach(member => {
+            const memberElement = $('<div>' + member.display_name + '</div>');
+
+            if (member.user_id != auth.userId) {
+                memberElement.append('<button class="delete"><span class="fa fa-times"></span></button>');
+                memberElement.find('button').click(() => {
+                    if (!confirm('Are you sure you want to remove ' + member.display_name + ' from this group?')) {
+                        return;
+                    }
+                    this.putMembers(teamMembers.filter(m => m.pk != member.pk));
+                });
+            }
+
+            membersContainer.append(memberElement);
+        });
+    },
+
+    searchTeamMember(query) {
+        const usersContainer = $('#edit-team-modal .searched-users');
+        usersContainer.empty();
+
+        if (query.length <= 3) {
+            return;
+        }
+        
+        $.get('/api/v1/users/?q=' + encodeURIComponent(query)).promise()
+            .then((response) => {
+                response.forEach(user => {
+                    if (teamMembers.find(m => m.pk == user.pk)) {
+                        return;
+                    }
+
+                    const userElement = $('<div>' + user.display_name + ' <button class="add"><span class="fa fa-plus"></span></button></div>');
+                    userElement.find('button').click(() => {
+                        this.putMembers(teamMembers.concat([user]));
+                        this.scope.memberSearchQuery = '';
+                        usersContainer.empty();
+                    });
+                    usersContainer.append(userElement);
+                });
+            });
+    },
+
+    putMembers(members) {
+        const data = {
+            name: this.scope.team.name,
+            members: members.map(m => m.pk),
+        };
+        this.http.put(teamApi + teamId + '/', data).then(
+            () => {
+                teamMembers = members;
+                this.refreshMembers();
+            }
+        );
     },
 };
 

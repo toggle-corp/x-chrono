@@ -56,8 +56,10 @@ body{
                 margin-left: 8px;
             }
 
-            &:hover {
-                color: rgba(255, 255, 255, 0.96);
+            a {
+                &:hover {
+                    color: rgba(255, 255, 255, 0.96);
+                }
             }
         }
 
@@ -85,7 +87,7 @@ body{
         }
          
         #projects {
-            height: calc(100% - 200px - 72px);
+            height: calc(100% - 144px - 72px);
             overflow-y: scroll;
 
             a {
@@ -104,7 +106,7 @@ body{
         #add-project-inputs{
             border-top: 1px solid rgba(0, 0, 0, 0.1);
             background-color: #fff;
-            height: 200px;
+            height: 144px;
             flex-wrap: wrap;
 
             header {
@@ -486,5 +488,49 @@ body{
              
         }
          
+    }
+
+    #edit-team-modal {
+        main {
+            width: 512px;
+
+            section {
+                display: flex;
+                flex-wrap: wrap;
+                margin-bottom: 16px;
+
+                > label {
+                    flex-basis: 100%;
+                    text-transform: uppercase;
+                    color: rgba(0, 0, 0, 0.5);
+                    height: 28px;
+                }
+            }
+        }
+
+        .members {
+            flex-basis: 50%;
+        }
+
+        .search {
+            flex-basis: 50%;
+
+            input {
+                padding: 4px 10px;
+            }
+        }
+
+        button {
+            background-color: transparent;
+            color: $primary-color;
+            outline: none;
+            border: 0;
+            padding: 8px;
+            cursor: pointer;
+
+            &.delete {
+                color: #e74c3c;
+            }
+        }
     }
 }

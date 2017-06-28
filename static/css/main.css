@@ -56,7 +56,7 @@ body {
       text-transform: none; }
       body > header #user-info .fa {
         margin-left: 8px; }
-      body > header #user-info:hover {
+      body > header #user-info a:hover {
         color: rgba(255, 255, 255, 0.96); }
   body > aside {
     flex-basis: 25%;
@@ -75,7 +75,7 @@ body {
         font-weight: 400;
         font-size: 24px; }
     body > aside #projects {
-      height: calc(100% - 200px - 72px);
+      height: calc(100% - 144px - 72px);
       overflow-y: scroll; }
       body > aside #projects a {
         display: block;
@@ -88,7 +88,7 @@ body {
     body > aside #add-project-inputs {
       border-top: 1px solid rgba(0, 0, 0, 0.1);
       background-color: #fff;
-      height: 200px;
+      height: 144px;
       flex-wrap: wrap; }
       body > aside #add-project-inputs header {
         padding: 0 16px;
@@ -338,5 +338,31 @@ body {
           align-items: center; }
         body #edit-task-modal main section > div input {
           padding: 0 4px; }
+  body #edit-team-modal main {
+    width: 512px; }
+    body #edit-team-modal main section {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 16px; }
+      body #edit-team-modal main section > label {
+        flex-basis: 100%;
+        text-transform: uppercase;
+        color: rgba(0, 0, 0, 0.5);
+        height: 28px; }
+  body #edit-team-modal .members {
+    flex-basis: 50%; }
+  body #edit-team-modal .search {
+    flex-basis: 50%; }
+    body #edit-team-modal .search input {
+      padding: 4px 10px; }
+  body #edit-team-modal button {
+    background-color: transparent;
+    color: #8e44ad;
+    outline: none;
+    border: 0;
+    padding: 8px;
+    cursor: pointer; }
+    body #edit-team-modal button.delete {
+      color: #e74c3c; }
 
 /*# sourceMappingURL=main.css.map */

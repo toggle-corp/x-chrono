@@ -1,3 +1,10 @@
+function getTimeLabel(hours) {
+    if (hours > 1) {
+        return Math.round(hours) + ' hrs';
+    }
+    return Math.round(hours*60) + ' mins';
+}
+
 class LineChart {
     constructor(svgElement, legendContainer) {
         const svg = d3.select(svgElement);
@@ -78,7 +85,7 @@ class LineChart {
                     .attr('r', 5);
             })
             .append('title')
-            .text(d => d.name + ' (' + Math.round(d.value) + ' hrs)');
+            .text(d => d.name + ' (' + getTimeLabel(d.value) + ')');
 
         user.append('text')
             .datum(user => ({ userName: user.userName, data: user.data[user.data.length - 1] }))
@@ -234,7 +241,7 @@ class PieChart {
                     .attr('transform', null);
             })
             .append('title')
-            .text(d => d.data.taskName + ' (' + Math.round(d.data.value) + ' hrs)');
+            .text(d => d.data.taskName + ' (' + getTimeLabel(d.data.value) + ')');
 
         const legend = this.legend
             .selectAll('.legend-element')
@@ -317,7 +324,7 @@ class BarChart {
                     .attr('transform', null);
             })
             .append('title')
-            .text(d => d.data.taskName + ' (' + Math.round(d[1] - d[0]) + ' hrs)');
+            .text(d => d.data.taskName + ' (' + getTimeLabel(d[1] - d[0]) + ')');
 
 
         const legend = this.legend

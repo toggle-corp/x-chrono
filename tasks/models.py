@@ -21,14 +21,21 @@ class Project(models.Model):
         super(Project, self).save(*args, **kwargs)
 
 
+class Phase(models.Model):
+    project = models.ForeignKey(Project)
+    name = models.CharField(max_length=300)
+    start_time = models.DateTimeField(default=datetime.now)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['-start_time']
+
+
 class Task(models.Model):
     name = models.CharField(max_length=300)
-    project = models.ForeignKey(Project)
-
-    plan_start = models.DateField(null=True, blank=True, default=None)
-    plan_end = models.DateField(null=True, blank=True, default=None)
-
-    active = models.BooleanField(default=False)
+    phase = models.ForeignKey(Phase)
 
     def __str__(self):
         return self.name

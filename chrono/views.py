@@ -9,7 +9,16 @@ import csv
 
 class HomeView(View):
     def get(self, request):
-        return render(request, 'chrono/home.html')
+        return render(request, 'chrono/landing.html')
+
+
+class TeamView(View):
+    def get(self, request, team_slug):
+        team = Team.objects.get(slug=team_slug)
+        context = {
+            'team': team,
+        }
+        return render(request, 'chrono/home.html', context)
 
 
 class DashboardView(View):

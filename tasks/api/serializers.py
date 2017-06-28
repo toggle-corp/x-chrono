@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from tasks.models import Project, Task, TaskEntry
+from tasks.models import Project, Task, TaskEntry, Phase
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -8,6 +8,12 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = ('pk', 'name', 'team', 'slug')
         read_only_fields = ('slug', )
+
+
+class PhaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Phase
+        fields = ('pk', 'project', 'name', 'start_time')
 
 
 class TaskEntrySerializer(serializers.ModelSerializer):
@@ -23,8 +29,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ('pk', 'name', 'project', 'plan_start', 'plan_end',
-                  'active', 'entries')
+        fields = ('pk', 'name', 'phase', 'entries')
 
     def get_entries(self, task):
         entries = TaskEntry.objects.filter(task=task)

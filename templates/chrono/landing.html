@@ -1,0 +1,62 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Chrono</title>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
+    <script>
+        const config = {
+            // Initialize Firebase
+            apiKey: "AIzaSyDV5SEaetn38UksDXF3a0mQPFY4UH1nPU4",
+            authDomain: "chrono-50f8f.firebaseapp.com",
+            databaseURL: "https://chrono-50f8f.firebaseio.com",
+            storageBucket: "chrono-50f8f.appspot.com",
+            messagingSenderId: "445187391"
+        };
+        firebase.initializeApp(config);
+
+        let userApi = '/api/v1/users/';
+        const teamApi = '/api/v1/teams/';
+    </script>
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="{% static 'js/landing.js' %}"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Cantarell:400,700" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500|Roboto:300,400,500" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/logo.png' %}"/>
+
+</head>
+<body>
+    <header>
+    </header>
+    <aside>
+    </aside>
+    <main>
+        Landing page
+        <section id="team-list">
+            <header>
+                <h3>Teams</h3>
+            </header>
+            <div class="content">
+                <div class="list"></div>
+                <div>
+                    <input placeholder="Create new team" id="new-team-name">
+                    <button id="add-new-team">Add</button>
+                </div>
+            </div>
+        </section>
+        {% csrf_token %}
+    </main>
+</body>

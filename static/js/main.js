@@ -1,5 +1,20 @@
 
-var chrono = angular.module('chrono', []);
+const chrono = angular.module('chrono', []);
+let editTeam = null;
+
+const teamManager = {
+    init() {
+        this.modal = new Modal(document.getElementById('edit-team-modal'), progressClick);
+    },
+
+    edit() {
+        this.modal.show((action) => {
+            return new Promise((resolve, reject) => {
+                resolve();
+            });
+        });
+    },
+};
 
 chrono.controller('mainController',  ['$scope', '$http', function($scope, $http) {
 
@@ -8,10 +23,11 @@ chrono.controller('mainController',  ['$scope', '$http', function($scope, $http)
     $http.defaults.xsrfHeaderName = 'X-CSRFToken';
 
     $scope.dataLoaded = false;
-    $scope.taskTab = 'active';
+    $scope.phaseTab = { };
+    $scope.teamId = teamId;
 
     $scope.getDashboardUrl = function(project) {
-        return database.teams.find(t => t.pk == project.team).slug +
+        return '/' + database.teams.find(t => t.pk == project.team).slug +
             '/' + project.slug + '/';
     };
 
@@ -23,12 +39,15 @@ chrono.controller('mainController',  ['$scope', '$http', function($scope, $http)
         database.init($scope, $http);
         return database.loadAll().then(function() {
             $scope.dataLoaded = true;
-            $scope.selectedTeam = database.teams[0].pk;
+            $scope.team = database.teams[0];
             $scope.$apply();
+
+            teamManager.init();
         });
     }).catch(function(error) {
         console.log(error);
     });
+
 }]);
 
 
