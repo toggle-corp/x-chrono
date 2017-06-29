@@ -1,0 +1,116 @@
+@import 'base';
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../img/bg.jpg');
+    background-color: #eee;
+    background-blend-mode: soft-light;
+
+    >section {
+        min-height: 100vh;
+        flex-basis: 30%;
+
+        &#app-detail {
+            flex-basis: 66%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+
+            h1 {
+                margin: 0;
+                font-size: 5em;
+                line-height: 1;
+
+                small {
+                    font-size: 0.5em;
+                    font-weight: $font-weight-normal;
+                }
+            }
+            
+        }
+
+        #team-list {
+            flex-basis: 30%;
+            padding: 16px;
+
+            header {
+                height: 96px;
+                display: flex;
+                align-items: center;
+                padding: 0 16px;
+                font-size: 2em;
+            }
+
+
+            .list {
+                overflow-y: auto;
+                height: calc(60vh - 96px - 32px);
+
+                a {
+                    display: block;
+                    width: 100%;
+                    min-height: 48px;
+                    padding: 0 24px;
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+                    display: flex;
+                    align-items: center;
+                    color: $primary-color;
+
+                    &:hover {
+                        background-color: rgba(0, 0, 0, 0.1);
+                    }
+                }
+            }
+        }
+
+        #new-team-input-container {
+            height: 40vh;
+
+            > header {
+                height: 96px;
+                display: flex;
+                align-items: center;
+                padding: 0 16px;
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 0 16px;
+
+                input {
+                    width: 100%;
+                    font-size: 1.2em;
+                    font-family: inherit;
+                    display: block;
+                    padding: 4px 8px;
+                    border: none;
+                    outline: none;
+                    background-color: transparent;
+                    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+                }
+                button {
+                    margin-top: 24px;
+                    display: block;
+                    padding: 4px 16px;
+                    font-family: inherit;
+                    font-size: 1.2em;
+                    text-transform: uppercase;
+                    border: none;
+                    background-color: $primary-color;
+                    color: #fff;
+                    border-radius: 3px;
+                }
+
+            }
+
+        }
+
+    }
+}

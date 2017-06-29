@@ -27,6 +27,7 @@ class LineChart {
         this.y = d3.scaleLinear().rangeRound([this.height, 0]);
 
         this.line = d3.line()
+            .curve(d3.curveMonotoneX)
             .x(d => this.x(d.date))
             .y(d => this.y(d.value));
     }

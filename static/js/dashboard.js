@@ -31,6 +31,8 @@ const visualizationCenter = {
 
     redraw(data) {
         const userHours = [];
+        const dates = [];
+
         data.entries.forEach(d => {
             const date = new Date(d.start_time);
             const hours = d.hours;
@@ -51,9 +53,26 @@ const visualizationCenter = {
                     color: users.find(u => u.pk == d.user).color,
                 });
             }
+
+            if (!dates.find(d => d.toDateString() === date.toDateString())) {
+                dates.push(date);
+            }
         });
 
-        userHours.forEach(u => u.data.sort((d1, d2) => d1.date - d2.date));
+        userHours.forEach(u => {
+            dates.forEach(date => {
+                if (!u.data.find(d => d.date.toDateString() === date.toDateString())) {
+                    u.data.push({ date: date, value: 0 });
+                }
+            });
+            u.data.sort((d1, d2) => d1.date - d2.date);
+
+            for (let i=u.data.length-1; i>=0; i--) {
+                if (u.data[i].value === 0) {
+                    u.data.splice(i, 1);
+                } else break;
+            }
+        });
         this.lineChart.redraw(userHours);
 
         const dayHours = [];
