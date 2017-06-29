@@ -25,6 +25,9 @@ body{
         border-bottom: 1px solid $primary-color;
         // box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.7);
 
+        a {
+            color: inherit;
+        }
 
         #app-info{
             display: flex;
@@ -75,6 +78,7 @@ body{
         >header{
             height: 72px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
             padding: 0 16px;
             background-color: #fff;
@@ -84,6 +88,72 @@ body{
                 font-weight: $font-weight-normal;
                 font-size: $font-size-sl;
             }
+
+            button {
+                background-color: transparent;
+                border: 0;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                outline: none;
+                width: 40px;
+                height: 40px;
+                cursor: pointer;
+                border-radius: 50%;
+                font-size: 1.2em;
+
+                &:hover:not(:disabled) {
+                    background-color: rgba(0, 0, 0, 0.1);
+                }
+            }
+        }
+         
+        #add-project-inputs{
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            padding: 16px;
+            border-top: 2px solid rgba(0, 0, 0, 0.3);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+
+            input {
+                diplay: block;
+                width: 100%;
+                padding: 4px 8px;
+                outline: none;
+                background-color: transparent;
+                border: none;
+                border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+                font-family: inherit;
+                font-size: 1.2em;
+
+                &:focus {
+                    border-bottom-color: $primary-color;
+                }
+            }
+
+            .action-buttons {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 16px;
+
+                button{
+                    border: none;
+                    outline: none;
+                    text-transform: uppercase;
+                    background-color: transparent;
+                    color: $primary-color;
+                    cursor: pointer;
+                    padding: 0;
+                    border-radius: 3px;
+                    font-weight: $font-weight-bold;
+                    font-family: inherit;
+
+                    .fa{
+                        margin-right: 6px;
+                    }
+                }
+            }
+
         }
          
         #projects {
@@ -97,85 +167,15 @@ body{
                 border-bottom: 1px solid rgba(0, 0, 0, 0.05);
                 color: $primary-color;
 
-                &:hover{
+                &:hover {
                     background-color: rgba(0, 0, 0, 0.05);
                 }
-            }
-        }
-         
-        #add-project-inputs{
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            height: 144px;
-            flex-wrap: wrap;
 
-            header {
-                padding: 0 16px;
-                height: 48px;
-                display: flex;
-                align-items: center;
-                 
-                h3 {
-                    font-weight: $font-weight-bold; 
+                &.active {
+                    background-color: $primary-color;
+                    color: #fff;
                 }
             }
-
-            .content {
-                padding: 0 16px;
-
-                .input-group {
-                    min-height: 36px;
-                    display: flex;
-                    align-items: center;
-                     
-                    input, select {
-                        font-family: inherit;
-                        outline: none;
-                    }
-                     
-                    label {
-                        flex-basis: 33%;
-                        color: $label-color;
-                        font-size: $font-size-sm; 
-                    }
-                     
-                    input, select{
-                        padding: 4px 8px;
-                        flex-basis: 67%;
-                        outline: none;
-                        font-size: $font-size-sm; 
-                        background-color: #fff;
-                    }
-                }
-                 
-                .action-buttons {
-                    min-height: 48px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-end;
-
-                    button{
-                        border: none;
-                        text-transform: uppercase;
-                        background-color: $primary-color;
-                        color: #fff;
-                        cursor: pointer;
-                        padding: 8px 16px;
-                        border-radius: 3px;
-                        font-weight: $font-weight-bold;
-
-                        font-family: inherit;
-
-                        .fa{
-                            margin-right: 6px;
-                        }
-                    }
-                }
-
-
-
-            }
-
         }
     }
 
@@ -241,6 +241,7 @@ body{
                         padding: 6px 16px;
                         cursor: pointer;
                         text-transform: uppercase;
+                        user-select: none;
 
                         &.active {
                             border-bottom: 2px solid $primary-color;
@@ -433,59 +434,54 @@ body{
         }
     }
 
-    #edit-task-modal {
+    #edit-task-modal, #edit-phase-modal {
         main {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
+            min-width: 320px;
 
-            section {
-                margin-bottom: 10px;
-                 
-                > label {
-                    display: block;
-                    margin-bottom: 6px;
-                    font-size: $font-size-xs;
-                    text-transform: uppercase;
-                    color: rgba(0, 0, 0, 0.5);
-                }
+            label {
+                width: 100%;
+                text-transform: uppercase;
+                color: rgba(0, 0, 0, 0.5);
+                font-size: 0.9em;
+            }
 
-                > div {
-                    width: 320px;
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 6px;
+            input {
+                width: 100%;
+                font-family: inherit;
+                outline: none;
+                border: none;
+                border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+                font-size: 1.2em;
 
-                    >label {
-                        flex-basis: 96px;
-                    }
-
-                    input[type="text"], input[type="date"] {
-                        flex-basis: calc(100% - 96px);
-                        font-family: inherit;
-                    }
-
-                    button {
-                        font-family: inherit;
-                        border: none;
-                        outline: none;
-                        background-color: transparent;
-                        color: #e74c3c;
-                        text-transform: uppercase;
-                        cursor: pointer;
-                    }
-
-                    .radio-input{
-                        display: flex;
-                        align-items: center;
-                    }
-                     
-                    input {
-                        padding: 0 4px;
-                    }
+                &:focus {
+                    border-bottom-color: $primary-color;
                 }
             }
-             
+
+            button {
+                background-color: transparent;
+                border: none;
+                outline: none;
+                color: #e04656;
+                font-family: inherit;
+                margin: 0 -24px;
+                margin-top: 32px;
+                padding: 10px 24px;
+                font-size: 1.2em;
+                cursor: pointer;
+                text-transform: uppercase;
+                text-align: left;
+
+                small {
+                    display: block;
+                    width: 100%;
+                    text-transform: none;
+                }
+
+                &:hover {
+                    background-color: rgba(0, 0, 0, 0.05);
+                }
+            }
         }
          
     }
@@ -493,6 +489,7 @@ body{
     #edit-team-modal {
         main {
             width: 512px;
+            padding: 0;
 
             section {
                 display: flex;
@@ -503,20 +500,53 @@ body{
                     flex-basis: 100%;
                     text-transform: uppercase;
                     color: rgba(0, 0, 0, 0.5);
-                    height: 28px;
+                    padding: 10px 16px;
                 }
             }
         }
 
         .members {
             flex-basis: 50%;
+
+            > div {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                min-height: 28px;
+                padding: 0 16px;
+
+                &:nth-child(odd) {
+                    background-color: #f0f0f0;
+                }
+            }
         }
 
         .search {
             flex-basis: 50%;
+            padding: 0 16px;
 
             input {
                 padding: 4px 10px;
+                width: 100%;
+                font-family: inherit;
+                outline: none;
+            }
+
+            .searched-users {
+                > div {
+                    display: flex;
+                    align-items: center;
+                    min-height: 28px;
+
+                    > span {
+                        order: 2;
+                    }
+
+                    button {
+                        order: 1;
+                        padding: 0 10px;
+                    }
+                }
             }
         }
 
@@ -525,8 +555,8 @@ body{
             color: $primary-color;
             outline: none;
             border: 0;
-            padding: 8px;
             cursor: pointer;
+            padding: 0;
 
             &.delete {
                 color: #e74c3c;

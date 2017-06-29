@@ -63,41 +63,41 @@
 {% verbatim %}
 <body ng-app="chrono" ng-controller="mainController">
     <header>
-        <div id="app-info">
-            <img src="/static/img/logo.png">
-            <h1>Chrono <span class="fa fa-circle-o-notch fa-spin" ng-show="!dataLoaded"></span></h1>
-        </div>
+        <a href="/">
+            <div id="app-info">
+                <img src="/static/img/logo.png">
+                <h1>Chrono <span class="fa fa-circle-o-notch fa-spin" ng-show="!dataLoaded"></span></h1>
+            </div>
+        </a>
         <div id="user-info">
-            <a onclick="teamManager.edit()"><span>{{ team.name }}</span><i></i></a> / 
             <a><span>{{ auth.user.displayName }}</span><i></i></a>
         </div>
     </header>
      
     <aside>
         <header>
-            <h2>Projects</h2>
-        </header>
-        <div id="projects">
-            <a ng-repeat="project in db.projects" href="#{{project.slug}}">{{ project.name }}</a>
-        </div>
-        <div id="add-project-inputs">
-            <header>
-                <h3>Add new project</h3>
-            </header>
-            <div class="content">
-                <div class="input-group">
-                    <label>Name: </label>
-                    <input ng-model="newProjectName" placeholder="Enter project name">
-                </div>
-                <div class="action-buttons">
-                    <button progress-click="db.addProject(teamId, newProjectName)"><i class="fa fa-plus"></i>Add</button>
-                </div>
+            <h2>{{ team .name }}</h2>
+            <div class="action-buttons">
+                <button onclick="teamManager.edit()"><i class="fa fa-edit"></i></button>
+                <button id="add-project-button" onclick="$('#add-project-inputs').show(); $(this).prop('disabled', true);"><i class="fa fa-plus"></i></button>
             </div>
+        </header>
+
+        <div id="add-project-inputs" hidden>
+            <input ng-model="newProjectName" placeholder="Enter project name">
+            <div class="action-buttons">
+                <button onclick="$('#add-project-inputs').hide(); $('#add-project-button').prop('disabled', false); ">Cancel</button>
+                <button progress-click="db.addProject(teamId, newProjectName)">Add</button>
+            </div>
+        </div>
+
+        <div id="projects">
+            <a ng-repeat="project in db.projects" href="#{{project.slug}}" ng-click="location.hash = '#' + project.slug" class="{{ location.hash == '#' + project.slug ? 'active' : '' }}">{{ project.name }}</a>
         </div>
     </aside>
      
     <main>
-        <div ng-if="project.team == teamId" ng-repeat="project in db.projects" id="{{project.slug}}" >
+    <div ng-if="project.team == teamId" ng-repeat="project in db.projects" id="{{ project.slug }}" ng-show="'#' + project.slug == location.hash">
             <header>
                 <h2>{{ project.name }}</h2>
                 <div class="action-buttons">
@@ -117,8 +117,8 @@
                         <h3>{{ task.name }}</h3>
                         <div class="task-action-buttons">
                             <button ng-click="db.editTask(task.pk)" title="Edit task"><i class="fa fa-edit"></i></button>
-                            <button ng-if="!task.running" progress-click="db.startTask(task.pk)" }} title="Start task"><i class="fa fa-play" ></i></button>
-                            <button ng-if="task.running" progress-click="db.stopTask(task.pk)" }} title="Stop task"><i class="fa fa-stop"></i></button>
+                            <button ng-show="phaseTab[project.pk] == project.activePhaseId" ng-if="!task.running" progress-click="db.startTask(task.pk)" }} title="Start task"><i class="fa fa-play" ></i></button>
+                            <button ng-show="phaseTab[project.pk] == project.activePhaseId" ng-if="task.running" progress-click="db.stopTask(task.pk)" }} title="Stop task"><i class="fa fa-stop"></i></button>
                         </div>
                     </header>
                      
@@ -175,21 +175,11 @@
         <div class="modal">
             <header><h2>Edit task</h2></header>
             <main>
-                <section>
-                    <label>Basic</label>
-                    <div>
-                        <label>Name: </label>
-                        <input type="text" ng-model="editTaskName">
-                    </div>
-                </section>
-                <section>
-                    <label>Status</label>
-                    <div>
-                        <button data-modal-action="delete" data-modal-persist="true">Delete</button>
-                    </div>
-                    <div>
-                    </div>
-                </section>
+                <div>
+                    <label>Name: </label>
+                    <input type="text" ng-model="editTaskName">
+                </div>
+                <button data-modal-action="delete" data-modal-persist="true">Delete <small>Removing this task will remove all its history</small></button>
             </main>
             <footer>
                 <button data-modal-action="close">Close</button>
@@ -227,16 +217,11 @@
                 <h2>Edit phase</h2>
             </header>
             <main>
-                <section>
+                <div>
                     <label>Name</label>
                     <input ng-model="editPhaseName">
-                </section>
-                <section>
-                    <label>Status</label>
-                    <div>
-                        <button data-modal-action="delete" data-modal-persist="true">Delete</button>
-                    </div>
-                </section>
+                </div>
+                <button data-modal-action="delete" data-modal-persist="true">Delete <small>Removing this phase will remove all tasks in it</small></button>
             </main>
             <footer>
                 <button data-modal-action="close">Close</button>

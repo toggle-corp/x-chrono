@@ -170,6 +170,10 @@ let database = {
             that.http.post(projectApi, project).then(
                 function success(response) {
                     that.projects.push(response.data);
+
+                    $('#add-project-inputs').hide();
+                    $('#add-project-button').prop('disabled', false);
+
                     resolve();
                 },
                 function error(response) {
@@ -541,7 +545,7 @@ let database = {
         const membersContainer = $('#edit-team-modal .members');
         membersContainer.empty();
         teamMembers.forEach(member => {
-            const memberElement = $('<div>' + member.display_name + '</div>');
+            const memberElement = $('<div><span>' + member.display_name + '</span></div>');
 
             if (member.user_id != auth.userId) {
                 memberElement.append('<button class="delete"><span class="fa fa-times"></span></button>');
@@ -572,7 +576,7 @@ let database = {
                         return;
                     }
 
-                    const userElement = $('<div>' + user.display_name + ' <button class="add"><span class="fa fa-plus"></span></button></div>');
+                    const userElement = $('<div><span>' + user.display_name + '</span><button class="add"><span class="fa fa-plus"></span></button></div>');
                     userElement.find('button').click(() => {
                         this.putMembers(teamMembers.concat([user]));
                         this.scope.memberSearchQuery = '';

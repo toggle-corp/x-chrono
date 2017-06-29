@@ -26,6 +26,8 @@ chrono.controller('mainController',  ['$scope', '$http', function($scope, $http)
     $scope.phaseTab = { };
     $scope.teamId = teamId;
 
+    $scope.location = location;
+
     $scope.getDashboardUrl = function(project) {
         return '/' + database.teams.find(t => t.pk == project.team).slug +
             '/' + project.slug + '/';

@@ -35,6 +35,8 @@ body {
     color: #fff;
     z-index: 1;
     border-bottom: 1px solid #8e44ad; }
+    body > header a {
+      color: inherit; }
     body > header #app-info {
       display: flex;
       align-items: center; }
@@ -67,6 +69,7 @@ body {
     body > aside > header {
       height: 72px;
       display: flex;
+      justify-content: space-between;
       align-items: center;
       padding: 0 16px;
       background-color: #fff;
@@ -74,6 +77,55 @@ body {
       body > aside > header h2 {
         font-weight: 400;
         font-size: 24px; }
+      body > aside > header button {
+        background-color: transparent;
+        border: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        outline: none;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        border-radius: 50%;
+        font-size: 1.2em; }
+        body > aside > header button:hover:not(:disabled) {
+          background-color: rgba(0, 0, 0, 0.1); }
+    body > aside #add-project-inputs {
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      padding: 16px;
+      border-top: 2px solid rgba(0, 0, 0, 0.3);
+      border-bottom: 2px solid rgba(0, 0, 0, 0.3); }
+      body > aside #add-project-inputs input {
+        diplay: block;
+        width: 100%;
+        padding: 4px 8px;
+        outline: none;
+        background-color: transparent;
+        border: none;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+        font-family: inherit;
+        font-size: 1.2em; }
+        body > aside #add-project-inputs input:focus {
+          border-bottom-color: #8e44ad; }
+      body > aside #add-project-inputs .action-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 16px; }
+        body > aside #add-project-inputs .action-buttons button {
+          border: none;
+          outline: none;
+          text-transform: uppercase;
+          background-color: transparent;
+          color: #8e44ad;
+          cursor: pointer;
+          padding: 0;
+          border-radius: 3px;
+          font-weight: 700;
+          font-family: inherit; }
+          body > aside #add-project-inputs .action-buttons button .fa {
+            margin-right: 6px; }
     body > aside #projects {
       height: calc(100% - 144px - 72px);
       overflow-y: scroll; }
@@ -85,54 +137,9 @@ body {
         color: #8e44ad; }
         body > aside #projects a:hover {
           background-color: rgba(0, 0, 0, 0.05); }
-    body > aside #add-project-inputs {
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
-      background-color: #fff;
-      height: 144px;
-      flex-wrap: wrap; }
-      body > aside #add-project-inputs header {
-        padding: 0 16px;
-        height: 48px;
-        display: flex;
-        align-items: center; }
-        body > aside #add-project-inputs header h3 {
-          font-weight: 700; }
-      body > aside #add-project-inputs .content {
-        padding: 0 16px; }
-        body > aside #add-project-inputs .content .input-group {
-          min-height: 36px;
-          display: flex;
-          align-items: center; }
-          body > aside #add-project-inputs .content .input-group input, body > aside #add-project-inputs .content .input-group select {
-            font-family: inherit;
-            outline: none; }
-          body > aside #add-project-inputs .content .input-group label {
-            flex-basis: 33%;
-            color: rgba(0, 0, 0, 0.5);
-            font-size: 13px; }
-          body > aside #add-project-inputs .content .input-group input, body > aside #add-project-inputs .content .input-group select {
-            padding: 4px 8px;
-            flex-basis: 67%;
-            outline: none;
-            font-size: 13px;
-            background-color: #fff; }
-        body > aside #add-project-inputs .content .action-buttons {
-          min-height: 48px;
-          display: flex;
-          align-items: center;
-          justify-content: flex-end; }
-          body > aside #add-project-inputs .content .action-buttons button {
-            border: none;
-            text-transform: uppercase;
-            background-color: #8e44ad;
-            color: #fff;
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 3px;
-            font-weight: 700;
-            font-family: inherit; }
-            body > aside #add-project-inputs .content .action-buttons button .fa {
-              margin-right: 6px; }
+        body > aside #projects a.active {
+          background-color: #8e44ad;
+          color: #fff; }
   body > main {
     flex-basis: 75%;
     height: calc(100vh - 80px);
@@ -182,7 +189,8 @@ body {
           body > main > div > header .tabs .tab {
             padding: 6px 16px;
             cursor: pointer;
-            text-transform: uppercase; }
+            text-transform: uppercase;
+            user-select: none; }
             body > main > div > header .tabs .tab.active {
               border-bottom: 2px solid #8e44ad; }
       body > main > div #tasks {
@@ -303,43 +311,44 @@ body {
     body #edit-entry-modal main > div > * {
       display: block;
       margin-top: 4px; }
-  body #edit-task-modal main {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around; }
-    body #edit-task-modal main section {
-      margin-bottom: 10px; }
-      body #edit-task-modal main section > label {
+  body #edit-task-modal main, body #edit-phase-modal main {
+    min-width: 320px; }
+    body #edit-task-modal main label, body #edit-phase-modal main label {
+      width: 100%;
+      text-transform: uppercase;
+      color: rgba(0, 0, 0, 0.5);
+      font-size: 0.9em; }
+    body #edit-task-modal main input, body #edit-phase-modal main input {
+      width: 100%;
+      font-family: inherit;
+      outline: none;
+      border: none;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+      font-size: 1.2em; }
+      body #edit-task-modal main input:focus, body #edit-phase-modal main input:focus {
+        border-bottom-color: #8e44ad; }
+    body #edit-task-modal main button, body #edit-phase-modal main button {
+      background-color: transparent;
+      border: none;
+      outline: none;
+      color: #e04656;
+      font-family: inherit;
+      margin: 0 -24px;
+      margin-top: 32px;
+      padding: 10px 24px;
+      font-size: 1.2em;
+      cursor: pointer;
+      text-transform: uppercase;
+      text-align: left; }
+      body #edit-task-modal main button small, body #edit-phase-modal main button small {
         display: block;
-        margin-bottom: 6px;
-        font-size: 11px;
-        text-transform: uppercase;
-        color: rgba(0, 0, 0, 0.5); }
-      body #edit-task-modal main section > div {
-        width: 320px;
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 6px; }
-        body #edit-task-modal main section > div > label {
-          flex-basis: 96px; }
-        body #edit-task-modal main section > div input[type="text"], body #edit-task-modal main section > div input[type="date"] {
-          flex-basis: calc(100% - 96px);
-          font-family: inherit; }
-        body #edit-task-modal main section > div button {
-          font-family: inherit;
-          border: none;
-          outline: none;
-          background-color: transparent;
-          color: #e74c3c;
-          text-transform: uppercase;
-          cursor: pointer; }
-        body #edit-task-modal main section > div .radio-input {
-          display: flex;
-          align-items: center; }
-        body #edit-task-modal main section > div input {
-          padding: 0 4px; }
+        width: 100%;
+        text-transform: none; }
+      body #edit-task-modal main button:hover, body #edit-phase-modal main button:hover {
+        background-color: rgba(0, 0, 0, 0.05); }
   body #edit-team-modal main {
-    width: 512px; }
+    width: 512px;
+    padding: 0; }
     body #edit-team-modal main section {
       display: flex;
       flex-wrap: wrap;
@@ -348,20 +357,41 @@ body {
         flex-basis: 100%;
         text-transform: uppercase;
         color: rgba(0, 0, 0, 0.5);
-        height: 28px; }
+        padding: 10px 16px; }
   body #edit-team-modal .members {
     flex-basis: 50%; }
+    body #edit-team-modal .members > div {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 28px;
+      padding: 0 16px; }
+      body #edit-team-modal .members > div:nth-child(odd) {
+        background-color: #f0f0f0; }
   body #edit-team-modal .search {
-    flex-basis: 50%; }
+    flex-basis: 50%;
+    padding: 0 16px; }
     body #edit-team-modal .search input {
-      padding: 4px 10px; }
+      padding: 4px 10px;
+      width: 100%;
+      font-family: inherit;
+      outline: none; }
+    body #edit-team-modal .search .searched-users > div {
+      display: flex;
+      align-items: center;
+      min-height: 28px; }
+      body #edit-team-modal .search .searched-users > div > span {
+        order: 2; }
+      body #edit-team-modal .search .searched-users > div button {
+        order: 1;
+        padding: 0 10px; }
   body #edit-team-modal button {
     background-color: transparent;
     color: #8e44ad;
     outline: none;
     border: 0;
-    padding: 8px;
-    cursor: pointer; }
+    cursor: pointer;
+    padding: 0; }
     body #edit-team-modal button.delete {
       color: #e74c3c; }
 
