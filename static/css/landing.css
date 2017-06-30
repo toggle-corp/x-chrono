@@ -23,61 +23,71 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url("../img/bg.jpg");
-  background-color: #eee;
+  background-image: url("../img/bg.png");
+  background-color: #8e44ad;
   background-blend-mode: soft-light; }
-  body > section {
+  body #app-detail {
+    flex-basis: 66%;
     min-height: 100vh;
-    flex-basis: 30%; }
-    body > section#app-detail {
-      flex-basis: 66%;
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-start;
+    flex-wrap: wrap; }
+    body #app-detail header {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap; }
-      body > section#app-detail h1 {
-        margin: 0;
-        font-size: 5em;
-        line-height: 1; }
-        body > section#app-detail h1 small {
-          font-size: 0.5em;
-          font-weight: 400; }
-    body > section #team-list {
-      flex-basis: 30%;
-      padding: 16px; }
-      body > section #team-list header {
+      align-items: center; }
+    body #app-detail img {
+      margin: 36px 0;
+      height: 72px; }
+    body #app-detail h1 {
+      margin: 36px 0;
+      font-size: 5em;
+      line-height: 1;
+      color: #f0f0f0;
+      text-transform: uppercase; }
+  body #team-detail {
+    min-height: calc(100vh - 96px);
+    flex-basis: 30%;
+    background-color: #fff;
+    margin: 48px 0;
+    padding: 0 32px;
+    border-radius: 5px;
+    box-shadow: 3px 5px 25px -7px rgba(0, 0, 0, 0.5); }
+    body #team-detail #team-list {
+      flex-basis: 30%; }
+      body #team-detail #team-list header {
         height: 96px;
         display: flex;
         align-items: center;
-        padding: 0 16px;
         font-size: 2em; }
-      body > section #team-list .list {
+      body #team-detail #team-list .empty {
+        height: calc(100vh - 100px - 96px - 96px);
+        padding-top: 48px;
+        text-align: center;
+        color: #c0c0c0;
+        font-size: 2em; }
+      body #team-detail #team-list .list {
         overflow-y: auto;
-        height: calc(60vh - 96px - 32px); }
-        body > section #team-list .list a {
+        height: calc(100vh - 100px - 96px - 96px); }
+        body #team-detail #team-list .list a {
           display: block;
           width: 100%;
           min-height: 48px;
-          padding: 0 24px;
           border-bottom: 1px solid rgba(0, 0, 0, 0.1);
           display: flex;
           align-items: center;
           color: #8e44ad; }
-          body > section #team-list .list a:hover {
+          body #team-detail #team-list .list a:hover {
             background-color: rgba(0, 0, 0, 0.1); }
-    body > section #new-team-input-container {
-      height: 40vh; }
-      body > section #new-team-input-container > header {
-        height: 96px;
+    body #team-detail #new-team-input-container {
+      height: 100px; }
+      body #team-detail #new-team-input-container .content {
         display: flex;
-        align-items: center;
-        padding: 0 16px;
-        font-size: 2em; }
-      body > section #new-team-input-container .content {
-        padding: 0 16px; }
-        body > section #new-team-input-container .content input {
-          width: 100%;
-          font-size: 1.2em;
+        justify-content: space-between;
+        align-items: baseline; }
+        body #team-detail #new-team-input-container .content input {
+          flex-basis: calc(95% - 164px);
+          font-size: 1.5em;
           font-family: inherit;
           display: block;
           padding: 4px 8px;
@@ -85,16 +95,22 @@ body {
           outline: none;
           background-color: transparent;
           border-bottom: 2px solid rgba(0, 0, 0, 0.1); }
-        body > section #new-team-input-container .content button {
+        body #team-detail #new-team-input-container .content button {
+          flex-basis: 164px;
+          flex-grow: 0;
+          flex-shrink: 0;
           margin-top: 24px;
           display: block;
-          padding: 4px 16px;
+          padding: 12px 16px;
           font-family: inherit;
           font-size: 1.2em;
           text-transform: uppercase;
           border: none;
           background-color: #8e44ad;
           color: #fff;
+          cursor: pointer;
           border-radius: 3px; }
+          body #team-detail #new-team-input-container .content button .fa {
+            margin-right: 10px; }
 
 /*# sourceMappingURL=landing.css.map */
