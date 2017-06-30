@@ -100,7 +100,9 @@ class SummaryApi(views.APIView):
 
         entries = []
         for task in tasks:
-            es = TaskEntry.objects.filter(task=task, user__in=users)
+            es = TaskEntry.objects.filter(task=task,
+                                          user__in=users,
+                                          end_time__isnull=False)
             if start_date:
                 es = es.filter(start_time__gte=start_date)
             if end_date:
