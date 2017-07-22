@@ -117,8 +117,8 @@
                         <h3>{{ task.name }}</h3>
                         <div class="task-action-buttons">
                             <button ng-click="db.editTask(task.pk)" title="Edit task"><i class="fa fa-edit"></i></button>
-                            <button ng-show="phaseTab[project.pk] == project.activePhaseId" ng-if="!task.running" progress-click="db.startTask(task.pk)" }} title="Start task"><i class="fa fa-play" ></i></button>
-                            <button ng-show="phaseTab[project.pk] == project.activePhaseId" ng-if="task.running" progress-click="db.stopTask(task.pk)" }} title="Stop task"><i class="fa fa-stop"></i></button>
+                            <button ng-if="!task.running" progress-click="db.startTask(task.pk)" }} title="Start task"><i class="fa fa-play" ></i></button>
+                            <button ng-if="task.running" progress-click="db.stopTask(task.pk)" }} title="Stop task"><i class="fa fa-stop"></i></button>
                         </div>
                     </header>
                      
@@ -137,7 +137,7 @@
                     </div>
                 </div>
 
-                <div class="task new-task" ng-show="phaseTab[project.pk] == project.activePhaseId">
+                <div class="task new-task">
                     <header>
                         <h3><input ng-model="newTaskName" placeholder="Enter task name"></h3>
                         <div class="task-action-buttons">
