@@ -27,12 +27,12 @@
         let userApi = '/api/v1/users/';
         const teamApi = '/api/v1/teams/';
     </script>
-    
+
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="{% static 'js/landing.js' %}"></script>
 
     <link rel="stylesheet" href="{% static 'css/landing.css' %}">
-    <link href="https://fonts.googleapis.com/css?family=Cantarell:400,700" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Cantarell:400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500|Roboto:300,400,500" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
@@ -41,24 +41,25 @@
 </head>
 <body>
     <section id="app-detail">
-        <h1>Chrono<br><small>The time tracking app</small></h1>
+      <header>
+        <img src="{% static 'img/logo.png' %}" />
+        <h1>Chrono</h1>
+      </header>
     </section>
-    <section>
+    <section id="team-detail">
         <div id="team-list">
             <header>
                 <h3>Your teams</h3>
             </header>
             <div class="content">
-                <div class="list"></div>
+                <div class="list" hidden></div>
+                <div class="empty">Such empty much wow</div>
             </div>
         </div>
         <div id="new-team-input-container">
-            <header>
-                <h3>Add new team</h3>
-            </header>
             <div class="content">
                 <input placeholder="Enter team name" id="new-team-name">
-                <button id="add-new-team">Add</button>
+                <button id="add-new-team"><i class="fa fa-plus"></i>Add team</button>
             </div>
         </div>
     </section>

@@ -75,6 +75,14 @@ const teams = {
             $.get(teamApi, { user_id: auth.userId }).promise()
                 .then(response => {
                     response.forEach(team => this.loadTeam(team));
+
+                    if (response.length == 0) {
+                        $('#team-list .empty').show();
+                        $('#team-list .list').hide();
+                    } else {
+                        $('#team-list .empty').hide();
+                        $('#team-list .list').show();
+                    }
                 })
                 .catch(e => reject(e));
         });
@@ -85,6 +93,8 @@ const teams = {
         teamElement.attr('href', '/' + team.slug);
         teamElement.text(team.name);
         teamElement.appendTo('#team-list .list');
+        $('#team-list .empty').hide();
+        $('#team-list .list').show();
     },
 
     addTeam(teamName) {
